@@ -67,3 +67,15 @@ INSERT INTO account_ownership (customer_id, account_id, ownership_mode, account_
 INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 50.23, 'Carrefour 2141515', null);
 INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 121.51, 'Shell 456488', null);
 INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 160.00, 'Outgoing transfer', 'PL54 2315 1535 1241 6462');
+
+INSERT INTO customers (name, nationality) VALUES('Barry M. Carmichael', 'US');
+set @last_customer_id = LAST_INSERT_ID();
+
+INSERT INTO accounts (iban, balance, currency) VALUES('PL13 5127 6900 0411 5593', 281378.45, 'USD');
+set @last_account_id = LAST_INSERT_ID();
+
+INSERT INTO account_ownership (customer_id, account_id, ownership_mode, account_name) VALUES (@last_customer_id, @last_account_id, 'O', 'Main account');
+
+INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 1829.15, 'Mortgage', null);
+INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 14.99, 'Starbucks 9281308', null);
+

@@ -28,13 +28,18 @@ Test the API by opening the following URL:
 
   http://localhost:3000/api/v1/customers
 
+You can also retrieve specific customer data using direct URL:
+
+  http://localhost:3000/api/v1/customers/2241
+  http://localhost:3000/api/v1/customers/2242  
+  
 Destroy stack
 
   docker stack rm bankapi
   
 Destroy stopped containers
 
-  docker container prune
+  docker container prune --force
   
 Delete images to ensure they are rebuilt correctly
 
