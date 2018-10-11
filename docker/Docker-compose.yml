@@ -8,6 +8,13 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
+      
+  api:
+    image: cgi/hacsec-api:0.0.1
+    restart: always
+    ports:
+      - 3000:3000
+  
 
   adminer:
     image: adminer
