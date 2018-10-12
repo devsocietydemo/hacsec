@@ -56,26 +56,22 @@ ALTER TABLE transactions AUTO_INCREMENT=12315671;
  * Insert initial database
  */
 
-INSERT INTO customers (name, nationality) VALUES('Michael M. Barcus', 'PL');
-set @last_customer_id = LAST_INSERT_ID();
+LOAD DATA INFILE '/tmp/customers.csv'
+INTO TABLE customers
+FIELDS TERMINATED BY ','
+(id, name, nationality);
 
-INSERT INTO accounts (iban, balance, currency) VALUES('PL12 5234 4143 8746 7665', 2512.21, 'PLN');
-set @last_account_id = LAST_INSERT_ID();
+LOAD DATA INFILE '/tmp/accounts.csv'
+INTO TABLE accounts
+FIELDS TERMINATED BY ','
+(id, iban, balance, currency);
 
-INSERT INTO account_ownership (customer_id, account_id, ownership_mode, account_name) VALUES (@last_customer_id, @last_account_id, 'O', 'Main checking account');
+LOAD DATA INFILE '/tmp/account_ownership.csv'
+INTO TABLE account_ownership
+FIELDS TERMINATED BY ','
+(customer_id, account_id, ownership_mode, account_name);
 
-INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 50.23, 'Carrefour 2141515', null);
-INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 121.51, 'Shell 456488', null);
-INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 160.00, 'Outgoing transfer', 'PL54 2315 1535 1241 6462');
-
-INSERT INTO customers (name, nationality) VALUES('Barry M. Carmichael', 'US');
-set @last_customer_id = LAST_INSERT_ID();
-
-INSERT INTO accounts (iban, balance, currency) VALUES('PL13 5127 6900 0411 5593', 281378.45, 'USD');
-set @last_account_id = LAST_INSERT_ID();
-
-INSERT INTO account_ownership (customer_id, account_id, ownership_mode, account_name) VALUES (@last_customer_id, @last_account_id, 'O', 'Main account');
-
-INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 1829.15, 'Mortgage', null);
-INSERT INTO transactions (account_id, amount, description, target_iban) VALUES (@last_account_id, 14.99, 'Starbucks 9281308', null);
-
+LOAD DATA INFILE '/tmp/transactions.csv'
+INTO TABLE transactions
+FIELDS TERMINATED BY ','
+(id, account_id, amount, description, target_iban);

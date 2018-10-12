@@ -1,0 +1,12 @@
+2241,86433,O,Main checking account
+2241,86434,P,Company account
+2241,86435,O,Savings account
+2242,86434,O,Main company account
+2242,86436,O,Home account
+2242,86437,O,Savings account
+2242,86438,O,null
+2243,86439,O,Main account
+2244,86440,O,null
+2244,86441,O,null
+2244,86435,P,Proxy savings account
+2244,86442,O,null
