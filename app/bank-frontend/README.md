@@ -1,6 +1,6 @@
 
-### Security hackathon - Examplary UI application
-# "Banking App"
+# Security hackathon - Examplary UI application
+## "Banking App"
 
 ## Installation
 
@@ -20,7 +20,7 @@ You should be redirected to accounts list. Click on the accounts to preview the 
 This UI app contains proxy to :3000, defined in package.json.
 
 
-## Create-react-app's boilerplate guide - bundled with create-react-app - END OF CONTENT RELATED TO APPLICATION
+# Create-react-app's boilerplate guide - bundled with create-react-app - END OF CONTENT RELATED TO APPLICATION
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
