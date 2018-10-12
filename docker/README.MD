@@ -1,23 +1,23 @@
 Start with building database image:
-
-  cd database
-  build_image.bat
-  
+```console
+  cd database && build_image.bat
+```
 Build API image:
-
-  cd ..
-  cd api
-  build_image.bat
-
+```console
+  cd .. && cd api && build_image.bat
+```
 Then, initialize Docker Swarm:
 
-  cd ..
-  docker swarm init
-  
+```console
+  cd .. && docker swarm init
+```
+
 Deploy stack to swarm:
 
+```console
   docker stack deploy -c Docker-compose.yml bankapi
-  
+```
+
 Confirm that the application is working fine, by going to:
 
   http://localhost:8080
@@ -34,18 +34,20 @@ You can also retrieve specific customer data using direct URL:
   http://localhost:3000/api/v1/customers/2242  
   
 Destroy stack
-
+```console
   docker stack rm bankapi
-  
+```
 Destroy stopped containers
-
+```console
   docker container prune --force
-  
+```
 Delete images to ensure they are rebuilt correctly
-
+```console
   docker image rm cgi/hacsec-mysql:0.0.1
   docker image rm cgi/hacsec-api:0.0.1
-  
-Leave the swarm
+```
 
+Leave the swarm
+```console
   docker swarm leave --force
+```
