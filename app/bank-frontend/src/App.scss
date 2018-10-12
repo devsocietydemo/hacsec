@@ -1,0 +1,52 @@
+$color-sky: #caebf2;
+$color-carbon: #a9a9a9;
+$color-red: #FF3B3F;
+$color-neutral: #EFEFEF;
+$color-white: #FFFFFF;
+$color-dark: darken($color-carbon, 60%);
+
+body {
+  color: $color-carbon;
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  background: $color-neutral;
+}
+
+.banking-button {
+  background: transparent;
+  color: $color-carbon;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  padding: 4px 20px;
+  border: 1px solid $color-carbon;
+  border-radius: 17px;
+
+  &.active {
+    background: $color-red;
+    border: 1px solid $color-red;
+    color: $color-white;
+  }
+}
+
+.banking-app-header {
+  display: flex;
+  flex-direction: row;
+  background: $color-red;
+  padding: 1em;
+  align-items: flex-end;
+  justify-content: space-between;
+  color: $color-white;
+
+  .logo {
+    font-size: 2em;
+    font-weight: bold;
+  }
+}
+
+.banking-app-container {
+  padding: 1em;
+  color: $color-dark;
+  font-weight: 400;
+}

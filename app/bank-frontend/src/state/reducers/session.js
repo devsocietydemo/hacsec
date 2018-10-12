@@ -1,4 +1,4 @@
-import { SET_LOGIN_STATE, SET_INPUT_CREDENTIALS } from '../actions/session';
+import { SET_LOGIN_STATE, SET_INPUT_CREDENTIALS, SET_LOGIN_ERROR } from '../actions/session';
 
 const defaultState = {
   login: '',
@@ -17,6 +17,11 @@ const session = (state = defaultState, action) => {
       return {
         ...state,
         currentUser: action.currentUser
+      }
+    case SET_LOGIN_ERROR:
+      return {
+        ...state,
+        error: action.error
       }
     default:
       return state;

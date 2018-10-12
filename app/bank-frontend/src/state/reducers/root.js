@@ -1,8 +1,11 @@
 import {combineReducers} from 'redux';
 import session from './session';
+import operations from './operations';
+
 
 const rootReducer = combineReducers({
-  session
+  session,
+  operations
 });
 
 export default rootReducer;

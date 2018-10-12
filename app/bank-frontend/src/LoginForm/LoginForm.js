@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { setInputCredentials, authenticate } from '../state/actions/session';
 
-const LoginForm = ({login, password, setLogin, setPassword, authenticate, ...props}) => {
+const LoginForm = ({login, password, error, setLogin, setPassword, authenticate, ...props}) => {
   return (
     <div className="login-form" {...props}>
       <div className="form-group">
@@ -16,16 +16,23 @@ const LoginForm = ({login, password, setLogin, setPassword, authenticate, ...pro
                value={password} />
       </div>
       <div>
-        <button onClick={() => authenticate()}>Login</button>
+        <button className="banking-button" onClick={() => authenticate()}>Login</button>
       </div>
+
+      { error && (
+        <div className="error">
+          { error }
+        </div>
+      ) }
     </div>
   )
 }
 
 const mapStateToProps = state => ({
   login: state.session.login,
-  password: state.session.password
-})
+  password: state.session.password,
+  error: state.session.error
+});
 
 const mapDispatchToProps = dispatch => ({
   setLogin: login => dispatch(setInputCredentials('login', login)),
