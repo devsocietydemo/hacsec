@@ -8,6 +8,8 @@ var mysql = require("mysql");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var customersRouter = require('./routes/customers');
+var accountsRouter = require('./routes/accounts');
+var transactionsRouter = require('./routes/transactions');
 
 var app = express();
 
@@ -35,6 +37,8 @@ app.use(function(req, res, next){
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/api/v1/customers', customersRouter);
+app.use('/api/v1/accounts', accountsRouter);
+app.use('/api/v1/transactions', transactionsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

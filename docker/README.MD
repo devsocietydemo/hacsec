@@ -31,7 +31,16 @@ Test the API by opening the following URL:
 You can also retrieve specific customer data using direct URL:
 
   http://localhost:3000/api/v1/customers/2241
+  
   http://localhost:3000/api/v1/customers/2242  
+  
+  http://localhost:3000/api/v1/customers/2242/accounts
+  
+  http://localhost:3000/api/v1/accounts/86436
+  
+  http://localhost:3000/api/v1/accounts/86436/transactions
+  
+  http://localhost:3000/api/v1/transactions/12316133
   
 Destroy stack
 ```console
