@@ -6,6 +6,7 @@ import {OPERATION_ACCOUNTS, OPERATION_NEW_TRANSFER, OPERATION_CURRENT_BALANCE,
     selectOperation } from '../state/actions/operations';
 
 import Accounts from './Accounts/Accounts';
+import CurrentBalance from './CurrentBalance/CurrentBalance';
 
 import './WorkingArea.scss';
 
@@ -38,6 +39,7 @@ const WorkingArea = ({selectOperation, currentOperation, ...props}) => {
         )) }
       </ul>
       { currentOperation === OPERATION_ACCOUNTS && <Accounts /> }
+      { currentOperation === OPERATION_CURRENT_BALANCE && <CurrentBalance /> }
     </div>
   )
 }

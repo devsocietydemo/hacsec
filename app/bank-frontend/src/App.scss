@@ -1,9 +1,4 @@
-$color-sky: #caebf2;
-$color-carbon: #a9a9a9;
-$color-red: #FF3B3F;
-$color-neutral: #EFEFEF;
-$color-white: #FFFFFF;
-$color-dark: darken($color-carbon, 60%);
+@import './variables.scss';
 
 body {
   color: $color-carbon;
