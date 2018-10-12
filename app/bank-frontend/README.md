@@ -1,3 +1,27 @@
+
+### Security hackathon - Examplary UI application
+# "Banking App"
+
+## Installation
+
+- Install Yarn:
+`npm install -g yarn`
+- Run the application
+`yarn start`
+
+## How to play with that?
+
+As a user name, put the customer ID. Password please leave empty, as we do not have any passwords :)
+
+Then click Login
+
+You should be redirected to accounts list. Click on the accounts to preview the balance.
+
+This UI app contains proxy to :3000, defined in package.json.
+
+
+## Create-react-app's boilerplate guide - bundled with create-react-app - END OF CONTENT RELATED TO APPLICATION
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

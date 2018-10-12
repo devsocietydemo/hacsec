@@ -7,23 +7,25 @@ import { setInputCredentials, authenticate } from '../state/actions/session';
 const LoginForm = ({login, password, error, setLogin, setPassword, authenticate, ...props}) => {
   return (
     <div className="login-form" {...props}>
-      <div className="form-group">
-        Login: <input type="text" onChange={(e) => setLogin(e.target.value)}
-               value={login} />
-      </div>
-      <div className="form-group">
-        Password: <input type="password" onChange={(e) => setPassword(e.target.value)}
-               value={password} />
-      </div>
-      <div>
-        <button className="banking-button" onClick={() => authenticate()}>Login</button>
-      </div>
-
-      { error && (
-        <div className="error">
-          { error }
+      <form onSubmit={ (e) => { e.preventDefault(); authenticate() } }>
+        <div className="form-group">
+          Login: <input type="text" onChange={(e) => setLogin(e.target.value)}
+                 value={login} />
         </div>
-      ) }
+        <div className="form-group">
+          Password: <input type="password" onChange={(e) => setPassword(e.target.value)}
+                 value={password} />
+        </div>
+        <div>
+          <button className="banking-button" type="submit">Login</button>
+        </div>
+
+        { error && (
+          <div className="error">
+            { error }
+          </div>
+        ) }
+      </form>
     </div>
   )
 }
