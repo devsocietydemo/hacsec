@@ -69,9 +69,11 @@ FIELDS TERMINATED BY ','
 LOAD DATA INFILE '/tmp/account_ownership.csv'
 INTO TABLE account_ownership
 FIELDS TERMINATED BY ','
-(customer_id, account_id, ownership_mode, account_name);
+(customer_id, account_id, ownership_mode, @account_name)
+SET account_name = nullif(TRIM(TRAILING '\r' FROM @account_name), '');
 
 LOAD DATA INFILE '/tmp/transactions.csv'
 INTO TABLE transactions
 FIELDS TERMINATED BY ','
-(id, account_id, amount, description, target_iban);
+(id, account_id, amount, description, @target_iban)
+SET target_iban = nullif(TRIM(TRAILING '\r' FROM @target_iban), '');
