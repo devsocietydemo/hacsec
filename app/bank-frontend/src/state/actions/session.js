@@ -1,5 +1,5 @@
 import { getCustomer } from '../../api';
-
+import { setUser, removeUser } from '../../sessionManager';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
 
 export const SET_LOGIN_STATE = 'setLoginState';
@@ -28,6 +28,8 @@ export const authenticate = () => (dispatch, getState) => {
 
   getCustomer(login).then(data => {
     if (data.response.length > 0) {
+      setUser(data.response[0]);
+
       dispatch(setLoginState(data.response[0]));
       dispatch(selectOperation(OPERATION_ACCOUNTS));
     } else {
@@ -35,4 +37,9 @@ export const authenticate = () => (dispatch, getState) => {
     }
 
   })
+};
+
+export const logout = () => (dispatch, getState) => {
+  removeUser();
+  dispatch(setLoginState(null));
 }

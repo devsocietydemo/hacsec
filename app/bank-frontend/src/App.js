@@ -2,10 +2,12 @@ import React from 'react';
 import './App.scss';
 import { connect } from 'react-redux';
 
+import { logout } from "./state/actions/session";
+
 import LoginForm from './LoginForm/LoginForm';
 import WorkingArea from './WorkingArea/WorkingArea';
 
-const App = ({currentUser, ...props}) => (
+const App = ({currentUser, logout, ...props}) => (
   <div className="banking-app" {...props}>
     <div className="banking-app-header">
       <div className="logo">
@@ -15,6 +17,7 @@ const App = ({currentUser, ...props}) => (
       { currentUser &&
         <div className="user-data">
           Welcome, { currentUser.name }
+          | <a onClick={ () => logout() }>Logout</a>
         </div>
       }
     </div>
@@ -32,7 +35,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-
+  logout: () => dispatch(logout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
