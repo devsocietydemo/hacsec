@@ -18,7 +18,7 @@ router.get('/:id', function(req, res, next) {
 
 router.get('/:id/accounts', function(req, res, next) {
 	const id = req.params.id;
-	res.locals.connection.query('SELECT account_id, ownership_mode from account_ownership where customer_id = ' + id, function (error, results, fields) {
+	res.locals.connection.query('SELECT account_id, ownership_mode, account_name from account_ownership where customer_id = ' + id, function (error, results, fields) {
 		if (error) throw error;
 		res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 	});

@@ -13,7 +13,7 @@ const Accounts = ({accounts, selectOperation, ...props}) => {
         <li>
           <button className="account" onClick={() => selectOperation(OPERATION_CURRENT_BALANCE, account.account_id)}>
             <h4 className="account-name">
-              ACME STANDARD Account
+              {account.account_name==null ? "ACME Bank Standard account" : account.account_name}
             </h4>
             <div>
               Number: {account.account_id}
