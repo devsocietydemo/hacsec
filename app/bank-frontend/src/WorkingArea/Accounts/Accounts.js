@@ -21,14 +21,19 @@ const Accounts = ({accounts, selectOperation, ...props}) => {
           <li>
             <div className="account">
               <div className="account-icon">
-                <FaMoneyBillAlt />
+                <div>
+                  <FaMoneyBillAlt />
+                </div>
+                <span className="account-currency">
+                  {account.currency}
+                </span>
               </div>
               <div className="account-details">
                 <h4 className="account-name">
                   {account.account_name==null ? "ACME Bank Standard account" : account.account_name}
                 </h4>
                 <div className="account-iban">
-                  PL61 1090 1014 0000 0712 1981 2874
+                  {account.iban}
                 </div>
                 <div className="account-controls">
                   <NavLink to={OPERATION_CURRENT_BALANCE}

@@ -21,6 +21,7 @@ a {
   padding: 4px 20px;
   border: 1px solid $color-carbon;
   border-radius: 17px;
+  cursor: pointer;
 
   &.active {
     background: $color-red;
