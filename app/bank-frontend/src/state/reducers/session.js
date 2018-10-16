@@ -1,10 +1,11 @@
 import { SET_LOGIN_STATE, SET_INPUT_CREDENTIALS, SET_LOGIN_ERROR } from '../actions/session';
+import { getUser } from '../../sessionManager';
 
 const defaultState = {
-  login: '',
-  password: '',
-  currentUser: null
-};
+        login: '',
+        password: '',
+        currentUser: getUser() || null
+      };
 
 const session = (state = defaultState, action) => {
   switch (action.type) {
