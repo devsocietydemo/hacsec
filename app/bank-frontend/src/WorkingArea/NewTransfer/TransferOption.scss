@@ -1,0 +1,15 @@
+@import '../../variables.scss';
+
+.transfer-option {
+  background: $color-red;
+  padding: 1em;
+  color: #FFF;
+  margin: 0 1em 1em 0em;
+  border-radius: 6px;
+  text-align: center;
+
+  &-icon {
+    font-size: 2em;
+    margin-bottom: 0em;
+  }
+}

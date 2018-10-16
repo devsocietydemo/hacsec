@@ -26,11 +26,16 @@ a {
   border: 1px solid $color-carbon;
   border-radius: 17px;
   cursor: pointer;
+  outline: none;
 
   &.active {
     background: $color-red;
     border: 1px solid $color-red;
     color: $color-white;
+  }
+
+  &:focus {
+    border: 1px solid $color-red;
   }
 
   &-big {
@@ -45,11 +50,13 @@ a {
   font-size: inherit;
   font-weight: inherit;
   color: $color-dark;
+  background: inherit;
   border: 0px;
   border-bottom: 2px solid $color-carbon;
   outline: none;
   display: block;
   width: 100%;
+  border-radius: none;
 
   &:focus {
     border-bottom: 2px solid $color-red;
