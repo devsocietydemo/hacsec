@@ -18,7 +18,7 @@ router.get('/:id', function(req, res, next) {
 
 router.get('/:id/transactions', function(req, res, next) {
 	const id = req.params.id;
-	res.locals.connection.query('SELECT tr.id, tr.amount, tr.description, tr.target_iban from accounts acc, transactions tr where acc.id = tr.account_id and acc.id = ' + id, function (error, results, fields) {
+	res.locals.connection.query('SELECT tr.id, tr.date, tr.amount, tr.description, tr.target_iban from accounts acc, transactions tr where acc.id = tr.account_id and acc.id = ' + id, function (error, results, fields) {
 		if (error) throw error;
 		res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 	});
