@@ -2,6 +2,8 @@ import { getUserAccounts, getAccountTransactions } from '../../api';
 import { setAccounts } from './accounts';
 import { setCurrentBalance } from './currentBalance';
 import { setAccountsForTransfer } from './newTransfer';
+import { ERROR_ACCOUNTS_FETCH_FAILED, ERROR_BALANCE_FETCH_FAILED,
+  ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED, setError } from './errors';
 
 export const SET_OPERATION = 'setOperation';
 export const SET_INPUT_CREDENTIALS = 'setInputCredentials';
@@ -30,24 +32,30 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
 
   switch (operation) {
     case OPERATION_ACCOUNTS: {
-      return getUserAccounts(currentUserId).then(data => {
-        dispatch(setAccounts(data.response));
-      });
+      return getUserAccounts(currentUserId)
+      .then(
+        data => dispatch(setAccounts(data.response)),
+        error => dispatch(setError(ERROR_ACCOUNTS_FETCH_FAILED, error))
+      )
     }
 
     case OPERATION_CURRENT_BALANCE: {
       const {accountId} = params;
-      return getAccountTransactions(accountId).then(data => {
-        dispatch(setCurrentBalance(accountId, data.response));
-      })
+      return getAccountTransactions(accountId)
+        .then(
+          data => dispatch(setCurrentBalance(accountId, data.response)),
+          error => dispatch(setError(ERROR_BALANCE_FETCH_FAILED, error))
+        );
     }
 
     case OPERATION_NEW_TRANSFER: {
       const accountId = params ? params.accountId : null;
 
-      return getUserAccounts(currentUserId).then(data => {
-        dispatch(setAccountsForTransfer(data.response, accountId));
-      })
+      return getUserAccounts(currentUserId)
+        .then(
+          data => dispatch(setAccountsForTransfer(data.response, accountId || data.response[0].account_id)),
+          error => dispatch(setError(ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED, error))
+        );
     }
 
     default:

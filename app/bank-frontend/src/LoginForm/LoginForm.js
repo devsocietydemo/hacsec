@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux';
 
 import { setInputCredentials, authenticate } from '../state/actions/session';
+import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED } from '../state/actions/errors';
+import Error from '../Error/Error';
 
 import FormGroup from '../FormGroup/FormGroup';
 
@@ -25,11 +27,7 @@ const LoginForm = ({login, password, error, setLogin, setPassword, authenticate,
           <button className="banking-button active banking-button-big" type="submit">Login</button>
         </div>
 
-        { error && (
-          <div className="error">
-            { error }
-          </div>
-        ) }
+        <Error codes={[ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED]} />
       </form>
     </div>
   )

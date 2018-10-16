@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { FaMoneyBillAlt } from 'react-icons/fa';
 
 import { NavLink } from '../../router';
+import Error from '../../Error/Error';
 
 import { OPERATION_CURRENT_BALANCE, OPERATION_NEW_TRANSFER, selectOperation } from '../../state/actions/operations';
+import { ERROR_ACCOUNTS_FETCH_FAILED } from '../../state/actions/errors';
 
 import './Accounts.scss';
 
@@ -16,6 +18,7 @@ const Accounts = ({accounts, selectOperation, ...props}) => {
         <div><strong>220.33 EUR</strong></div>
       </div>
       <ul className="accounts-list">
+        <Error codes={[ERROR_ACCOUNTS_FETCH_FAILED]} />
         { accounts && accounts.map((account, key) => (
           <li key={key}>
             <div className="account">

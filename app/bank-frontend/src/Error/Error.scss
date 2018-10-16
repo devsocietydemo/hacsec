@@ -1,0 +1,32 @@
+@import '../variables.scss';
+
+.alert-error {
+  border: 1px solid $color-red;
+  border-radius: 17px;
+  display: flex;
+  flex-direction: row;
+  margin: 2em 0;
+  overflow: hidden;
+  width: 100%;
+  font-size: 0.9em;
+
+  &-icon {
+    background: $color-red;
+    color: $color-white;
+    font-size: 3em;
+    padding: 0.2em 0.5em;
+  }
+
+  &-description {
+    padding: 0.5em;
+    background: #FFF;
+    width: 100%;
+  }
+
+  h4 {
+    font-weight: bold;
+    margin-bottom: 1em;
+    color: $color-red;
+    margin: 0 0 0.2em 0;
+  }
+}

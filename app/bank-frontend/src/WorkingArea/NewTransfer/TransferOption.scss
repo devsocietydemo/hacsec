@@ -1,15 +1,29 @@
 @import '../../variables.scss';
 
 .transfer-option {
-  background: $color-red;
+  background: $color-carbon;
   padding: 1em;
   color: #FFF;
   margin: 0 1em 1em 0em;
   border-radius: 6px;
   text-align: center;
+  box-shadow: 0 0 1px rgba($color-carbon, 0.3);
 
   &-icon {
     font-size: 2em;
     margin-bottom: 0em;
+  }
+
+  &:nth-child(1) {
+    background: #03CEA4;
+  }
+  &:nth-child(2) {
+    background: #E61739;
+  }
+  &:nth-child(3) {
+    background: #345995;
+  }
+  &:nth-child(4) {
+    background: #FB4D3D;
   }
 }
