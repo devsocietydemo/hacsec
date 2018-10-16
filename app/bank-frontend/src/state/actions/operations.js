@@ -15,8 +15,15 @@ export const setOperation = (operation, params) => ({
   params
 });
 
-export const selectOperation = (operation, ...params) => (dispatch, getState) => {
-  const currentUserId = getState().session.currentUser.id;
+export const selectOperation = (operation, params) => (dispatch, getState) => {
+  const currentUser = getState().session.currentUser;
+
+  if (!currentUser) {
+    dispatch(setOperation(null));
+    return;
+  }
+
+  const currentUserId = currentUser.id;
 
   dispatch(setOperation(operation));
 
@@ -28,7 +35,7 @@ export const selectOperation = (operation, ...params) => (dispatch, getState) =>
       break;
 
     case OPERATION_CURRENT_BALANCE:
-      const [accountId] = params;
+      const {accountId} = params;
       getAccountTransactions(accountId).then(data => {
         dispatch(setCurrentBalance(accountId, data.response));
       })

@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.scss';
 import { connect } from 'react-redux';
+import { FaRegUserCircle, FaUnlockAlt } from 'react-icons/fa';
 
 import { logout } from "./state/actions/session";
 
@@ -16,8 +17,13 @@ const App = ({currentUser, logout, ...props}) => (
 
       { currentUser &&
         <div className="user-data">
-          Welcome, { currentUser.name }
-          | <a onClick={ () => logout() }>Logout</a>
+          <FaRegUserCircle /> Welcome, { currentUser.name }
+          &nbsp; | &nbsp;
+          <a onClick={ () => logout() }>
+            <FaUnlockAlt />
+            &nbsp;
+            Logout
+          </a>
         </div>
       }
     </div>

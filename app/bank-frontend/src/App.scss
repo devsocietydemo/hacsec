@@ -2,10 +2,14 @@
 
 body {
   color: $color-carbon;
-  font-family: sans-serif;
+  font-family: $family;
   font-size: 15px;
   font-weight: 300;
   background: $color-neutral;
+}
+
+a {
+  cursor: pointer
 }
 
 .banking-button {

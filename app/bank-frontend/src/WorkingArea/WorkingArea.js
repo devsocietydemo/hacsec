@@ -1,45 +1,42 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { routes } from '../routes';
+import { NavLink, Route } from '../router';
 
 import {OPERATION_ACCOUNTS, OPERATION_NEW_TRANSFER, OPERATION_CURRENT_BALANCE,
     selectOperation } from '../state/actions/operations';
 
 import Accounts from './Accounts/Accounts';
 import CurrentBalance from './CurrentBalance/CurrentBalance';
+import NewTransfer from './NewTransfer/NewTransfer';
 
 import './WorkingArea.scss';
-
-const operations = [
-  {
-    id: OPERATION_CURRENT_BALANCE,
-    name: 'Current balance'
-  },
-  {
-    id: OPERATION_ACCOUNTS,
-    name: 'Accounts'
-  },
-  {
-    id: OPERATION_NEW_TRANSFER,
-    name: 'Create new cash transfer'
-  }
-];
 
 const WorkingArea = ({selectOperation, currentOperation, ...props}) => {
   return (
     <div className="operations">
       <ul className="operation-chooser">
-        { operations.map(operation => (
+        { routes.filter(route => route.inMainMenu).map(operation => (
           <li>
-            <button className={'banking-button' + (currentOperation === operation.id ? ' active': '')}
-                    onClick={() => selectOperation(operation.id)}>
+            <NavLink className="banking-button" activeClassName="active" to={operation.id}>
               {operation.name}
-            </button>
+            </NavLink>
           </li>
         )) }
       </ul>
-      { currentOperation === OPERATION_ACCOUNTS && <Accounts /> }
-      { currentOperation === OPERATION_CURRENT_BALANCE && <CurrentBalance /> }
+
+      <Route id={OPERATION_ACCOUNTS}>
+        <Accounts />
+      </Route>
+
+      <Route id={OPERATION_CURRENT_BALANCE}>
+        <CurrentBalance />
+      </Route>
+
+      <Route id={OPERATION_NEW_TRANSFER}>
+        <NewTransfer />
+      </Route>
     </div>
   )
 }

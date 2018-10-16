@@ -9,6 +9,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from './state/reducers/root'
 
+import { Router } from './router';
+
 const store = createStore(
   rootReducer,
   composeWithDevTools(
@@ -17,5 +19,7 @@ const store = createStore(
 )
 
 ReactDOM.render(<Provider store={store}>
-  <App />
+  <Router store={store}>
+    <App />
+  </Router>
 </Provider>, document.getElementById('root'));

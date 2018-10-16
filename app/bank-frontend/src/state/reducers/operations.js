@@ -1,7 +1,8 @@
 import { SET_OPERATION, OPERATION_CURRENT_BALANCE } from '../actions/operations';
 
 const defaultState = {
-  currentOperation: null
+  operation: null,
+  params: null
 };
 
 const operations = (state = defaultState, action) => {
@@ -9,7 +10,8 @@ const operations = (state = defaultState, action) => {
     case SET_OPERATION:
       return {
         ...state,
-        operation: action.operation
+        operation: action.operation,
+        params: action.params
       }
     default:
       return state;
