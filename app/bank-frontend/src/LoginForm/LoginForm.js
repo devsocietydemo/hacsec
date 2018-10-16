@@ -4,20 +4,26 @@ import { connect } from 'react-redux';
 
 import { setInputCredentials, authenticate } from '../state/actions/session';
 
+import FormGroup from '../FormGroup/FormGroup';
+
+import './LoginForm.scss';
+
 const LoginForm = ({login, password, error, setLogin, setPassword, authenticate, ...props}) => {
   return (
     <div className="login-form" {...props}>
       <form onSubmit={ (e) => { e.preventDefault(); authenticate() } }>
-        <div className="form-group">
-          Login: <input type="text" onChange={(e) => setLogin(e.target.value)}
+        <FormGroup label="Login">
+          <input className="banking-input" type="text" onChange={(e) => setLogin(e.target.value)}
                  value={login} />
-        </div>
-        <div className="form-group">
-          Password: <input type="password" onChange={(e) => setPassword(e.target.value)}
+        </FormGroup>
+
+        <FormGroup label="Password">
+          <input className="banking-input" type="password" onChange={(e) => setPassword(e.target.value)}
                  value={password} />
-        </div>
-        <div>
-          <button className="banking-button" type="submit">Login</button>
+        </FormGroup>
+
+        <div className="login-form-submit">
+          <button className="banking-button active banking-button-big" type="submit">Login</button>
         </div>
 
         { error && (

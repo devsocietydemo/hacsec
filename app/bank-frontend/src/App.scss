@@ -6,6 +6,10 @@ body {
   font-size: 15px;
   font-weight: 300;
   background: $color-neutral;
+
+  @media screen and (max-width: $breakpoint) {
+    font-size: 12px;
+  }
 }
 
 a {
@@ -28,6 +32,28 @@ a {
     border: 1px solid $color-red;
     color: $color-white;
   }
+
+  &-big {
+    font-size: 1.3em;
+    padding: 6px 23px;
+    border-radius: 24px;
+    font-weight: bold;
+  }
+}
+
+.banking-input {
+  font-size: inherit;
+  font-weight: inherit;
+  color: $color-dark;
+  border: 0px;
+  border-bottom: 2px solid $color-carbon;
+  outline: none;
+  display: block;
+  width: 100%;
+
+  &:focus {
+    border-bottom: 2px solid $color-red;
+  }
 }
 
 .banking-app-header {
@@ -49,4 +75,8 @@ a {
   padding: 1em;
   color: $color-dark;
   font-weight: 400;
+}
+
+.color-brand {
+  color: $color-red;
 }

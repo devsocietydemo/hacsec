@@ -7,6 +7,7 @@ import { logout } from "./state/actions/session";
 
 import LoginForm from './LoginForm/LoginForm';
 import WorkingArea from './WorkingArea/WorkingArea';
+import Landing from './Landing/Landing';
 
 const App = ({currentUser, logout, ...props}) => (
   <div className="banking-app" {...props}>
@@ -28,9 +29,19 @@ const App = ({currentUser, logout, ...props}) => (
       }
     </div>
 
-    <div className="banking-app-container">
-      { !currentUser ? <LoginForm /> : <WorkingArea /> }
-    </div>
+    { !currentUser ? (
+      <Landing>
+        <LoginForm />
+      </Landing>
+    )
+    : (
+      <div className="banking-app-container">
+        <WorkingArea />
+      </div>
+    )}
+
+
+
 
 
   </div>
