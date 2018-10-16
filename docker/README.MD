@@ -1,11 +1,25 @@
 Start with building database image:
+
+Windows:
 ```console
   cd database && build_image.bat
 ```
+Unix:
+```console
+  cd database && sh build_image.sh
+```
+
 Build API image:
+
+Windows:
 ```console
   cd .. && cd api && build_image.bat
 ```
+Unix:
+```console
+  cd .. && cd api && sh build_image.sh
+```
+
 Then, initialize Docker Swarm:
 
 ```console
