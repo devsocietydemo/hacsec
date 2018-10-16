@@ -12,7 +12,7 @@ Unix:
 ```
 
 
-## Build API image:
+### Build API image:
 
 Windows:
 ```console
@@ -30,15 +30,15 @@ Unix:
   cd .. && docker swarm init
 ```
 
-## Deploy stack to swarm:
+### Deploy stack to swarm:
 
 ```console
   docker stack deploy -c Docker-compose.yml bankapi
 ```
 
-### Automated build instructions - Unix only
+## Automated build instructions - Unix only
 
-## You can use the shellscripts in /docker to build all the stack...
+### You can use the shellscripts in /docker to build all the stack...
 
 ```console
   . build.sh
@@ -81,17 +81,18 @@ You can also retrieve specific customer data using direct URL:
 ```console
   docker stack rm bankapi
 ```
-Destroy stopped containers
+
+### Destroy stopped containers
 ```console
   docker container prune --force
 ```
-Delete images to ensure they are rebuilt correctly
+### Delete images to ensure they are rebuilt correctly
 ```console
   docker image rm cgi/hacsec-mysql:0.0.1
   docker image rm cgi/hacsec-api:0.0.1
 ```
 
-Leave the swarm
+### Leave the swarm
 ```console
   docker swarm leave --force
 ```
