@@ -1,4 +1,6 @@
-Start with building database image:
+## Manual build instructions
+
+# Start with building database image:
 
 Windows:
 ```console
@@ -9,7 +11,8 @@ Unix:
   cd database && sh build_image.sh
 ```
 
-Build API image:
+
+# Build API image:
 
 Windows:
 ```console
@@ -20,22 +23,39 @@ Unix:
   cd .. && cd api && sh build_image.sh
 ```
 
-Then, initialize Docker Swarm:
+
+# Then, initialize Docker Swarm:
 
 ```console
   cd .. && docker swarm init
 ```
 
-Deploy stack to swarm:
+# Deploy stack to swarm:
 
 ```console
   docker stack deploy -c Docker-compose.yml bankapi
 ```
 
+## Automated build instructions - Unix only
+
+# You can use the shellscripts in /docker to build all the stack...
+
+```console
+  . build.sh
+```
+
+# or destroy the stack.
+
+```console
+  . destroy.sh
+```
+
+## Testing the build
+
 Confirm that the application is working fine, by going to:
 
   http://localhost:8080
-  
+
 Login using bankappuser/AppUserPassword credentials, open database bankdb and query some tables - data should be selected correctly
 
 Test the API by opening the following URL:
@@ -45,18 +65,19 @@ Test the API by opening the following URL:
 You can also retrieve specific customer data using direct URL:
 
   http://localhost:3000/api/v1/customers/2241
-  
+
   http://localhost:3000/api/v1/customers/2242  
-  
+
   http://localhost:3000/api/v1/customers/2242/accounts
-  
+
   http://localhost:3000/api/v1/accounts/86436
-  
+
   http://localhost:3000/api/v1/accounts/86436/transactions
-  
+
   http://localhost:3000/api/v1/transactions/12316133
-  
-Destroy stack
+
+## Destroy stack
+
 ```console
   docker stack rm bankapi
 ```
