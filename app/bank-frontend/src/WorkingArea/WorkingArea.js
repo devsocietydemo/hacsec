@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { routes } from '../routes';
 import { NavLink, Route } from '../router';
@@ -17,8 +16,8 @@ const WorkingArea = ({selectOperation, currentOperation, ...props}) => {
   return (
     <div className="operations">
       <ul className="operation-chooser">
-        { routes.filter(route => route.inMainMenu).map(operation => (
-          <li>
+        { routes.filter(route => route.inMainMenu).map((operation, key) => (
+          <li key={key}>
             <NavLink className="banking-button" activeClassName="active" to={operation.id}>
               {operation.name}
             </NavLink>

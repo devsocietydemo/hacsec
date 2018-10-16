@@ -21,7 +21,7 @@ export const routes = [
   {
     id: OPERATION_NEW_TRANSFER,
     name: 'Create new cash transfer',
-    href: '/transfer',
+    href: '/transfer(/:accountId)',
     inMainMenu: true
   }
 ];

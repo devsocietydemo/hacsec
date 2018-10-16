@@ -24,7 +24,7 @@ export const setLoginError = (error) => ({
 });
 
 export const authenticate = () => (dispatch, getState) => {
-  const {login, password} = getState().session;
+  const {login} = getState().session;
 
   getCustomer(login).then(data => {
     if (data.response.length > 0) {

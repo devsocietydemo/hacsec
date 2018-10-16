@@ -44,6 +44,11 @@ a {
     border-radius: 24px;
     font-weight: bold;
   }
+
+  &-white {
+    color: $color-white;
+    border-color: $color-white;
+  }
 }
 
 .banking-input {

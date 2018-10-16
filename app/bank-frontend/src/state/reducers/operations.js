@@ -1,4 +1,4 @@
-import { SET_OPERATION, OPERATION_CURRENT_BALANCE } from '../actions/operations';
+import { SET_OPERATION } from '../actions/operations';
 
 const defaultState = {
   operation: null,

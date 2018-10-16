@@ -1,16 +1,24 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-
-import TransferOption from './TransferOption';
-
-import FormGroup from '../../FormGroup/FormGroup';
+import { connect } from 'react-redux';
 
 import { FaAward, FaMailBulk, FaGlobeAmericas } from 'react-icons/fa';
 import { IoIosPhonePortrait } from 'react-icons/io';
 
+import TransferOption from './TransferOption';
+import FormGroup from '../../FormGroup/FormGroup';
+import { setInputTransferData } from '../../state/actions/newTransfer';
+
+
 import './NewTransfer.scss';
 
-const NewTransfer = (props) => {
+const NewTransfer = ({
+  targetBankAccountNumber,
+  amount,
+  description,
+  senderBankAccount,
+  accounts,
+  setField
+}) => {
   return (
     <div className="new-transfer">
       <div className="new-transfer-options">
@@ -27,32 +35,42 @@ const NewTransfer = (props) => {
             <FormGroup label="From account">
               <select type="text"
                      className="banking-input"
-                     placeholder="Enter the sender's account number">
-
-                  <option>Bank account 1</option>
-                  <option>Bank account 2</option>
+                     placeholder="Enter the sender's account number"
+                     defaultValue={senderBankAccount}
+                     onChange={e => setField('senderBankAccount', e.target.value)}>
+                { accounts.map((account, key) => (
+                  <option key={key} value={account.account_id}>
+                    { account.account_name } ({account.currency}) - {account.iban}
+                  </option>
+                )) }
               </select>
             </FormGroup>
 
             <FormGroup label="To account">
               <input type="text"
                      className="banking-input"
-                     placeholder="Enter the recipient's account number" />
+                     placeholder="Enter the recipient's account number"
+                     value={targetBankAccountNumber}
+                     onChange={e => setField('targetBankAccountNumber', e.target.value)} />
             </FormGroup>
 
             <FormGroup label="Amount">
 
               <input type="text"
                      className="banking-input"
-                     placeholder="0.00"  />
+                     placeholder="0.00"
+                     value={amount}
+                     onChange={e => setField('amount', e.target.value)}  />
 
-              USD
+                   { senderBankAccount && accounts.find(a => a.account_id === parseInt(senderBankAccount)).currency }
             </FormGroup>
 
             <FormGroup label="Description">
               <input type="text"
                      className="banking-input"
-                     placeholder="Enter the decription, eg. to Tom for Diner" />
+                     placeholder="Enter the decription, eg. to Tom for Diner"
+                     value={description}
+                     onChange={e => setField('description', e.target.value)} />
             </FormGroup>
           </div>
 
@@ -66,4 +84,26 @@ const NewTransfer = (props) => {
   )
 }
 
-export default NewTransfer
+const mapStateToProps = state => {
+  const {
+    targetBankAccountNumber,
+    amount,
+    description,
+    senderBankAccount,
+    accounts
+  } = state.newTransfer;
+
+  return {
+    targetBankAccountNumber,
+    amount,
+    description,
+    senderBankAccount,
+    accounts
+  }
+};
+
+const mapDispatchToProps = dispatch => ({
+  setField: (...props) => dispatch(setInputTransferData(...props))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewTransfer);

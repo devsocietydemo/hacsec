@@ -1,11 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { FaMoneyBillAlt } from 'react-icons/fa';
 
 import { NavLink } from '../../router';
 
-import { OPERATION_CURRENT_BALANCE, selectOperation } from '../../state/actions/operations';
+import { OPERATION_CURRENT_BALANCE, OPERATION_NEW_TRANSFER, selectOperation } from '../../state/actions/operations';
 
 import './Accounts.scss';
 
@@ -17,8 +16,8 @@ const Accounts = ({accounts, selectOperation, ...props}) => {
         <div><strong>220.33 EUR</strong></div>
       </div>
       <ul className="accounts-list">
-        { accounts && accounts.map(account => (
-          <li>
+        { accounts && accounts.map((account, key) => (
+          <li key={key}>
             <div className="account">
               <div className="account-icon">
                 <div>
@@ -39,6 +38,10 @@ const Accounts = ({accounts, selectOperation, ...props}) => {
                   <NavLink to={OPERATION_CURRENT_BALANCE}
                            params={{accountId: account.account_id}}
                            className="banking-button active">Go to balance</NavLink>
+
+                  <NavLink to={OPERATION_NEW_TRANSFER}
+                           params={{accountId: account.account_id}}
+                           className="banking-button">New cash transfer</NavLink>
 
                   <button className="banking-button">Cards</button>
                   <button className="banking-button">Close the account</button>

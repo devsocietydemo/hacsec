@@ -1,6 +1,7 @@
-import { getUserAccounts, getTransaction, getAccountTransactions } from '../../api';
+import { getUserAccounts, getAccountTransactions } from '../../api';
 import { setAccounts } from './accounts';
 import { setCurrentBalance } from './currentBalance';
+import { setAccountsForTransfer } from './newTransfer';
 
 export const SET_OPERATION = 'setOperation';
 export const SET_INPUT_CREDENTIALS = 'setInputCredentials';
@@ -28,16 +29,28 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
   dispatch(setOperation(operation));
 
   switch (operation) {
-    case OPERATION_ACCOUNTS:
-      getUserAccounts(currentUserId).then(data => {
+    case OPERATION_ACCOUNTS: {
+      return getUserAccounts(currentUserId).then(data => {
         dispatch(setAccounts(data.response));
       });
-      break;
+    }
 
-    case OPERATION_CURRENT_BALANCE:
+    case OPERATION_CURRENT_BALANCE: {
       const {accountId} = params;
-      getAccountTransactions(accountId).then(data => {
+      return getAccountTransactions(accountId).then(data => {
         dispatch(setCurrentBalance(accountId, data.response));
       })
+    }
+
+    case OPERATION_NEW_TRANSFER: {
+      const accountId = params ? params.accountId : null;
+
+      return getUserAccounts(currentUserId).then(data => {
+        dispatch(setAccountsForTransfer(data.response, accountId));
+      })
+    }
+
+    default:
+      return null;
   }
 }

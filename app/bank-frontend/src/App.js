@@ -20,11 +20,11 @@ const App = ({currentUser, logout, ...props}) => (
         <div className="user-data">
           <FaRegUserCircle /> Welcome, { currentUser.name }
           &nbsp; | &nbsp;
-          <a onClick={ () => logout() }>
+          <button className="banking-button banking-button-white" onClick={ () => logout() }>
             <FaUnlockAlt />
             &nbsp;
             Logout
-          </a>
+          </button>
         </div>
       }
     </div>

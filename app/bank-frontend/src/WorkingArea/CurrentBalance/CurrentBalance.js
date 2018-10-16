@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 
 const CurrentBalance = ({ transactions, accountId, ...props }) => {
@@ -10,8 +9,8 @@ const CurrentBalance = ({ transactions, accountId, ...props }) => {
       </div>
 
       <ul>
-        { transactions.map(({id}) => (
-          <li>
+        { transactions.map(({id}, key) => (
+          <li key={key}>
             { id }
           </li>
         )) }
