@@ -1,6 +1,6 @@
 ## Manual build instructions
 
-# Start with building database image:
+### Start with building database image:
 
 Windows:
 ```console
@@ -12,7 +12,7 @@ Unix:
 ```
 
 
-# Build API image:
+## Build API image:
 
 Windows:
 ```console
@@ -24,27 +24,27 @@ Unix:
 ```
 
 
-# Then, initialize Docker Swarm:
+### Then, initialize Docker Swarm:
 
 ```console
   cd .. && docker swarm init
 ```
 
-# Deploy stack to swarm:
+## Deploy stack to swarm:
 
 ```console
   docker stack deploy -c Docker-compose.yml bankapi
 ```
 
-## Automated build instructions - Unix only
+### Automated build instructions - Unix only
 
-# You can use the shellscripts in /docker to build all the stack...
+## You can use the shellscripts in /docker to build all the stack...
 
 ```console
   . build.sh
 ```
 
-# or destroy the stack.
+### or destroy the stack.
 
 ```console
   . destroy.sh
