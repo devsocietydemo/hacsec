@@ -36,16 +36,24 @@ Unix:
   docker stack deploy -c Docker-compose.yml bankapi
 ```
 
-## Automated build instructions - Unix only
+## Automated build instructions
 
 ### You can use the shellscripts in /docker to build all the stack...
-
+Windows:
+```console
+  .\build.bat
+```
+Unix:
 ```console
   . build.sh
 ```
 
 ### or destroy the stack.
-
+Windows:
+```console
+  .\destroy.bat
+```
+Unix:
 ```console
   . destroy.sh
 ```
