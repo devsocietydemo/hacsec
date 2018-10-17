@@ -23,5 +23,9 @@ export const getAccountTransactions = (id = null) => fetchBankApi(['accounts', i
 
 export const sendNormalTransfer = (data) => fetchBankApi(['transactions'], {
   method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  },
   body: JSON.stringify(data)
 });
