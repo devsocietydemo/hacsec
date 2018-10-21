@@ -29,3 +29,12 @@ export const sendNormalTransfer = (data) => fetchBankApi(['transactions'], {
   },
   body: JSON.stringify(data)
 });
+
+export const processLoginOperation = (data) => fetchBankApi(['login'], {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+});

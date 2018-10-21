@@ -24,7 +24,8 @@ DROP TABLE IF EXISTS customers;
 
 CREATE TABLE customers(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,                       
                        name VARCHAR(60) NOT NULL,					   
-					   nationality CHAR(2) NOT NULL DEFAULT 'PL');
+					   nationality CHAR(2) NOT NULL DEFAULT 'PL',
+						 password CHAR(64) NOT NULL);
 					   
 ALTER TABLE customers AUTO_INCREMENT=2241;
 					   
@@ -60,7 +61,8 @@ ALTER TABLE transactions AUTO_INCREMENT=12315671;
 LOAD DATA INFILE '/tmp/customers.csv'
 INTO TABLE customers
 FIELDS TERMINATED BY ','
-(id, name, nationality);
+(id, name, nationality, @password)
+SET password = SHA2(@password, 256);
 
 LOAD DATA INFILE '/tmp/accounts.csv'
 INTO TABLE accounts

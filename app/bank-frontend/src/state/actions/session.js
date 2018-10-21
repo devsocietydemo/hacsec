@@ -1,7 +1,8 @@
-import { getCustomer } from '../../api';
+import { getCustomer, processLoginOperation } from '../../api';
 import { setUser, removeUser } from '../../sessionManager';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
-import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, setError } from './errors';
+import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, ERROR_LOGIN_FAILED, setError } from './errors';
+import { sha256 } from "js-sha256";
 
 export const SET_LOGIN_STATE = 'setLoginState';
 export const SET_LOGIN_ERROR = 'setLoginError';
@@ -22,17 +23,28 @@ export const setLoginState = (currentUser) => ({
 
 export const authenticate = () => (dispatch, getState) => {
   const {login} = getState().session;
+  const credentials = {id: getState().session.login, password: sha256(getState().session.password)};
 
-  getCustomer(login)
+  processLoginOperation(credentials)
     .then(
       data => {
-        if (data.response.length > 0) {
-          setUser(data.response[0]);
-
-          dispatch(setLoginState(data.response[0]));
-          dispatch(selectOperation(OPERATION_ACCOUNTS));
+        if (data.response.success) {
+          getCustomer(login)
+          .then(
+            data => {
+              if (data.response.length > 0) {
+                setUser(data.response[0]);
+      
+                dispatch(setLoginState(data.response[0]));
+                dispatch(selectOperation(OPERATION_ACCOUNTS));
+              } else {
+                dispatch(setError(ERROR_LOGIN_NOT_FOUND));
+              }
+            },
+            error => dispatch(setError(ERROR_LOGIN_FETCH_FAILED, error))
+          )
         } else {
-          dispatch(setError(ERROR_LOGIN_NOT_FOUND));
+          dispatch(setError(ERROR_LOGIN_FAILED));
         }
       },
       error => dispatch(setError(ERROR_LOGIN_FETCH_FAILED, error))

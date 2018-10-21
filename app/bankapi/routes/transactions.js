@@ -18,7 +18,6 @@ router.get('/:id', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	const requestBody = req.body;
-	console.log(requestBody);
 	res.locals.connection.query('INSERT INTO transactions (account_id, transaction_date, amount, description, target_iban) VALUES( '
 		+ requestBody.account_id + ', "'+ new Date().toLocaleString() +'" , ' + requestBody.amount + ', "' + requestBody.description + '" , ' + requestBody.target_iban
 		+ ' )'

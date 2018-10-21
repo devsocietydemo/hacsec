@@ -5,6 +5,7 @@ export const SET_ERROR = 'setError';
 // Login (class 1)
 export const ERROR_LOGIN_NOT_FOUND = 101;
 export const ERROR_LOGIN_FETCH_FAILED = 102;
+export const ERROR_LOGIN_FAILED = 103;
 
 // Transfer (class 2)
 export const ERROR_TRANSFER_FAILED = 201;
