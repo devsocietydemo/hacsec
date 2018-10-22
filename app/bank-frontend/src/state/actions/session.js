@@ -1,7 +1,7 @@
 import { getCustomer, processLoginOperation } from '../../api';
 import { setUser, removeUser, setUserSessionId } from '../../sessionManager';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
-import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, ERROR_LOGIN_FAILED, setError } from './errors';
+import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, setError } from './errors';
 import { sha256 } from "js-sha256";
 
 export const SET_LOGIN_STATE = 'setLoginState';
@@ -52,7 +52,7 @@ export const authenticate = () => (dispatch, getState) => {
             error => dispatch(setError(ERROR_LOGIN_FETCH_FAILED, error))
           )
         } else {
-          dispatch(setError(ERROR_LOGIN_FAILED));
+          dispatch(setError(ERROR_LOGIN_NOT_FOUND));
         }
       },
       error => dispatch(setError(ERROR_LOGIN_FETCH_FAILED, error))
