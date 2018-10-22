@@ -1,4 +1,5 @@
 import { SET_INPUT_TRANSFER_DATA, SET_ACCOUNTS_FOR_TRANSFER } from '../actions/newTransfer';
+import { START_LOADING } from '../actions/spinner';
 
 const defaultState = {
   accounts: [],
@@ -21,6 +22,11 @@ const newTransfer = (state = defaultState, action) => {
         ...defaultState,
         accounts: action.accounts,
         senderBankAccount: action.senderBankAccount
+      };
+
+    case START_LOADING:
+      return {
+        ...defaultState
       };
 
     default:

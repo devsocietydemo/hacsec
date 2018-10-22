@@ -1,4 +1,5 @@
 import { SET_CURRENT_BALANCE } from '../actions/currentBalance';
+import { START_LOADING } from '../actions/spinner';
 
 const defaultState = {
   transactions: [],
@@ -12,6 +13,11 @@ const accounts = (state = defaultState, action) => {
         ...state,
         transactions: action.transactions,
         accountId: action.accountId
+      };
+
+    case START_LOADING:
+      return {
+        ...defaultState
       };
 
     default:

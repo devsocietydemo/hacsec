@@ -53,8 +53,8 @@ const errorViews = {
 };
 
 const Error = ({errors, ...props}) => {
-  return errors.map( error => (
-    <div className="alert-error" {...props}>
+  return errors.map( (error, idx) => (
+    <div className="alert-error" key={idx} {...props}>
       <div className="alert-error-icon">
         <IoIosCloseCircleOutline />
       </div>

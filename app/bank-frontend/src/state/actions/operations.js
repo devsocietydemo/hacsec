@@ -2,6 +2,7 @@ import { getUserAccounts, getAccountTransactions } from '../../api';
 import { setAccounts } from './accounts';
 import { setCurrentBalance } from './currentBalance';
 import { setAccountsForTransfer } from './newTransfer';
+import { startLoading } from './spinner';
 import { ERROR_ACCOUNTS_FETCH_FAILED, ERROR_BALANCE_FETCH_FAILED,
   ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED, setError } from './errors';
 
@@ -33,6 +34,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
 
   switch (operation) {
     case OPERATION_ACCOUNTS: {
+      dispatch(startLoading());
       return getUserAccounts(currentUserId, sessionId)
       .then(
         data => dispatch(setAccounts(data.response)),
@@ -42,6 +44,8 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
 
     case OPERATION_CURRENT_BALANCE: {
       const {accountId} = params;
+
+      dispatch(startLoading());
       return getAccountTransactions(accountId)
         .then(
           data => dispatch(setCurrentBalance(accountId, data.response)),
@@ -52,6 +56,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
     case OPERATION_NEW_TRANSFER: {
       const accountId = params ? params.accountId : null;
 
+      dispatch(startLoading());
       return getUserAccounts(currentUserId, sessionId)
         .then(
           data => dispatch(setAccountsForTransfer(data.response, accountId || data.response[0].account_id)),

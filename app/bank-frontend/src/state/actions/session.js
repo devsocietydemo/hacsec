@@ -1,5 +1,6 @@
 import { getCustomer, processLoginOperation } from '../../api';
 import { setUser, removeUser, setUserSessionId } from '../../sessionManager';
+import { startLoading } from './spinner';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
 import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, setError } from './errors';
 import { sha256 } from "js-sha256";
@@ -31,6 +32,8 @@ export const authenticate = () => (dispatch, getState) => {
   const {login} = getState().session;
   const credentials = {id: getState().session.login, password: sha256(getState().session.password)};
 
+
+  dispatch(startLoading());
   processLoginOperation(credentials)
     .then(
       data => {
@@ -42,7 +45,7 @@ export const authenticate = () => (dispatch, getState) => {
             data => {
               if (data.response.length > 0) {
                 setUser(data.response[0]);
-      
+
                 dispatch(setLoginState(data.response[0]));
                 dispatch(selectOperation(OPERATION_ACCOUNTS));
               } else {

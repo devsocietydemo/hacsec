@@ -1,0 +1,53 @@
+@import '../../variables.scss';
+
+.transactions {
+  &, li {
+    display: block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding: 4px 0;
+  }
+
+  .transaction {
+    display: flex;
+    flex-direction: row;
+
+    background: $color-white;
+    box-shadow: 0 0 1px rgba($color-carbon, 0.3);
+    padding: 1em;
+    border-radius: 0;
+
+    &-date, &-details {
+      display: flex;
+    }
+
+    &-date {
+      width: 20%;
+    }
+
+    &-details {
+      width: 60%;
+      flex-direction: column;
+
+      &-description {
+        font-weight: bold;
+      }
+
+      &-iban {
+        font-size: 0.8em;
+        padding-top: 0.5em;
+      }
+    }
+
+    &-amount {
+      width: 20%;
+      text-align: right;
+      font-weight: bold;
+      color: $color-red;
+    }
+  }
+}

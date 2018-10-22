@@ -5,6 +5,7 @@ import accounts from './accounts';
 import currentBalance from './currentBalance';
 import newTransfer from './newTransfer';
 import errors from './errors';
+import spinner from './spinner';
 
 const rootReducer = combineReducers({
   session,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   accounts,
   currentBalance,
   newTransfer,
-  errors
+  errors,
+  spinner
 });
 
 export default rootReducer;

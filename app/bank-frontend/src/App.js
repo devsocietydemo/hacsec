@@ -8,6 +8,7 @@ import { logout } from "./state/actions/session";
 import LoginForm from './LoginForm/LoginForm';
 import WorkingArea from './WorkingArea/WorkingArea';
 import Landing from './Landing/Landing';
+import Spinner from './Spinner/Spinner';
 
 const App = ({currentUser, logout, ...props}) => (
   <div className="banking-app" {...props}>
@@ -40,10 +41,7 @@ const App = ({currentUser, logout, ...props}) => (
       </div>
     )}
 
-
-
-
-
+    <Spinner />
   </div>
 )
 
