@@ -1,4 +1,4 @@
-import { getUserAccounts, getAccountTransactions } from '../../api';
+import { getUserAccounts, getAccountTransactions, getAccount } from '../../api';
 import { setAccounts } from './accounts';
 import { setCurrentBalance } from './currentBalance';
 import { setAccountsForTransfer } from './newTransfer';
@@ -46,9 +46,12 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
       const {accountId} = params;
 
       dispatch(startLoading());
-      return getAccountTransactions(accountId)
+      return Promise.all([
+          getAccountTransactions(accountId),
+          getAccount(accountId)
+        ])
         .then(
-          data => dispatch(setCurrentBalance(accountId, data.response)),
+          ([txData, accountData]) => dispatch(setCurrentBalance(accountData.response[0], txData.response)),
           error => dispatch(setError(ERROR_BALANCE_FETCH_FAILED, error))
         );
     }

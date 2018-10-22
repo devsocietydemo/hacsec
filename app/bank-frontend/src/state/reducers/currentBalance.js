@@ -3,7 +3,7 @@ import { START_LOADING } from '../actions/spinner';
 
 const defaultState = {
   transactions: [],
-  accountId: null
+  account: {}
 };
 
 const accounts = (state = defaultState, action) => {
@@ -12,7 +12,7 @@ const accounts = (state = defaultState, action) => {
       return {
         ...state,
         transactions: action.transactions,
-        accountId: action.accountId
+        account: action.account
       };
 
     case START_LOADING:

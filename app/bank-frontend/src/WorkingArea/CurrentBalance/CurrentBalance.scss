@@ -15,7 +15,8 @@
   .transaction {
     display: flex;
     flex-direction: row;
-
+    align-items: center;
+    
     background: $color-white;
     box-shadow: 0 0 1px rgba($color-carbon, 0.3);
     padding: 1em;
@@ -23,6 +24,14 @@
 
     &-date, &-details {
       display: flex;
+    }
+
+    &-icon {
+      color: $color-red;
+      font-size: 2.1em;
+      padding-right: 0.5em;
+      line-height: 1;
+      padding-top: 0.1em;
     }
 
     &-date {
