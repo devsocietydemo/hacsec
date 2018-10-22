@@ -20,6 +20,7 @@ export const setOperation = (operation, params) => ({
 
 export const selectOperation = (operation, params) => (dispatch, getState) => {
   const currentUser = getState().session.currentUser;
+  const sessionId = getState().session.sessionId;
 
   if (!currentUser) {
     dispatch(setOperation(null));
@@ -32,7 +33,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
 
   switch (operation) {
     case OPERATION_ACCOUNTS: {
-      return getUserAccounts(currentUserId)
+      return getUserAccounts(currentUserId, sessionId)
       .then(
         data => dispatch(setAccounts(data.response)),
         error => dispatch(setError(ERROR_ACCOUNTS_FETCH_FAILED, error))
@@ -51,7 +52,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
     case OPERATION_NEW_TRANSFER: {
       const accountId = params ? params.accountId : null;
 
-      return getUserAccounts(currentUserId)
+      return getUserAccounts(currentUserId, sessionId)
         .then(
           data => dispatch(setAccountsForTransfer(data.response, accountId || data.response[0].account_id)),
           error => dispatch(setError(ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED, error))

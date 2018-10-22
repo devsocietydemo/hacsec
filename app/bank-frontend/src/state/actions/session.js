@@ -1,11 +1,12 @@
 import { getCustomer, processLoginOperation } from '../../api';
-import { setUser, removeUser } from '../../sessionManager';
+import { setUser, removeUser, setUserSessionId } from '../../sessionManager';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
 import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, ERROR_LOGIN_FAILED, setError } from './errors';
 import { sha256 } from "js-sha256";
 
 export const SET_LOGIN_STATE = 'setLoginState';
 export const SET_LOGIN_ERROR = 'setLoginError';
+export const SET_SESSION_ID = "setSessionId";
 export const SET_INPUT_CREDENTIALS = 'setInputCredentials';
 
 export const setInputCredentials = (field, value) => ({
@@ -20,6 +21,11 @@ export const setLoginState = (currentUser) => ({
   currentUser
 });
 
+export const setSessionId = (sessionId) => ({
+  type: SET_SESSION_ID,
+  sessionId
+})
+
 
 export const authenticate = () => (dispatch, getState) => {
   const {login} = getState().session;
@@ -29,6 +35,8 @@ export const authenticate = () => (dispatch, getState) => {
     .then(
       data => {
         if (data.response.success) {
+          dispatch(setSessionId(data.response.sessionId));
+          setUserSessionId(data.response.sessionId);
           getCustomer(login)
           .then(
             data => {

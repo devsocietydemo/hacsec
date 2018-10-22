@@ -13,7 +13,7 @@ router.post('/', function (req, res, next) {
 			if (results[0].matches == 1) {
 				loginResponse.success = true;
 				loginResponse.sessionId = uid.sync(18);
-				res.locals.redisClient.set(loginResponse.sessionId, requestBody.id, 'EX', 10);
+				res.locals.redisClient.set(loginResponse.sessionId, requestBody.id);
 			}
 			res.send(JSON.stringify({ "status": 200, "error": null, "response": loginResponse }));
 		});
