@@ -17,7 +17,11 @@ const fetchBankApi = (path, ...options) => fetch(
 
 export const getCustomer = (id) => fetchBankApi(['customers', id]);
 export const getTransaction = (id) => fetchBankApi(['transactions', id]);
-export const getUserAccounts = (id) => fetchBankApi(['customers', id, 'accounts']);
+export const getUserAccounts = (id, sessionId) => fetchBankApi(['customers', id, 'accounts'], {
+  headers: {
+    'sessionId': sessionId
+  }
+});
 export const getAccount = (id) => fetchBankApi(['accounts', id]);
 export const getAccountTransactions = (id = null) => fetchBankApi(['accounts', id, 'transactions']);
 

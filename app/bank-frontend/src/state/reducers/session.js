@@ -1,10 +1,11 @@
-import { SET_LOGIN_STATE, SET_INPUT_CREDENTIALS, SET_LOGIN_ERROR } from '../actions/session';
-import { getUser } from '../../sessionManager';
+import { SET_LOGIN_STATE, SET_INPUT_CREDENTIALS, SET_LOGIN_ERROR, SET_SESSION_ID } from '../actions/session';
+import { getUser, getUserSessionId } from '../../sessionManager';
 
 const defaultState = {
         login: '',
         password: '',
-        currentUser: getUser() || null
+        currentUser: getUser() || null,
+        sessionId: getUserSessionId() || null
       };
 
 const session = (state = defaultState, action) => {
@@ -18,6 +19,11 @@ const session = (state = defaultState, action) => {
       return {
         ...state,
         currentUser: action.currentUser
+      }
+    case SET_SESSION_ID:
+      return {
+        ...state,
+        sessionId: action.sessionId
       }
     case SET_LOGIN_ERROR:
       return {
