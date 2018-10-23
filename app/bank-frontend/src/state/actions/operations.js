@@ -62,7 +62,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
       dispatch(startLoading());
       return getUserAccounts(currentUserId, sessionId)
         .then(
-          data => dispatch(setAccountsForTransfer(data.response, accountId || data.response[0].account_id)),
+          data => dispatch(setAccountsForTransfer(data.response, (accountId && accountId.toString()) || data.response[0].account_id)),
           error => dispatch(setError(ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED, error))
         );
     }

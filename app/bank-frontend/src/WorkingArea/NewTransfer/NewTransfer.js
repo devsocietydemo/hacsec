@@ -8,7 +8,7 @@ import Error from '../../Error/Error';
 import TransferOption from './TransferOption';
 import FormGroup from '../../FormGroup/FormGroup';
 import { setInputTransferData, initTransferSend } from '../../state/actions/newTransfer';
-import { ERROR_TRANSFER_FAILED } from '../../state/actions/errors';
+import { ERROR_TRANSFER_FAILED, ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED } from '../../state/actions/errors';
 
 
 import './NewTransfer.scss';
@@ -34,16 +34,20 @@ const NewTransfer = ({
         <form onSubmit={e => {e.preventDefault(); initTransferSend()}}>
           <h2 className="new-transfer-header">Sending of the regular transfer</h2>
 
+          <Error codes={[
+              ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED
+            ]} />
           <div className="transfer-data">
             <FormGroup label="From account">
               <select type="text"
                      required
                      className="banking-input"
                      placeholder="Enter the sender's account number"
-                     defaultValue={senderBankAccount}
+                     value={senderBankAccount && senderBankAccount.toString()}
                      onChange={e => setField('senderBankAccount', e.target.value)}>
                 { accounts.map((account, key) => (
-                  <option key={key} value={account.account_id}>
+                  <option key={key}
+                          value={account.account_id.toString()}>
                     { account.account_name } ({account.currency}) - {account.iban}
                   </option>
                 )) }
