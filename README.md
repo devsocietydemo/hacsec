@@ -1,17 +1,15 @@
 # Security hackathon - "Banking App"
 
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:undefined orderedList:0 -->
+__Table of contents__
 
 - [Backend](#backend)
-		- [Automated build instructions](#automated-build-instructions)
-		- [Testing the build](#testing-the-build)
-		- [Manual build instructions](#manual-build-instructions)
-		- [Manual destroy instructions](#manual-destroy-instructions)
+	- [Automated build instructions](#automated-build-instructions)
+	- [Testing the build](#testing-the-build)
+	- [Manual build instructions](#manual-build-instructions)
+	- [Manual destroy instructions](#manual-destroy-instructions)
 - [Frontend](#frontend)
-		- [Installation](#installation)
-		- [How to play with that?](#how-to-play-with-that)
-
-<!-- /TOC -->
+	- [Installation](#installation)
+	- [How to play with that?](#how-to-play-with-that)
 
 # Backend
 
