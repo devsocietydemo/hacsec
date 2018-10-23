@@ -1,5 +1,18 @@
 # Security hackathon - "Banking App"
 
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:undefined orderedList:0 -->
+
+- [Backend](#backend)
+		- [Automated build instructions](#automated-build-instructions)
+		- [Testing the build](#testing-the-build)
+		- [Manual build instructions](#manual-build-instructions)
+		- [Manual destroy instructions](#manual-destroy-instructions)
+- [Frontend](#frontend)
+		- [Installation](#installation)
+		- [How to play with that?](#how-to-play-with-that)
+
+<!-- /TOC -->
+
 # Backend
 
 The backend of application consists of
@@ -10,52 +23,10 @@ The backend of application consists of
 
 - Redis storage - used as a storage of sessions in REST.
 
-
-### Manual build instructions
-
-***__IMPORTANT:__***
-__All the following commands takes a /docker as a root directory.__
-
-
-#### Start with building database image:
-
-Windows:
-```console
-  cd database && build_image.bat
-```
-Unix:
-```console
-  cd database && sh build_image.sh
-```
-
-
-#### Build API image:
-
-Windows:
-```console
-  cd .. && cd api && build_image.bat
-```
-Unix:
-```console
-  cd .. && cd api && sh build_image.sh
-```
-
-
-#### Then, initialize Docker Swarm:
-
-```console
-  cd .. && docker swarm init
-```
-
-#### Deploy stack to swarm:
-
-```console
-  docker stack deploy -c Docker-compose.yml bankapi
-```
-
 ### Automated build instructions
 
-#### You can use the shellscripts in /docker to build all the stack...
+__You can use the shellscripts in /docker to build all the stack...__
+
 Windows:
 ```console
   .\build.bat
@@ -65,7 +36,8 @@ Unix:
   . build.sh
 ```
 
-#### or destroy the stack.
+__or destroy the stack.__
+
 Windows:
 ```console
   .\destroy.bat
@@ -101,23 +73,68 @@ You can also retrieve specific customer data using direct URL:
 
   http://localhost:3000/api/v1/transactions/12316133
 
-### Destroy stack
+### Manual build instructions
+
+***__IMPORTANT:__***
+__All the following commands takes a /docker as a root directory.__
+
+__Start with building database image:__
+
+Windows:
+```console
+  cd database && build_image.bat
+```
+Unix:
+```console
+  cd database && sh build_image.sh
+```
+
+
+__Build API image:__
+
+Windows:
+```console
+  cd .. && cd api && build_image.bat
+```
+Unix:
+```console
+  cd .. && cd api && sh build_image.sh
+```
+
+
+__Then, initialize Docker Swarm:__
+
+```console
+  cd .. && docker swarm init
+```
+
+__Deploy stack to swarm:__
+
+```console
+  docker stack deploy -c Docker-compose.yml bankapi
+```
+
+
+### Manual destroy instructions
+
+__Destroy stack__
 
 ```console
   docker stack rm bankapi
 ```
 
-#### Destroy stopped containers
+__Destroy stopped containers__
 ```console
   docker container prune --force
 ```
-#### Delete images to ensure they are rebuilt correctly
+
+__Delete images to ensure they are rebuilt correctly__
 ```console
   docker image rm cgi/hacsec-mysql:0.0.1
   docker image rm cgi/hacsec-api:0.0.1
 ```
 
-#### Leave the swarm
+__Leave the swarm__
 ```console
   docker swarm leave --force
 ```
