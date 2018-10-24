@@ -42,3 +42,9 @@ export const processLoginOperation = (data) => fetchBankApi(['login'], {
   },
   body: JSON.stringify(data)
 });
+
+export const processLogoutOperation = (sessionId) => fetchBankApi(['logout'], {
+  headers: {
+    'sessionId': sessionId
+  }
+});

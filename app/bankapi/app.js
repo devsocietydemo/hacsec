@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
+var logoutRouter = require('./routes/logout');
 var customersRouter = require('./routes/customers');
 var accountsRouter = require('./routes/accounts');
 var transactionsRouter = require('./routes/transactions');
@@ -51,6 +52,7 @@ app.use(function (req, res, next) {
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/api/v1/login', loginRouter);
+app.use('/api/v1/logout', logoutRouter);
 app.use('/api/v1/customers', customersRouter);
 app.use('/api/v1/accounts', accountsRouter);
 app.use('/api/v1/transactions', transactionsRouter);
