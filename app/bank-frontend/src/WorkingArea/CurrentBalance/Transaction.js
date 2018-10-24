@@ -19,9 +19,9 @@ const Transaction = ({
       </span>
       <span className="transaction-date">{ transaction_date }</span>
       <span className="transaction-details">
-        <span className="transaction-details-description">
-          { description }
-        </span>
+        <span className="transaction-details-description" dangerouslySetInnerHTML={{
+            __html: description
+          }} />
         <span className="transaction-details-iban">
           For: <strong>{ target_iban }</strong>
         </span>

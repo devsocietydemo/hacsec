@@ -1,4 +1,6 @@
-import {OPERATION_ACCOUNTS, selectOperation} from './operations';
+import { stateToHTML } from 'draft-js-export-html';
+
+import { OPERATION_ACCOUNTS, selectOperation } from './operations';
 import { setError, ERROR_TRANSFER_FAILED } from './errors';
 import { startLoading } from './spinner';
 import { sendNormalTransfer } from '../../api';
@@ -36,7 +38,7 @@ export const initTransferSend = () => (dispatch, getState) => {
   const dataToSend = {
     target_iban,
     amount,
-    description,
+    description: stateToHTML(description.getCurrentContent()),
     account_id
   };
 

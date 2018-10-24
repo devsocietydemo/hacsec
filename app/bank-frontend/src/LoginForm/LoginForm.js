@@ -17,7 +17,7 @@ const LoginForm = ({login, password, error, setLogin, setPassword, authenticate,
           <input className="banking-input"
                  type="text"
                  pattern="\d{4}"
-                 maxlength="4"
+                 maxLength="4"
                  onChange={(e) => setLogin(e.target.value)}
                  title="Login should be 4 digits."
                  value={login} />

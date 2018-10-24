@@ -2,14 +2,16 @@ import React from 'react'
 
 import './FormGroup.scss';
 
-const FormGroup = ({label, children, ...props}) => {
+const FormGroup = ({label, children, noHtmlLabel, ...props}) => {
+
+  const ElementType = noHtmlLabel ? 'div' : 'label';
   return (
-    <label className="form-group" {...props}>
+    <ElementType className="form-group" {...props}>
       <span className="form-group-label">{ label }</span>
       <span className="form-group-field">
         {children}
       </span>
-    </label>
+    </ElementType>
   )
 }
 

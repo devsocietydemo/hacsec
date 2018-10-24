@@ -7,6 +7,7 @@ import { IoIosPhonePortrait } from 'react-icons/io';
 import Error from '../../Error/Error';
 import TransferOption from './TransferOption';
 import FormGroup from '../../FormGroup/FormGroup';
+import DescriptionEditor from './DescriptionEditor/DescriptionEditor';
 import { setInputTransferData, initTransferSend } from '../../state/actions/newTransfer';
 import { ERROR_TRANSFER_FAILED, ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED } from '../../state/actions/errors';
 
@@ -75,13 +76,9 @@ const NewTransfer = ({
                    { senderBankAccount && accounts.find(a => a.account_id === parseInt(senderBankAccount)).currency }
             </FormGroup>
 
-            <FormGroup label="Description">
-              <input type="text"
-                     required
-                     className="banking-input"
-                     placeholder="Enter the decription, eg. to Tom for Diner"
-                     value={description}
-                     onChange={e => setField('description', e.target.value)} />
+            <FormGroup label="Description" noHtmlLabel="true">
+              <DescriptionEditor state={description}
+                                 onChange={e => setField('description', e)} />
             </FormGroup>
           </div>
 

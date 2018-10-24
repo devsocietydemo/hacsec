@@ -1,12 +1,13 @@
 import { SET_INPUT_TRANSFER_DATA, SET_ACCOUNTS_FOR_TRANSFER } from '../actions/newTransfer';
 import { START_LOADING } from '../actions/spinner';
+import { EditorState } from 'draft-js';
 
 const defaultState = {
   accounts: [],
   senderBankAccount: '',
   targetBankAccountNumber: '',
   amount: '',
-  description: ''
+  description: EditorState.createEmpty()
 };
 
 const newTransfer = (state = defaultState, action) => {
