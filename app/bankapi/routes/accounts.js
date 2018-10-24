@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/:id', function(req, res, next) {
 	const id = req.params.id;
-	res.locals.connection.query('SELECT * from accounts where id = ' + id, function (error, results, fields) {
+	res.locals.connection.query('SELECT a.*, o.account_name from accounts a LEFT JOIN account_ownership o ON (o.account_id = a.id) where id = ' + id, function (error, results, fields) {
 		if (error) throw error;
 		res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 	});

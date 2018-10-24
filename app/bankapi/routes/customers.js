@@ -23,7 +23,7 @@ router.get('/:id/accounts', function(req, res, next) {
 	validateCustomerSession(res.locals.redisClient, sessionId, id, function(err, success) {
 		if (err) throw err;
 		if (success) {
-			res.locals.connection.query(`SELECT o.account_id, o.ownership_mode, o.account_name, a.iban, a.currency
+			res.locals.connection.query(`SELECT o.account_id as id, o.ownership_mode, o.account_name, a.iban, a.currency, a.balance 
 					FROM account_ownership o
 					JOIN accounts a
 						ON (a.id = o.account_id)

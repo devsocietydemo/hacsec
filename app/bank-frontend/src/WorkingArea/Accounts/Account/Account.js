@@ -12,7 +12,7 @@ import './Account.scss';
 const Account = ({
   currency,
   account_name,
-  account_id,
+  id,
   iban,
   balance
 }) => {
@@ -39,11 +39,11 @@ const Account = ({
         </div>
         <div className="account-controls">
           <NavLink to={OPERATION_CURRENT_BALANCE}
-                   params={{accountId: account_id}}
+                   params={{accountId: id}}
                    className="banking-button active">Go to balance</NavLink>
 
           <NavLink to={OPERATION_NEW_TRANSFER}
-                   params={{accountId: account_id}}
+                   params={{accountId: id}}
                    className="banking-button">New cash transfer</NavLink>
 
           <button className="banking-button">Cards</button>

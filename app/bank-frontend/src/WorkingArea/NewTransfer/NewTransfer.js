@@ -48,7 +48,7 @@ const NewTransfer = ({
                      onChange={e => setField('senderBankAccount', e.target.value)}>
                 { accounts.map((account, key) => (
                   <option key={key}
-                          value={account.account_id.toString()}>
+                          value={account.id.toString()}>
                     { account.account_name } ({account.currency}) - {account.iban}
                   </option>
                 )) }
@@ -73,7 +73,7 @@ const NewTransfer = ({
                      value={amount}
                      onChange={e => setField('amount', e.target.value)}  />
 
-                   { senderBankAccount && accounts.find(a => a.account_id === parseInt(senderBankAccount)).currency }
+                   { senderBankAccount && accounts.find(a => a.id === parseInt(senderBankAccount)).currency }
             </FormGroup>
 
             <FormGroup label="Description" noHtmlLabel="true">
