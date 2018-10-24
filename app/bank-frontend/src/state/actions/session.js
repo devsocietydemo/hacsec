@@ -1,4 +1,4 @@
-import { getCustomer, processLoginOperation } from '../../api';
+import { getCustomer, processLoginOperation, processLogoutOperation } from '../../api';
 import { setUser, removeUser, setUserSessionId } from '../../sessionManager';
 import { startLoading } from './spinner';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
@@ -65,4 +65,6 @@ export const authenticate = () => (dispatch, getState) => {
 export const logout = () => (dispatch, getState) => {
   removeUser();
   dispatch(setLoginState(null));
+  // @TODO: uncomment following line, when backend guys will deliever it
+  // processLogoutOperation().then( () => dispatch(setLoginState(null)) );
 }

@@ -23,6 +23,8 @@ const session = (state = defaultState, action) => {
     case SET_SESSION_ID:
       return {
         ...state,
+        login: defaultState.login,
+        password: defaultState.password,
         sessionId: action.sessionId
       }
     case SET_LOGIN_ERROR:
