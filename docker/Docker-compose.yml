@@ -17,10 +17,17 @@ services:
 
   redis:
     image: redis
-    restart: always  
+    restart: always
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+  cdn:
+    image: httpd:latest
+    volumes:
+      - ../app/bank-cdn:/usr/local/apache2/htdocs
+    ports:
+      - 3001:80
