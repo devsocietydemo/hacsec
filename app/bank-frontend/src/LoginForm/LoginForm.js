@@ -14,12 +14,19 @@ const LoginForm = ({login, password, error, setLogin, setPassword, authenticate,
     <div className="login-form" {...props}>
       <form onSubmit={ (e) => { e.preventDefault(); authenticate() } }>
         <FormGroup label="Login">
-          <input className="banking-input" type="text" onChange={(e) => setLogin(e.target.value)}
+          <input className="banking-input"
+                 type="text"
+                 pattern="\d{4}"
+                 maxlength="4"
+                 onChange={(e) => setLogin(e.target.value)}
+                 title="Login should be 4 digits."
                  value={login} />
         </FormGroup>
 
         <FormGroup label="Password">
-          <input className="banking-input" type="password" onChange={(e) => setPassword(e.target.value)}
+          <input className="banking-input"
+                 type="password"
+                 onChange={(e) => setPassword(e.target.value)}
                  value={password} />
         </FormGroup>
 
