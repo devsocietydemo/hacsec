@@ -1,4 +1,4 @@
-/* 
+/*
  * Create application user and database
  */
 
@@ -22,20 +22,20 @@ DROP TABLE IF EXISTS account_ownership;
 DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS customers;
 
-CREATE TABLE customers(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,                       
-                       name VARCHAR(60) NOT NULL,					   
+CREATE TABLE customers(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                       name VARCHAR(60) NOT NULL,
 					   nationality CHAR(2) NOT NULL DEFAULT 'PL',
 						 password CHAR(64) NOT NULL);
-					   
+
 ALTER TABLE customers AUTO_INCREMENT=2241;
-					   
+
 CREATE TABLE accounts(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                       iban VARCHAR(26) NOT NULL UNIQUE,
 					  balance NUMERIC(15,2) NOT NULL,
 					  currency CHAR(3) NOT NULL DEFAULT 'EUR');
-					  
+
 ALTER TABLE accounts AUTO_INCREMENT=86433;
-					  
+
 CREATE TABLE account_ownership(customer_id INTEGER NOT NULL,
                                account_id INTEGER NOT NULL,
 							   ownership_mode ENUM('O', 'P'),
@@ -43,7 +43,7 @@ CREATE TABLE account_ownership(customer_id INTEGER NOT NULL,
 							   PRIMARY KEY(customer_id, account_id),
 							   FOREIGN KEY(customer_id) REFERENCES customers(id),
 							   FOREIGN KEY(account_id) REFERENCES accounts(id));
-							   
+
 CREATE TABLE transactions(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                           account_id INTEGER NOT NULL,
 													transaction_date DATE NOT NULL,
@@ -53,6 +53,14 @@ CREATE TABLE transactions(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                           FOREIGN KEY(account_id) REFERENCES accounts(id));
 
 ALTER TABLE transactions AUTO_INCREMENT=12315671;
+
+CREATE TABLE contacts(contact_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                      name TEXT,
+                      iban TEXT,
+                      customer_id INTEGER NOT NULL,
+                      FOREIGN KEY(customer_id) REFERENCES customers(id) );
+
+ALTER TABLE contacts AUTO_INCREMENT=1000;
 
 /*
  * Insert initial database

