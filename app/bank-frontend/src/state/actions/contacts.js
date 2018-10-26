@@ -10,9 +10,8 @@ export const SET_CONTACTS = 'setContacts';
 
 export const setInputNewContactData = (field, value) => ({
   type: SET_INPUT_NEW_CONTACT_DATA,
-  values: {
-    [field]: value
-  }
+  field,
+  value
 });
 
 export const setContacts = (contacts) => ({

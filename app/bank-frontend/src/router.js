@@ -14,10 +14,10 @@ class RoutingService {
     this.reduxStore = reduxStore;
 
     window.onpopstate = (event) => {
-      this.handleRoute(window.location.pathname);
+      this.handleRoute(window.location.pathname + window.location.search);
     }
 
-    this.handleRoute(window.location.pathname);
+    this.handleRoute(window.location.pathname + window.location.search);
   }
 
   applyRoute(id, params) {
@@ -33,6 +33,8 @@ class RoutingService {
           })
           .find(route => route.parsableHref.match(urlPath)),
           params = routeToUse ? routeToUse.parsableHref.match(urlPath) : {};
+
+          // @TODO: check params extracting
 
     return this.applyRoute(routeToUse ? routeToUse.id : null, params);
   }

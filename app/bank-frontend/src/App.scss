@@ -49,6 +49,11 @@ a {
     color: $color-white;
     border-color: $color-white;
   }
+
+  &-white-bg {
+    background: $color-white;
+    color: $color-red;
+  }
 }
 
 .banking-input {

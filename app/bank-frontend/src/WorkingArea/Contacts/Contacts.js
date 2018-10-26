@@ -1,43 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
+import { IoIosCash } from 'react-icons/io';
 
 import Error from '../../Error/Error';
 import FormGroup from '../../FormGroup/FormGroup';
-import { IoIosCash } from 'react-icons/io';
+import { NavLinkComponent } from '../../router';
 
 import { setInputNewContactData, initImportContacts, initAddContact } from '../../state/actions/contacts';
-import { selectOperation, OPERATION_NEW_TRANSFER } from '../../state/actions/operations';
+import { OPERATION_NEW_TRANSFER } from '../../state/actions/operations';
 
 
 import './Contacts.scss';
 
-const getXmlFromInput = (domEl) => {
+const getXmlFromInput = (domEl) => new Promise((resolve, reject) => {
+  const fr = new FileReader();
 
-}
+  if (domEl.files.length === 1) {
+    fr.onload = () => resolve(fr.result);
+    fr.readAsText(domEl.files[0]);
+  }
+});
 
-const Contacts = ({contacts, goToTransfer, addContact, importContacts, setData, newContact}) => {
+const Contacts = ({contacts, addContact, importContacts, setData, newContact}) => {
   return (
     <div className="contacts">
-      <ul>
-      {contacts.map((contact, key) =>
-        <li key={key}>
-          <div className="contact">
-            <h2>{contact.name}</h2>
-            <p>{contact.iban}</p>
-            <span className="contact-actions">
-              <button className="banking-button" onClick={() => goToTransfer(contact.iban)}>
-                <IoIosCash />
-              </button>
-            </span>
-          </div>
-        </li>
-      )}
-      </ul>
-
       <div className="new-contact">
+        <h3>Add new...</h3>
         <div className="new-contact-input">
-          <FormGroup label="Nazwa">
+          <FormGroup label="Name">
             <input className="banking-input"
                    onChange={(e) => setData('name', e.target.value)}
                     value={newContact.name} />
@@ -49,28 +40,53 @@ const Contacts = ({contacts, goToTransfer, addContact, importContacts, setData, 
                     value={newContact.iban} />
           </FormGroup>
 
-          <div className="add-contact-actions">
-            <button className="banking-button"
+          <div className="new-contact-actions">
+            <button className="banking-button active"
                     onClick={() => addContact()}>
               Add
             </button>
           </div>
         </div>
-        <div className="new-contacts-xml">
 
+        <div className="new-contact-or">——— or ————</div>
+
+        <div className="new-contact-xml">
           <FormGroup label="XML File">
             <input type="file" className="banking-input"
-                   onChange={(e) => setData('importXml', getXmlFromInput(e.target))}
-                    value={newContact.iban} />
+                   onChange={ (e) => getXmlFromInput(e.target).then(result => setData('importXml', result)) }
+                />
           </FormGroup>
-          <div className="add-contact-actions">
-            <button className="banking-button"
+          <p>
+
+            <strong>Warning:</strong> All contacts will be deleted and overwritten by XML content.
+          </p>
+          <div className="new-contact-actions">
+            <button className="banking-button active"
                     onClick={() => importContacts()}>
-              Import from XML
+              Import
             </button>
           </div>
         </div>
       </div>
+
+
+      <ul className="contacts-list">
+      {contacts.map((contact, key) =>
+        <li key={key} className="contacts-list-item">
+          <div className="contact">
+            <span className="contact-name">{contact.name}</span>
+            <span className="contact-iban">{contact.iban}</span>
+            <span className="contact-actions">
+             <NavLinkComponent to={OPERATION_NEW_TRANSFER}
+                               params={{iban: contact.iban}}
+                               className="banking-button banking-button-white banking-button-white-bg">
+               Transfer...
+             </NavLinkComponent>
+            </span>
+          </div>
+        </li>
+      )}
+      </ul>
     </div>
   )
 }
@@ -81,7 +97,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  goToTransfer: (iban) => dispatch(selectOperation(OPERATION_NEW_TRANSFER, {iban})),
   setData: (...props) => dispatch(setInputNewContactData(...props)),
   addContact: () => dispatch(initAddContact()),
   importContacts: () => dispatch(initImportContacts())

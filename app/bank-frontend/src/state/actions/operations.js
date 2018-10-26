@@ -1,7 +1,7 @@
 import { getUserAccounts, getAccountTransactions, getAccount, getContacts } from '../../api';
 import { setAccounts } from './accounts';
 import { setCurrentBalance } from './currentBalance';
-import { setAccountsForTransfer } from './newTransfer';
+import { setAccountsForTransfer, setInputTransferData } from './newTransfer';
 import { setContacts } from './contacts';
 import { startLoading } from './spinner';
 import { ERROR_ACCOUNTS_FETCH_FAILED, ERROR_BALANCE_FETCH_FAILED,
@@ -60,11 +60,15 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
 
     case OPERATION_NEW_TRANSFER: {
       const accountId = params ? params.accountId : null;
-
       dispatch(startLoading());
       return getUserAccounts(currentUserId, sessionId)
         .then(
-          data => dispatch(setAccountsForTransfer(data.response, (accountId && accountId.toString()) || data.response[0].id)),
+          data => {
+            dispatch(setAccountsForTransfer(data.response, (accountId && accountId.toString()) || data.response[0].id));
+            if (params.iban) {
+              dispatch(setInputTransferData('targetBankAccountNumber', params.iban));
+            }
+          },
           error => dispatch(setError(ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED, error))
         );
     }

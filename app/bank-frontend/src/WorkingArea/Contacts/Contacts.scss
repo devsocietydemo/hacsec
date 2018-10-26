@@ -4,23 +4,84 @@
   display: flex;
   flex-direction: row;
 
-  .contact {
+  .new-contact {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
     background: $color-white;
+    margin: 0.5em;
+    padding: 0.3em;
+    border-radius: 5px;
+
+    h3 {
+      padding: 0 0.7em;
+    }
+
+    p {
+      padding: 0.7em;
+      margin: 0;
+    }
+
+    &-input, &-xml {
+      padding: 0.4em 0;
+    }
+
+    &-or {
+      color: $color-carbon;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 2em 0;
+      font-weight: bold
+    }
+
+    .new-contact-actions {
+      padding-top: 1em;
+      text-align: center;
+    }
+  }
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 70%;
+
+    &-item {
+      display: block;
+      padding: 0;
+      margin: 0.5em 0;
+    }
+  }
+
+  .contact {
+    background: $color-red;
+    color: #FFF;
     box-shadow: 0 0 1px rgba($color-carbon, 0.3);
     padding: 1em;
+    box-sizing: border-box;
     border-radius: 0;
-  }
-}
+    overflow: hidden;
 
-.new-contact {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-  .new-contact-input {
-    width: 50%;
+    &-name {
+      width: 30%;
+      font-weight: bold;
+    }
+
+    &-iban {
+      width: 80%;
+      overflow: hidden;
+    }
+
+    &-actions {
+
+    }
   }
 
-  .new-contacts-xml {
-    width: 50%;
-  }
+
 }
