@@ -1,5 +1,5 @@
-import {OPERATION_CURRENT_BALANCE, OPERATION_ACCOUNTS, OPERATION_NEW_TRANSFER}
-  from './state/actions/operations';
+import {OPERATION_CURRENT_BALANCE, OPERATION_ACCOUNTS, OPERATION_NEW_TRANSFER,
+ OPERATION_CONTACTS} from './state/actions/operations';
 
 export const routes = [
   {
@@ -21,7 +21,13 @@ export const routes = [
   {
     id: OPERATION_NEW_TRANSFER,
     name: 'Create new cash transfer',
-    href: '/transfer(/:accountId)',
+    href: '/transfer(/:accountId(/:iban))',
+    inMainMenu: true
+  },
+  {
+    id: OPERATION_CONTACTS,
+    name: 'Your contacts',
+    href: '/contacts',
     inMainMenu: true
   }
 ];

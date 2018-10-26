@@ -4,11 +4,12 @@ import { routes } from '../routes';
 import { NavLink, Route } from '../router';
 
 import {OPERATION_ACCOUNTS, OPERATION_NEW_TRANSFER, OPERATION_CURRENT_BALANCE,
-    selectOperation } from '../state/actions/operations';
+    OPERATION_CONTACTS, selectOperation } from '../state/actions/operations';
 
 import Accounts from './Accounts/Accounts';
 import CurrentBalance from './CurrentBalance/CurrentBalance';
 import NewTransfer from './NewTransfer/NewTransfer';
+import Contacts from './Contacts/Contacts';
 
 import './WorkingArea.scss';
 
@@ -35,6 +36,10 @@ const WorkingArea = ({selectOperation, currentOperation, ...props}) => {
 
       <Route id={OPERATION_NEW_TRANSFER}>
         <NewTransfer />
+      </Route>
+
+      <Route id={OPERATION_CONTACTS}>
+        <Contacts />
       </Route>
     </div>
   )
