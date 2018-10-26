@@ -18,6 +18,19 @@ router.get('/:customerId', function(req, res, next) {
 });
 
 router.post('/:customerId', function(req, res, next) {
+  const {name, iban} = req.body;
+  const customerId = req.params.customerId;
+
+	res.locals.connection.query(
+    `INSERT INTO contacts (name, iban, customer_id) VALUES ("${name}", "${iban}", "${customerId}")`,
+    function (error, results, fields) {
+  		if (error) throw error;
+  		res.send(JSON.stringify({"status": 200, "error": null, "response": 'OK'}));
+  	}
+  );
+});
+
+router.post('/:customerId/xml', function(req, res, next) {
   const contacts = req.body.contactsXml;
   const parsedXml = libxmljs.parseXmlString(contacts, libxmlParseOptions);
   const content = parsedXml.find('//contacts/contact');
