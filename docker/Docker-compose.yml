@@ -14,6 +14,10 @@ services:
     restart: always
     ports:
       - 3000:3000
+    environment:
+      BANKAPI_DB_HOSTNAME: db
+      BANKAPI_REDIS_HOSTNAME: redis
+      BANKAPI_REDIS_PORT: 6379
 
   redis:
     image: redis

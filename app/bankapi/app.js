@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(function (req, res, next) {
 	res.locals.connection = mysql.createConnection({
-		host: 'db',
+		host: process.env.BANKAPI_DB_HOSTNAME,
 		user: 'bankappuser',
 		password: 'AppUserPassword',
 		database: 'bankdb',
@@ -42,7 +42,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (req, res, next) {
-	res.locals.redisClient = redis.createClient(6379, 'redis');
+	res.locals.redisClient = redis.createClient(process.env.BANKAPI_REDIS_PORT, process.env.BANKAPI_REDIS_HOSTNAME);
 	res.locals.redisClient.on('error', function (err) {
 		console.log('Something went wrong ' + err);
 	});
