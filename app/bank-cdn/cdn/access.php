@@ -1,6 +1,7 @@
 <?php
 
 $db_address = 'localhost';
-$db_pass = 'admin1234';
+$db_user = 'root';
+$db_pass = 'rootpassword';
 
 ?>

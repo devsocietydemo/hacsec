@@ -1,1 +1,1 @@
-docker build -f ../../app/bankapi/Dockerfile -t cgi/hacsec-api:0.0.1 ../../app/bankapi
+docker build -f ../../app/bank-api/Dockerfile -t cgi/hacsec-api:0.0.1 ../../app/bank-api
