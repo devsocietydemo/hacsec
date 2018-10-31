@@ -5,10 +5,12 @@ services:
   db:
     container_name: acmebank-db
     image: cgi/hacsec-mysql:0.0.1
+    restart: always
 
   redis:
     container_name: acmebank-redis
     image: cgi/hacsec-redis:0.0.1
+    restart: always
 
   api:
     container_name: acmebank-api
@@ -22,6 +24,7 @@ services:
       BANKAPI_REDIS_PORT: 6379
     ports:
       - 3000:3000
+    restart: always
 
   adminer:
     container_name: acmebank-adminer
@@ -30,9 +33,11 @@ services:
       - db
     ports:
       - 8080:8080
+    restart: always
 
   cdn:
     container_name: acmebank-cdn
     image: cgi/hacsec-cdn:0.0.1
     ports:
       - 3001:80
+    restart: always

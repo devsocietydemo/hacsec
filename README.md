@@ -31,7 +31,7 @@ Windows:
 ```
 Unix:
 ```console
-  . build.sh
+  .\build.sh
 ```
 
 __or destroy the stack.__
@@ -42,7 +42,31 @@ Windows:
 ```
 Unix:
 ```console
-  . destroy.sh
+  .\destroy.sh
+```
+
+### Running application
+
+After build is completed, start the application using automatic start script:
+
+Windows:
+```console
+  .\start.bat
+```
+Unix:
+```console
+  .\start.sh
+```
+
+Stop the application using automatic stop script:
+
+Windows:
+```console
+  .\stop.bat
+```
+Unix:
+```console
+  .\stop.sh
 ```
 
 ### Testing the build
@@ -80,11 +104,11 @@ __Start with building database image:__
 
 Windows:
 ```console
-  cd database && build_image.bat
+  cd database && call build_image.bat && cd ..
 ```
 Unix:
 ```console
-  cd database && sh build_image.sh
+  cd database && sh build_image.sh && cd ..
 ```
 
 
@@ -92,33 +116,61 @@ __Build API image:__
 
 Windows:
 ```console
-  cd .. && cd api && build_image.bat
+  cd api && call build_image.bat && cd ..
 ```
 Unix:
 ```console
-  cd .. && cd api && sh build_image.sh
+  cd api && sh build_image.sh && cd ..
 ```
 
 
-__Then, initialize Docker Swarm:__
+__Build CDN image:__
+
+Windows:
+```console
+  cd cdn && call build_image.bat && cd ..
+```
+Unix:
+```console
+  cd cdn && sh build_image.sh && cd ..
+```
+
+
+__Build Redis image:__
+
+Windows:
+```console
+  cd redis && call build_image.bat && cd .. 
+```
+Unix:
+```console
+  cd redis && sh build_image.sh && cd ..
+```
+
+
+__Build Adminer image:__
+
+Windows:
+```console
+  cd adminer && call build_image.bat && cd ..
+```
+Unix:
+```console
+  cd adminer && sh build_image.sh && cd ..
+```
+
+
+__Then, start the application using Docker Compose:__
 
 ```console
-  cd .. && docker swarm init
+  docker-compose up -d
 ```
-
-__Deploy stack to swarm:__
-
-```console
-  docker stack deploy -c Docker-compose.yml bankapi
-```
-
 
 ### Manual destroy instructions
 
-__Destroy stack__
-
+__Stop the application__
 ```console
-  docker stack rm bankapi
+  docker-compose down
 ```
 
 __Destroy stopped containers__
@@ -128,13 +180,11 @@ __Destroy stopped containers__
 
 __Delete images to ensure they are rebuilt correctly__
 ```console
-  docker image rm cgi/hacsec-mysql:0.0.1
-  docker image rm cgi/hacsec-api:0.0.1
-```
-
-__Leave the swarm__
-```console
-  docker swarm leave --force
+  docker image rm cgi/hacsec-mysql:0.0.1 --force
+  docker image rm cgi/hacsec-api:0.0.1 --force
+  docker image rm cgi/hacsec-cdn:0.0.1 --force
+  docker image rm cgi/hacsec-redis:0.0.1 --force
+  docker image rm cgi/hacsec-adminer:0.0.1 --force
 ```
 
 # Frontend
