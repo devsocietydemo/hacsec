@@ -73,6 +73,10 @@ Unix:
 
 Confirm that the application is working fine, by going to:
 
+  http://localhost:8081
+
+You can also access database directly:
+
   http://localhost:8080
 
 Login using bankappuser/AppUserPassword credentials, open database bankdb and query some tables - data should be selected correctly
@@ -160,6 +164,18 @@ Unix:
 ```
 
 
+__Build Frontend image:__
+
+Windows:
+```console
+  cd frontend && call build_image.bat && cd ..
+```
+Unix:
+```console
+  cd frontend && sh build_image.sh && cd ..
+```
+
+
 __Then, start the application using Docker Compose:__
 
 ```console
@@ -185,29 +201,12 @@ __Delete images to ensure they are rebuilt correctly__
   docker image rm cgi/hacsec-cdn:0.0.1 --force
   docker image rm cgi/hacsec-redis:0.0.1 --force
   docker image rm cgi/hacsec-adminer:0.0.1 --force
+  docker image rm cgi/hacsec-frontend:0.0.1 --force
 ```
 
 # Frontend
 
-After the backend setup, install the frontend to have a visual access to the banking app.
-
-### Installation
-
-- Install Yarn:
-
-  `npm install -g yarn`
-
-- Go to the `app/bank-frontend/`
-
-- Run the application
-
-  `yarn start`
-
-- Application should be running at http://localhost:8081
-
-### How to play with that?
-
-Log in using customer ID and password.
+Log in using customer ID and password: 2241/password.
 
 You should be redirected to accounts list. Click on the accounts to preview the balance.
 
