@@ -73,7 +73,7 @@ Unix:
 
 Confirm that the application is working fine, by going to:
 
-  http://localhost:8081
+  http://localhost
 
 You can also access database directly:
 
@@ -83,21 +83,21 @@ Login using bankappuser/AppUserPassword credentials, open database bankdb and qu
 
 Test the API by opening the following URL:
 
-  http://localhost:3000/api/v1/customers
+  http://localhost/api/v1/customers
 
 You can also retrieve specific customer data using direct URL:
 
-  http://localhost:3000/api/v1/customers/2241
+  http://localhost/api/v1/customers/2241
 
-  http://localhost:3000/api/v1/customers/2242
+  http://localhost/api/v1/customers/2242
 
-  http://localhost:3000/api/v1/customers/2242/accounts
+  http://localhost/api/v1/customers/2242/accounts
 
-  http://localhost:3000/api/v1/accounts/86436
+  http://localhost/api/v1/accounts/86436
 
-  http://localhost:3000/api/v1/accounts/86436/transactions
+  http://localhost/api/v1/accounts/86436/transactions
 
-  http://localhost:3000/api/v1/transactions/12316133
+  http://localhost/api/v1/transactions/12316133
 
 ### Manual build instructions
 
