@@ -42,7 +42,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (req, res, next) {
-	res.locals.redisClient = redis.createClient(process.env.BANKAPI_REDIS_PORT, process.env.BANKAPI_REDIS_HOSTNAME);
+	res.locals.redisClient = redis.createClient(process.env.BANKAPI_REDIS_PORT, process.env.BANKAPI_REDIS_HOSTNAME, { password: "redispassword" });
 	res.locals.redisClient.on('error', function (err) {
 		console.log('Something went wrong ' + err);
 	});
