@@ -1,0 +1,99 @@
+@import './variables.scss';
+
+body {
+  color: $color-carbon;
+  font-family: $family;
+  font-size: 15px;
+  font-weight: 300;
+  background: $color-neutral;
+
+  @media screen and (max-width: $breakpoint) {
+    font-size: 12px;
+  }
+}
+
+a {
+  cursor: pointer
+}
+
+.test-button {
+  background: transparent;
+  color: $color-carbon;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  padding: 4px 20px;
+  border: 1px solid $color-carbon;
+  border-radius: 17px;
+  cursor: pointer;
+  outline: none;
+
+  &.active {
+    background: $color-red;
+    border: 1px solid $color-red;
+    color: $color-white;
+  }
+
+  &:focus {
+    border: 1px solid $color-red;
+  }
+
+  &-big {
+    font-size: 1.3em;
+    padding: 6px 23px;
+    border-radius: 24px;
+    font-weight: bold;
+  }
+
+  &-white {
+    color: $color-white;
+    border-color: $color-white;
+  }
+
+  &-white-bg {
+    background: $color-white;
+    color: $color-red;
+  }
+}
+
+.test-input {
+  font-size: inherit;
+  font-weight: inherit;
+  color: $color-dark;
+  background: inherit;
+  border: 0px;
+  border-bottom: 2px solid $color-carbon;
+  outline: none;
+  display: block;
+  width: 100%;
+  border-radius: none;
+
+  &:focus {
+    border-bottom: 2px solid $color-red;
+  }
+}
+
+.test-app-header {
+  display: flex;
+  flex-direction: row;
+  background: $color-red;
+  padding: 1em;
+  align-items: flex-end;
+  justify-content: space-between;
+  color: $color-white;
+
+  .logo {
+    font-size: 2em;
+    font-weight: bold;
+  }
+}
+
+.test-app-container {
+  padding: 1em;
+  color: $color-dark;
+  font-weight: 400;
+}
+
+.color-brand {
+  color: $color-red;
+}

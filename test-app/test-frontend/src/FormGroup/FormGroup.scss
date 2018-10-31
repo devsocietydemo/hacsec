@@ -1,0 +1,29 @@
+@import '../variables.scss';
+
+.form-group {
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+  padding: 0.4em;
+
+  &-label {
+    display: flex;
+    width: 20%;
+    padding: 0.3em;
+    padding-top: 0.4em;
+  }
+
+  &-field {
+    display: flex;
+    width: 80%;
+    padding: 0.3em;
+  }
+
+  @media screen and (max-width: $breakpoint) {
+    flex-direction: column;
+
+    &-label, &-field {
+      width: 100%;
+    }
+  }
+}

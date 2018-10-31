@@ -1,0 +1,36 @@
+@import '../variables.scss';
+
+.landing {
+  background-image: url('/cdn/business.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  text-align: center;
+  color: $color-white;
+  height: 100vh;
+  overflow: auto;
+
+  &-overlay {
+    background: rgba($color-neutral, 0.93);
+    padding: 1em 3em;
+    overflow: auto;
+    color: $color-dark;
+    text-shadow: 0 0 1px rgba($color-white,0.6);
+  }
+
+  & > h1, & > h2, & > p {
+    font-weight: bold;
+    text-shadow: 0 0 1px rgba($color-carbon,0.3);
+  }
+
+  & > h1 {
+    margin: 0;
+    padding: 12vh 0 12vh;
+    font-size: 4em;
+    text-shadow: 0 0 1px rgba($color-dark, 0.68);
+
+    @media screen and (max-width: $breakpoint) {
+      padding: 1em 0 1em;
+    }
+  }
+}

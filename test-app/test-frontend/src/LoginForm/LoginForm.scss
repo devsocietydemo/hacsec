@@ -1,0 +1,19 @@
+@import '../variables.scss';
+
+.login-form {
+  padding: 1em;
+  background: #FFF;
+  box-shadow: 0 0 1px rgba($color-white, 0.3);
+  width: 800px;
+  margin: 6em auto 6em auto;
+  color: $color-dark;
+
+  @media screen and (max-width: $breakpoint) {
+    width: 90%;
+  }
+
+  &-submit {
+    margin-top: 1em;
+  }
+
+}

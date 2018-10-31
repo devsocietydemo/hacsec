@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+
+  db:
+    container_name: test-app-db
+    image: cgi/hacsec-test-mysql:0.0.1
+    restart: always
+
+  redis:
+    container_name: test-app-redis
+    image: cgi/hacsec-test-redis:0.0.1
+    restart: always
+
+  api:
+    container_name: test-app-api
+    image: cgi/hacsec-test-api:0.0.1
+    depends_on:
+      - db
+      - redis
+    environment:
+      TESTAPI_DB_HOSTNAME: db
+      TESTAPI_REDIS_HOSTNAME: redis
+      TESTAPI_REDIS_PORT: 6379
+    restart: always
+
+  adminer:
+    container_name: test-app-adminer
+    image: cgi/hacsec-test-adminer:0.0.1
+    depends_on:
+      - db
+    restart: always
+
+  cdn:
+    container_name: test-app-cdn
+    image: cgi/hacsec-test-cdn:0.0.1
+    restart: always
+
+  frontend:
+   container_name: test-app-frontend
+   image: cgi/hacsec-test-frontend:0.0.1
+   depends_on:
+     - api
+     - cdn
+   ports:
+     - 80:80
+   restart: always
