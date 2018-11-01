@@ -1,8 +1,9 @@
 import { encryptUser } from '../../api';
-import { setError, ERROR_SESSION_NOT_SET, ERROR_HASH_NOT_VALID } from './errors';
+import { setError, ERROR_SESSION_NOT_SET, ERROR_ENCRYPT_FAILED, ERROR_HASH_NOT_VALID } from './errors';
 export const SET_USER_EMAIL = 'setEmail';
 export const SET_HOST_NAME = 'setHostname';
 export const SET_USER_HASH = 'setUserHash';
+export const RESET_USER_DATA = 'resetUserData';
 
 export const setEmail = email => ({
   type: SET_USER_EMAIL,
@@ -18,6 +19,11 @@ export const setUserHash = hash => ({
   type: SET_USER_HASH,
   hash
 });
+
+export const resetUserData = () => ({
+  type: RESET_USER_DATA
+});
+
 
 export const encrypt = () => (dispatch, getState) => {
   const currentSessionId = getState().session.sessionId;
@@ -38,7 +44,7 @@ export const encrypt = () => (dispatch, getState) => {
             dispatch(setError(ERROR_HASH_NOT_VALID));
           }
         },
-        error => dispatch(setError(ERROR_HASH_NOT_VALID, error))
+        error => dispatch(setError(ERROR_ENCRYPT_FAILED, error))
       )
   }
 }

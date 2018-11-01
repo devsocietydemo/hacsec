@@ -34,6 +34,10 @@ a {
     color: $color-white;
   }
 
+  &.link-button {
+    text-decoration: none;
+  }
+
   &:focus {
     border: 1px solid $color-red;
   }

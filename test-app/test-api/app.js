@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mysql = require("mysql");
 var redis = require('redis');
 var bodyParser = require('body-parser');
 var initRouter = require('./routes/init');
@@ -22,18 +21,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(function (req, res, next) {
-	res.locals.connection = mysql.createConnection({
-		host: process.env.TESTAPI_DB_HOSTNAME,
-		user: 'testappuser',
-		password: 'TestAppPassword',
-		database: 'testdb',
-		multipleStatements: true
-	});
-	res.locals.connection.connect();
-	next();
-});
 
 app.use(function (req, res, next) {
 	res.locals.redisClient = redis.createClient(process.env.TESTAPI_REDIS_PORT, process.env.TESTAPI_REDIS_HOSTNAME, { password: "r3d1sp455w0rd" });

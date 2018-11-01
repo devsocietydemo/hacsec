@@ -8,8 +8,14 @@ router.post('/', function (req, res, next) {
 	var loginResponse = { success: false, sessionId: null};
 	loginResponse.success = true;
 	loginResponse.sessionId = uid.sync(18);
-	res.locals.redisClient.set(loginResponse.sessionId, requestBody.id);
+	res.locals.redisClient.set(loginResponse.sessionId, requestBody.id, 'EX', 60, function(err, result) {
+		if (err || result!=="OK") {
+			res.send(JSON.stringify({ "status": 200, "error": null, "response": { success: false, sessionId: null } }))
+		} else {
 			res.send(JSON.stringify({ "status": 200, "error": null, "response": loginResponse }));
+		}
+	});
+	
 });
 
 router.get('/sessions', function (req, res, next) {

@@ -1,4 +1,4 @@
-import { SET_USER_EMAIL, SET_HOST_NAME, SET_USER_HASH} from '../actions/encrypt';
+import { SET_USER_EMAIL, SET_HOST_NAME, SET_USER_HASH, RESET_USER_DATA} from '../actions/encrypt';
 
 const defaultState = {
   email: '',
@@ -25,6 +25,14 @@ const encrypt = (state = defaultState, action) => {
       ...state,
       hash: action.hash
     };
+
+    case RESET_USER_DATA:
+    return {
+      ...state,
+      email: '',
+      hostname: '',
+      hash: ''
+    }
 
     default:
     return state;

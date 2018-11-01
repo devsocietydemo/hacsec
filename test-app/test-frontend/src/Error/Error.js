@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 
 import {
-   ERROR_LOGIN_NOT_FOUND,
-   ERROR_LOGIN_FETCH_FAILED,
-   ERROR_LOGIN_FAILED,
-   ERROR_SESSION_NOT_SET,
-   ERROR_HASH_NOT_VALID
+  ERROR_INIT_FAILED,
+  ERROR_SESSION_NOT_SET,
+  ERROR_HASH_NOT_VALID,
+  ERROR_ENCRYPT_FAILED
 } from '../state/actions/errors';
 
 import './Error.scss';
@@ -24,25 +23,21 @@ const ErrorBody = ({children, title}) => {
 }
 
 const errorViews = {
-  [ERROR_LOGIN_NOT_FOUND]:
-    <ErrorBody title="Login error">
-      Probably You have written wrong login credentials. Please check, if You have correct access data and try again.
-    </ErrorBody>,
-  [ERROR_LOGIN_FETCH_FAILED]:
-    <ErrorBody title="Login error">
-      Something is going on with the authentication server. Try again later.
-    </ErrorBody>,
-  [ERROR_LOGIN_FAILED]:
-    <ErrorBody title="Login failed">
-      Something is going wrong with login operation.
+  [ERROR_INIT_FAILED]:
+    <ErrorBody title="Init failed">
+      Session initialization failed, please reload page and try again. If the problem persists, contact system administrator.
     </ErrorBody>,
   [ERROR_SESSION_NOT_SET]:
     <ErrorBody title="Session not set">
-      The server wasn't able to establish session yet.
+      Session expired, please reload page to initialize new session. If the problem persists, contact system administrator.
     </ErrorBody>,
   [ERROR_HASH_NOT_VALID]:
-    <ErrorBody title="Hash calculation failure">
-      The server is not able to calculate hash.
+    <ErrorBody title="Hash not valid">
+      Encryption operation returned invalid hash. Please reload page and try again. If the problem persists, contact system administrator.
+    </ErrorBody>,
+  [ERROR_ENCRYPT_FAILED]:
+    <ErrorBody title="Encryption failed">
+      Encryption operation failed. Please reload page and try again. If the problem persists, contact system administrator.
     </ErrorBody>,
 };
 

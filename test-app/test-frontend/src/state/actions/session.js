@@ -1,5 +1,5 @@
 import { startLoading } from './spinner';
-import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, setError } from './errors';
+import { ERROR_SESSION_NOT_SET, ERROR_INIT_FAILED, setError } from './errors';
 import { v4 as uuid } from 'uuid';
 
 import { initSession } from "../../api";
@@ -30,10 +30,10 @@ export const init = () => (dispatch, getState) => {
           if (data.response.success) {
             dispatch(setSessionId(data.response.sessionId));
           } else {
-            dispatch(setError(ERROR_LOGIN_NOT_FOUND));
+            dispatch(setError(ERROR_SESSION_NOT_SET));
           }
         },
-        error => dispatch(setError(ERROR_LOGIN_FETCH_FAILED, error))
+        error => dispatch(setError(ERROR_INIT_FAILED, error))
       )
   }
 }
