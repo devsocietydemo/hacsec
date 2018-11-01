@@ -38,11 +38,13 @@ export const encrypt = () => (dispatch, getState) => {
     encryptUser(body, currentSessionId)
       .then(
         data => {
-          if (data.response.hash) {
-            dispatch(setUserHash(data.response.hash));
-          } else {
-            dispatch(setError(ERROR_HASH_NOT_VALID));
-          }
+          if (data.status === 401) {
+            dispatch(setError(ERROR_SESSION_NOT_SET));
+          } else if (data.response.hash) {
+              dispatch(setUserHash(data.response.hash));
+            } else {
+              dispatch(setError(ERROR_HASH_NOT_VALID));
+            }
         },
         error => dispatch(setError(ERROR_ENCRYPT_FAILED, error))
       )
