@@ -1,1 +1,1 @@
-docker-compose down
+HOST_HOSTNAME=`hostname` docker-compose down

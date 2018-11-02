@@ -1,3 +1,1 @@
-HOST_HOSTNAME=`hostname`
-
-docker-compose up -d
+HOST_HOSTNAME=`hostname` docker-compose up -d
