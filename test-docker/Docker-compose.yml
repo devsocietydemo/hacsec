@@ -22,6 +22,7 @@ services:
       TESTAPI_DB_HOSTNAME: db
       TESTAPI_REDIS_HOSTNAME: redis
       TESTAPI_REDIS_PORT: 6379
+      TESTAPI_HOST_HOSTNAME: ${HOST_HOSTNAME}
     restart: always
 
   adminer:

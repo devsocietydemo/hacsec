@@ -14,8 +14,8 @@ class Landing extends React.Component {
   
         <div className="landing-overlay">
   
-          <p>This application is used to test your system compatibility and generate unique user access key, necessary to participate in hackathon event.</p>
-          { !hash && <h2 className="color-brand">Provide your e-mail address and your workstation hostname to generate key</h2> }
+          <p>This application is used to test your system compatibility and generate unique user access key, necessary to participate in hackathon event</p>
+          { !hash && <h2 className="color-brand">Provide your e-mail address to generate key</h2> }
           { hash && 
             <div>
               <h2>Your access key is: <strong className="color-brand">{ hash }</strong></h2>

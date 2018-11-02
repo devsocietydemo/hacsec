@@ -30,7 +30,6 @@ const encrypt = (state = defaultState, action) => {
     return {
       ...state,
       email: '',
-      hostname: '',
       hash: ''
     }
 

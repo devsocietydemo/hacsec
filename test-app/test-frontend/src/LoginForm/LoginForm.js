@@ -26,7 +26,7 @@ const LoginForm = ({email, hostname, hash, error, init, setEmail, setHostname, s
         <FormGroup label="Hostname">
           <input className="test-input"
                  type="text"
-                 disabled={ hash !== '' }
+                 disabled={ hostname !== '' }
                  onChange={(e) => setHostname(e.target.value)}
                  value={hostname} />
         </FormGroup>

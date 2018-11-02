@@ -2,7 +2,8 @@ import { startLoading } from './spinner';
 import { ERROR_SESSION_NOT_SET, ERROR_INIT_FAILED, setError } from './errors';
 import { v4 as uuid } from 'uuid';
 
-import { initSession } from "../../api";
+import { initSession } from '../../api';
+import { setHostname } from './encrypt';
 
 export const SET_SESSION_ID = "setSessionId";
 export const SET_UUID = "setUUID"
@@ -29,6 +30,7 @@ export const init = () => (dispatch, getState) => {
         data => {
           if (data.response.success) {
             dispatch(setSessionId(data.response.sessionId));
+            dispatch(setHostname(data.response.hostname));
           } else {
             dispatch(setError(ERROR_SESSION_NOT_SET));
           }
