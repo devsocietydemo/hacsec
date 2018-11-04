@@ -40,8 +40,8 @@ export const encrypt = () => (dispatch, getState) => {
         data => {
           if (data.status === 401) {
             dispatch(setError(ERROR_SESSION_NOT_SET));
-          } else if (data.response.hash) {
-              dispatch(setUserHash(data.response.hash));
+          } else if (data.hash) {
+              dispatch(setUserHash(data.hash));
             } else {
               dispatch(setError(ERROR_HASH_NOT_VALID));
             }

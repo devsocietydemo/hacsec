@@ -5,6 +5,7 @@ const fetchTestApi = (path, ...options) => fetch(
     ...options
   )
   .then(response => {
+    console.log(response);
     if (response.status !== 200) {
       return response.text().then(text => {
         throw {text, code: response.status};

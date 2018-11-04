@@ -28,9 +28,9 @@ export const init = () => (dispatch, getState) => {
     initSession({id:idValue})
       .then(
         data => {
-          if (data.response.success) {
-            dispatch(setSessionId(data.response.sessionId));
-            dispatch(setHostname(data.response.hostname));
+          if (data.sessionId) {
+            dispatch(setSessionId(data.sessionId));
+            dispatch(setHostname(data.hostname));
           } else {
             dispatch(setError(ERROR_SESSION_NOT_SET));
           }

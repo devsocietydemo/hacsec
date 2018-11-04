@@ -1,1 +1,1 @@
-docker build -f Dockerfile -t cgi/hacsec-test-mysql:0.0.1 .
+docker build -f ../../test-app/test-database/Dockerfile -t cgi/hacsec-test-mysql:0.0.1 ../../test-app/test-database
