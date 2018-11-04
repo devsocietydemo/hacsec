@@ -48,8 +48,8 @@ CREATE TABLE transactions(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                           account_id INTEGER NOT NULL,
 													transaction_date DATE NOT NULL,
                           amount NUMERIC(15,2) NOT NULL,
-                          description VARCHAR(50) NOT NULL,
-						  target_iban VARCHAR(26),
+                          description VARCHAR(500) NOT NULL,
+						              target_iban VARCHAR(26),
                           FOREIGN KEY(account_id) REFERENCES accounts(id));
 
 ALTER TABLE transactions AUTO_INCREMENT=12315671;

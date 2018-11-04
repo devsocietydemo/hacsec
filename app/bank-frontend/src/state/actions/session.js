@@ -37,16 +37,16 @@ export const authenticate = () => (dispatch, getState) => {
   processLoginOperation(credentials)
     .then(
       data => {
-        if (data.response.success) {
-          dispatch(setSessionId(data.response.sessionId));
-          setUserSessionId(data.response.sessionId);
+        if (data.success) {
+          dispatch(setSessionId(data.sessionId));
+          setUserSessionId(data.sessionId);
           getCustomer(login)
           .then(
             data => {
-              if (data.response.length > 0) {
-                setUser(data.response[0]);
+              if (data.length > 0) {
+                setUser(data[0]);
 
-                dispatch(setLoginState(data.response[0]));
+                dispatch(setLoginState(data[0]));
                 dispatch(selectOperation(OPERATION_ACCOUNTS));
               } else {
                 dispatch(setError(ERROR_LOGIN_NOT_FOUND));

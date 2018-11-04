@@ -39,7 +39,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
       dispatch(startLoading());
       return getUserAccounts(currentUserId, sessionId)
       .then(
-        data => dispatch(setAccounts(data.response)),
+        data => dispatch(setAccounts(data)),
         error => dispatch(setError(ERROR_ACCOUNTS_FETCH_FAILED, error))
       )
     }
@@ -53,7 +53,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
           getAccount(accountId)
         ])
         .then(
-          ([txData, accountData]) => dispatch(setCurrentBalance(accountData.response[0], txData.response)),
+          ([txData, accountData]) => dispatch(setCurrentBalance(accountData[0], txData)),
           error => dispatch(setError(ERROR_BALANCE_FETCH_FAILED, error))
         );
     }
@@ -64,8 +64,8 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
       return getUserAccounts(currentUserId, sessionId)
         .then(
           data => {
-            dispatch(setAccountsForTransfer(data.response, (accountId && accountId.toString()) || data.response[0].id));
-            if (params.iban) {
+            dispatch(setAccountsForTransfer(data, (accountId && accountId.toString()) || data[0].id));
+            if (params && params.iban) {
               dispatch(setInputTransferData('targetBankAccountNumber', params.iban));
             }
           },
@@ -77,7 +77,7 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
       dispatch(startLoading());
       return getContacts(currentUserId, sessionId)
         .then(
-          data => dispatch(setContacts(data.response)),
+          data => dispatch(setContacts(data)),
           error => dispatch(setError(ERROR_CONTACTS_FETCH_FAILED, error))
         );
     }

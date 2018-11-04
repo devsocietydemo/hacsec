@@ -12,8 +12,11 @@ var {validateCustomerSession} = require('../common/security');
 
 router.get('/:customerId', function(req, res, next) {
 	res.locals.connection.query('SELECT * from contacts WHERE customer_id = ' + req.params.customerId, function (error, results, fields) {
-		if (error) throw error;
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+		if (error) {
+			res.status(500).send({error: "Database query failed, error message: " + error});
+		} else {
+			res.status(200).send(results);
+		}
 	});
 });
 
@@ -24,8 +27,11 @@ router.post('/:customerId', function(req, res, next) {
 	res.locals.connection.query(
     `INSERT INTO contacts (name, iban, customer_id) VALUES ("${name}", "${iban}", "${customerId}")`,
     function (error, results, fields) {
-  		if (error) throw error;
-  		res.send(JSON.stringify({"status": 200, "error": null, "response": 'OK'}));
+  		if (error) {
+        res.status(500).send({error: "Database query failed, error message: " + error});
+      } else {
+        res.status(200).send(results);
+      }
   	}
   );
 });
@@ -41,24 +47,28 @@ router.post('/:customerId/xml', function(req, res, next) {
   }));
 
 	res.locals.connection.query('DELETE FROM contacts WHERE customer_id = ' + req.params.customerId, function (error, results, fields) {
-		if (error) throw error;
+		if (error) {
+			res.status(500).send({error: "Database query failed, error message: " + error});
+		} else {
+      const insert = contactObjects
+        .map(obj => `INSERT INTO contacts (\`name\`, \`iban\`, \`customer_id\`)
+        VALUES (
+          "${obj.name.replace(/\n/g, '')}",
+          "${obj.iban.replace(/\n/g, '')}",
+          ${req.params.customerId}
+        )`)
+        .join('; \n');
 
-    const insert = contactObjects
-      .map(obj => `INSERT INTO contacts (\`name\`, \`iban\`, \`customer_id\`)
-      VALUES (
-        "${obj.name.replace(/\n/g, '')}",
-        "${obj.iban.replace(/\n/g, '')}",
-        ${req.params.customerId}
-      )`)
-      .join('; \n');
+      console.log(insert);
 
-    console.log(insert);
-
-    res.locals.connection.query(insert, function (error, results) {
-      if (error) throw error;
-
-      res.send({"status": 200, "error": null, "response": contactObjects});
-    });
+      res.locals.connection.query(insert, function (error, results) {
+        if (error) {
+          res.status(500).send({error: "Database query failed, error message: " + error});
+        } else {
+          res.status(200).send(contactObjects);
+        }
+      });
+    }
 	});
 });
 
