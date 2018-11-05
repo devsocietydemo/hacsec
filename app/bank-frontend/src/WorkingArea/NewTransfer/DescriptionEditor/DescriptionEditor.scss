@@ -15,6 +15,13 @@
     margin-top: 10px;
   }
 
+  &-html {
+    font-family: 'Courier New',monospace;
+    height: 6em;
+    margin-top: 1em;
+    color: #000;
+  }
+
   &-button {
     display: inline-block;
     overflow: hidden;
@@ -33,6 +40,10 @@
 
     &.bold {
       font-weight: bold;
+    }
+
+    &.toggle-mode {
+      width: 120px;
     }
   }
 

@@ -1,13 +1,17 @@
-import { SET_INPUT_TRANSFER_DATA, SET_ACCOUNTS_FOR_TRANSFER } from '../actions/newTransfer';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
+import { stateToHTML } from 'draft-js-export-html';
+
+import { SET_INPUT_TRANSFER_DATA, SET_ACCOUNTS_FOR_TRANSFER, SET_DESCRIPTION_MODE } from '../actions/newTransfer';
 import { START_LOADING } from '../actions/spinner';
-import { EditorState } from 'draft-js';
 
 const defaultState = {
   accounts: [],
   senderBankAccount: '',
   targetBankAccountNumber: '',
   amount: '',
-  description: EditorState.createEmpty()
+  description: EditorState.createEmpty(),
+  descriptionHtml: '',
+  descriptionMode: 'visual'
 };
 
 const newTransfer = (state = defaultState, action) => {
@@ -24,6 +28,31 @@ const newTransfer = (state = defaultState, action) => {
         accounts: action.accounts,
         senderBankAccount: action.senderBankAccount
       };
+
+    case SET_DESCRIPTION_MODE:
+      const currentState = {
+        ...state,
+        descriptionMode: action.mode
+      };
+
+      if (action.mode === 'html') {
+        currentState.descriptionHtml = stateToHTML(state.description.getCurrentContent())
+      }
+
+      if (action.mode === 'visual') {
+        const blocksFromHTML = convertFromHTML(currentState.descriptionHtml);
+        if (blocksFromHTML.contentBlocks) {
+          const editorState = ContentState.createFromBlockArray(
+            blocksFromHTML.contentBlocks,
+            blocksFromHTML.entityMap
+          );
+          currentState.description = EditorState.createWithContent(editorState)
+        } else {
+          currentState.description = EditorState.createEmpty();
+        }
+      }
+
+      return currentState;
 
     case START_LOADING:
       return {

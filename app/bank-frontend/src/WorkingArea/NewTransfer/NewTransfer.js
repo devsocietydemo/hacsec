@@ -8,7 +8,8 @@ import Error from '../../Error/Error';
 import TransferOption from './TransferOption';
 import FormGroup from '../../FormGroup/FormGroup';
 import DescriptionEditor from './DescriptionEditor/DescriptionEditor';
-import { setInputTransferData, initTransferSend } from '../../state/actions/newTransfer';
+import HtmlDescriptionEditor from './DescriptionEditor/HtmlDescriptionEditor';
+import { setInputTransferData, initTransferSend, setDescriptionMode } from '../../state/actions/newTransfer';
 import { ERROR_TRANSFER_FAILED, ERROR_NEW_TRANSFER_ACCOUNTS_FETCH_FAILED } from '../../state/actions/errors';
 
 
@@ -21,7 +22,10 @@ const NewTransfer = ({
   senderBankAccount,
   accounts,
   setField,
-  initTransferSend
+  initTransferSend,
+  descriptionMode,
+  setDescriptionMode,
+  descriptionHtml
 }) => {
   return (
     <div className="new-transfer">
@@ -77,8 +81,13 @@ const NewTransfer = ({
             </FormGroup>
 
             <FormGroup label="Description" noHtmlLabel="true">
-              <DescriptionEditor state={description}
-                                 onChange={e => setField('description', e)} />
+              { descriptionMode === 'visual' && <DescriptionEditor state={description}
+                                 onChange={value => setField('description', value)}
+                                 onGoToHtmlMode={() => setDescriptionMode('html')} /> }
+
+              { descriptionMode === 'html' && <HtmlDescriptionEditor state={descriptionHtml}
+                                 onChange={value => setField('descriptionHtml', value)}
+                                 onGoToVisualMode={() => setDescriptionMode('visual')} /> }
             </FormGroup>
           </div>
 
@@ -100,7 +109,9 @@ const mapStateToProps = state => {
     amount,
     description,
     senderBankAccount,
-    accounts
+    accounts,
+    descriptionMode,
+    descriptionHtml
   } = state.newTransfer;
 
   return {
@@ -108,13 +119,16 @@ const mapStateToProps = state => {
     amount,
     description,
     senderBankAccount,
-    accounts
+    accounts,
+    descriptionMode,
+    descriptionHtml
   }
 };
 
 const mapDispatchToProps = dispatch => ({
   setField: (...props) => dispatch(setInputTransferData(...props)),
-  initTransferSend: () => dispatch(initTransferSend())
+  initTransferSend: () => dispatch(initTransferSend()),
+  setDescriptionMode: (...props) => dispatch(setDescriptionMode(...props))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewTransfer);

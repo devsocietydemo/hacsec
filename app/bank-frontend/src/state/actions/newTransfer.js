@@ -8,6 +8,7 @@ import { sendNormalTransfer } from '../../api';
 export const SET_ACCOUNTS_FOR_TRANSFER = 'setAccountsForTransfer';
 export const SET_INPUT_TRANSFER_DATA = 'setInputTransferData';
 export const SET_TRANSFER_ERROR = 'setTransferError';
+export const SET_DESCRIPTION_MODE = 'setDescriptionMode';
 
 export const setAccountsForTransfer = (accounts, senderBankAccount) => ({
   type: SET_ACCOUNTS_FOR_TRANSFER,
@@ -27,18 +28,26 @@ export const setTransferError = (error) => ({
   error
 });
 
+export const setDescriptionMode = (mode) => ({
+  type: SET_DESCRIPTION_MODE,
+  mode
+});
+
 export const initTransferSend = () => (dispatch, getState) => {
   const {
     targetBankAccountNumber: target_iban,
     amount,
     description,
-    senderBankAccount: account_id
+    descriptionHtml,
+    senderBankAccount: account_id,
+    descriptionMode
   } = getState().newTransfer;
 
   const dataToSend = {
     target_iban,
     amount,
-    description: stateToHTML(description.getCurrentContent()),
+    description: descriptionMode === 'visual'
+      ? stateToHTML(description.getCurrentContent()) : descriptionHtml,
     account_id
   };
 

@@ -35,6 +35,11 @@ class DescriptionEditor extends React.Component {
                   onClick={() => this._onItalicClick()}>
                     I
           </button>
+          <button type="button"
+                  className="description-editor-button toggle-mode"
+                  onClick={() => this.props.onGoToHtmlMode()}>
+                    Go to HTML mode
+          </button>
         </div>
         <div className="description-editor-workspace">
           <Editor editorState={this.props.state}
