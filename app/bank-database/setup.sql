@@ -46,7 +46,7 @@ CREATE TABLE account_ownership(customer_id INTEGER NOT NULL,
 
 CREATE TABLE transactions(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                           account_id INTEGER NOT NULL,
-													transaction_date DATE NOT NULL,
+													transaction_date DATETIME NOT NULL,
                           amount NUMERIC(15,2) NOT NULL,
                           description VARCHAR(500) NOT NULL,
 						              target_iban VARCHAR(26),
@@ -88,4 +88,4 @@ INTO TABLE transactions
 FIELDS TERMINATED BY ','
 (id, account_id, amount, @transaction_date, description, @target_iban)
 SET target_iban = nullif(TRIM(TRAILING '\r' FROM @target_iban), ''),
-    transaction_date = STR_TO_DATE(@transaction_date, '%d.%m.%Y');
+    transaction_date = STR_TO_DATE(@transaction_date, '%d.%m.%Y %H:%i:%s');
