@@ -1,0 +1,413 @@
+Security Hackathon Introduction
+===============================
+:Author: Dawid Buchwald 
+:Email: dawid.buchwald@cgi.com
+:version: 1.0
+:linkattrs:
+
+image::hackathon.jpg["Hackathon"]
+
+Introduction
+------------
+The purpose of this document is to provide all the information needed to set up local laptop environment for Security Hackathon.
+
+[[hackathon-application-description]]
+Hackathon application description
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+During the hackathon event you will be trying to break into online banking application, created specifically for this purpose. In order to ensure that each participant hacks the application in isolation (preventing them to break each other's system), banking application will be working locally on their laptops. Unfortunately, to be able to simulate various attacks, complex, multi-tiered architecture is required - resulting system setup consists of several components (database, application server, web frontend, session cache, static content provider).
+
+In order to ensure portability and performance of such application, Docker solution has been chosen - each of the specific components exists in separate, lightweight container. This should enable running the system even on older machines.
+
+Additionally, to ensure that all the potential compatibility issues are found and solved in advance, dedicated compatibility testing application was created - it uses exactly the same components as the final banking application, so if it runs correctly, the banking app will run just the same; at the same time, participants can't probe the final system for vulnerabilities prior to the event.
+
+This document describes the process of installing and configuring Docker for Windows and running the compatibility testing application on your laptop.
+
+System requirements 
+^^^^^^^^^^^^^^^^^^^
+To be able to run Docker for Windows on your laptop you need the following:
+
+. Administrative rights (to enable Hyper-V and install Docker),
+. Windows 10 Professional or Enterprise 64-bit is preferred (Windows 7 can be used, but using Docker Toolbox for Windows, which is slightly different and currently out of scope for this document),
+. Hyper-V enabled CPU (all laptops should have it now).
+
+If you already have Docker for Windows installed and working correctly on your machine, skip directly to <<testing-docker-for-windows, chapter 3>>.
+
+Installing Hyper-V
+------------------
+As stated above, it's necessary to enable Hyper-V functionality of your operating system to be able to install and run Docker successfully.
+
+Unfortunately, there are important differences between various builds on Windows 10, so the first step is to check your version.
+
+To do it, invoke `Run` window using `Windows + R` keyboard shortcut. Enter `winver` as the command and press `Enter` key or click OK.
+
+image::run_winver.jpg["Running winver application"]
+
+This window will open with Windows 10 build version number:
+
+image::build_version.jpg["Running winver application"]
+
+After noting down build number, you can close the window using OK button.
+
+If you are using build 1703, you are lucky and you don't have to do anything - Docker for Windows will be able to enable Hyper-V automatically, and you can skip to <<installing-docker-for-windows, next chapter>>.
+
+Hyper-V installation on Windows 10 build 1607
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+WARNING: Your computer will restart during installation, so save your work before installing Hyper-V!
+
+Hyper-V is enabled in Windows Features window. To access it quickly, use `Windows + R` shortcut to bring up Run menu and enter `optionalfeatures` as a command:
+
+image::run_optionalfeatures.jpg["Running Windows Features application"]
+
+In order to enable administrative access required to carry out the operation, you will be prompted to enter username and password - use the same credentials you use to log into your laptop.
+
+This window will open:
+
+image::enable_hyper-v.jpg["Hyper-V is enabled"]
+
+If the checkbox next to Hyper-V entry is checked - good, you don't have to do anything, and you can skip to <<installing-docker-for-windows, next chapter>>. 
+
+If the checkbox is not checked, check it and click OK. This will trigger Hyper-V installation and after it's completed, Hyper-V should be enabled. You can confirm it by running Windows Features application again.
+
+NOTE: In some cases installation of Hyper-V might fail. In case it happens, please contact author of this document for suggestions. Most likely it will be necessary to upgrade to Windows 10 build 1703 - which is good idea anyway.
+
+[[installing-docker-for-windows]]
+Installing Docker for Windows
+-----------------------------
+Download latest version of the Docker for Windows application from https://store.docker.com/editions/community/docker-ce-desktop-windows[Docker Store]. Download and run the executable. To proceed with the installation you will be prompted for username and password to enable administrative access. Provide credentials you use to log into your computer.
+
+During the installation the following message box will open:
+
+image::install_docker.jpg["Installing Docker"]
+
+Make sure that the ``Use Windows containers instead of Linux containers...'' is *unchecked*. As for the desktop shortcut - your call.
+
+After some time you expect installation to complete successfully:
+
+image::docker_installed.jpg["Docker installed successfully"]
+
+IMPORTANT: Even if not prompted for it, restart your laptop now.
+
+[[testing-docker-for-windows]]
+Testing Docker for Windows
+--------------------------
+Test your Docker installation by running the *hello-world* image from Docker Hub. To do it, start by opening command prompt using `Windows + R` shortcut again and entering `cmd` as command:
+
+image::run_cmd.jpg["Running Windows Command Prompt"]
+
+TIP:Don't close Windows Command Prompt for now, we will keep using it.
+
+Run hello-world image from Docker Hub using `docker run hello-world` command to ensure your Docker installation is running fine:
+----
+C:\Users\dawid.buchwald>docker run hello-world
+----
+
+Image will be downloaded (if not done before), and the following output should be printed:
+----
+C:\Users\dawid.buchwald>docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+d1725b59e92d: Pull complete
+Digest: sha256:0add3ace90ecb4adbf7777e9aacf18357296e799f81cabc9fde470971e499788
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
+
+C:\Users\dawid.buchwald>
+----
+
+Congratulations, this means that your Docker installation is working fine!
+
+Checking Docker Compose version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To be able to run the hackathon applications, you need also need Docker Compose. If you just installed Docker for Windows, most likely you have it already, but just to be sure run the `docker-compose version` command in the Windows Command Prompt ( if you closed it already, open it again using `Windows + R`, `cmd`).
+----
+C:\Users\dawid.buchwald>docker-compose version
+docker-compose version 1.22.0, build f46880fe
+docker-py version: 3.4.1
+CPython version: 3.6.6
+OpenSSL version: OpenSSL 1.0.2o  27 Mar 2018
+
+C:\Users\dawid.buchwald>
+----
+
+If this is what you get (your versions might differ, that's OK as long as they are newer), you are good to go!
+
+[[checking-port-80]]
+Finding available port
+----------------------
+Our application by default uses port `80` to listen, so when you run it in next chapter, it will be available to your browser on http://localhost (browsers use port `80` by default).
+
+Unfortunately, on some laptops port `80` might already be in use by another application, and we will have to use another one. To verify it, run the following command in Windows Command Prompt: `netstat -an | grep LISTEN | grep ':80 '`. You expect no entries in response, like that:
+----
+C:\Users\dawid.buchwald>netstat -an | grep LISTEN | grep ':80 '
+
+C:\Users\dawid.buchwald>
+----
+
+If this is what you get (no output), move on to <<running-compatibility-test-application,next chapter>>. Otherwise, if you got something like:
+----
+C:\Users\dawid.buchwald>netstat -an | grep LISTEN | grep ':80 '
+  TCP    0.0.0.0:80            0.0.0.0:0              LISTENING
+  TCP    [::]:80               [::]:0                 LISTENING
+
+C:\Users\dawid.buchwald>
+----
+
+This means that the port `80` is already in use on your machine, and you have to try to use another one. Some of the numbers to try are: `81`, `8080`, `8081`, `8082`. Keep checking them until you find one that is not used (there will be no output, like below):
+----
+C:\Users\dawid.buchwald>netstat -an | grep LISTEN | grep ':81 '   <1>
+  TCP    0.0.0.0:81            0.0.0.0:0              LISTENING
+  TCP    [::]:81               [::]:0                 LISTENING
+
+C:\Users\dawid.buchwald>netstat -an | grep LISTEN | grep ':8081 ' <2>
+  TCP    0.0.0.0:8081          0.0.0.0:0              LISTENING
+  TCP    [::]:8081             [::]:0                 LISTENING
+
+C:\Users\dawid.buchwald>netstat -an | grep LISTEN | grep ':8080 ' <3>
+
+C:\Users\dawid.buchwald>
+----
+
+<1> - port 81 is used, since there is some output,
+<2> - port 8081 is also used, since there is some output,
+<3> - port 8080 is available, since there is no output. *Note it down and continue*.
+
+[[running-compatibility-test-application]]
+Running compatibility test
+--------------------------
+Don't worry, we are almost there! 
+
+Last thing to do is to download and run the compatibility test application. Luckily all you need is five small files.
+
+Run the following command in Windows Command Prompt to get the files (Please note: this is single line command!) `cp -r \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool .`:
+----
+C:\Users\dawid.buchwald>cp -r \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool .
+
+----
+
+Go to `CompatibilityTool` folder using `cd CompatibilityTool` command:
+----
+C:\Users\dawid.buchwald>cd CompatibilityTool
+
+----
+
+List directory contents using `dir` command:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>dir
+ Volume in drive C is Windows
+ Volume Serial Number is 204D-474E
+
+ Directory of C:\Users\dawid.buchwald\CompatibilityTool
+
+07.11.2018  18:33    <DIR>          .
+07.11.2018  18:33    <DIR>          ..
+07.11.2018  18:34             1 046 Docker-compose.yml <1>
+07.11.2018  18:34                95 start.bat          <2>
+07.11.2018  18:34                47 start.sh           <3>
+07.11.2018  18:34                94 stop.bat           <4>
+07.11.2018  18:34                44 stop.sh            <5>
+               5 File(s)          1 326 bytes
+               2 Dir(s)  401 113 387 008 bytes free
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+The files are:
+
+<1> `Docker-compose.yml` file contains application definition, it will be used by Docker to run the app,
+<2> `start.bat` is the Windows script used to run the application,
+<3> `start.sh` is the startup script to be used in Linux/MacOS environment,
+<4> `stop.bat` is the Windows script used to stop the application,
+<5> `stop.sh` is the shutdown script for Linux/MacOS systems.
+
+Now, if in <<checking-port-80, previous chapter>> you discovered that port `80` is available, you can skip to <<starting-up-compatibility-test-application, next section>>. Otherwise, do the following:
+
+Run Notepad to edit `Docker-compose.yml` file using the following command (Inside Windows Command Prompt): `notepad Docker-compose.yml`
+----
+C:\Users\dawid.buchwald\CompatibilityTool>notepad Docker-compose.yml
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+image::docker_compose_yml_top.jpg["Opening Notepad with Docker-compose.yml"]
+
+Scroll down to the end of the file and notice `ports:` section:
+
+image::docker_compose_yml_bottom.jpg["Bottom of Docker-compose.yml"]
+
+Update the *first* value to the port number noted down in <<checking-port-80, previous chapter>>, as shown here:
+
+image::docker_compose_yml_modified.jpg["Updated Docker-compose.yml"]
+
+Save the file using `Ctrl + S` shortcut and close Notepad application using `Alt + F4` shortcut and go back to Windows Command Prompt where you started Notepad.
+
+[[starting-up-compatibility-test-application]]
+Starting up Compatibility Test application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+From the Windows Command Prompt run the `start.bat` script (Please note: in `CompatibilityTool` folder!):
+----
+C:\Users\dawid.buchwald\CompatibilityTool>start.bat
+Creating network "compatibilitytool_default" with the default driver
+Pulling db (dawidbuchwald/hacsec-test-mysql:latest)...
+latest: Pulling from dawidbuchwald/hacsec-test-mysql
+f17d81b4b692: Downloading [=====>                                             ]  2.555MB/22.49MB
+c691115e6ae9: Download complete
+41544cb19235: Download complete
+254d04f5f66d: Download complete
+4fe240edfdc9: Download complete
+
+8df36ec4b34a: Download complete
+720bf9851f6a: Waiting
+e933e0a4fddf: Waiting
+9ffdbf5f677f: Waiting
+a403e1df0389: Waiting
+4669c5f285a6: Waiting
+cc97989e9e00: Waiting
+----
+
+Docker images will be downloaded from Docker Hub - it will take some time (around five minutes, depending on your network bandwidth).
+
+NOTE: Starting up will take so much time only the first time ever. Images will be cached locally by Docker, making the startup process in future much faster.
+
+What you expect at the end is:
+----
+07b9730387a3: Already exists
+6dbdee9d6fa5: Already exists
+477f45823c5d: Pull complete
+ebc261256063: Pull complete
+Digest: sha256:b7bdf0878904579a8fe3fae637e14b6bf4e48e0f28307d256c23f3e5ebc40375
+Status: Downloaded newer image for dawidbuchwald/hacsec-test-frontend:latest
+Creating test-app-cdn   ... done
+Creating test-app-db    ... done
+Creating test-app-redis ... done
+Creating test-app-adminer  ... done
+Creating test-app-api     ... done
+Creating test-app-frontend ... done
+----
+If this is what you get (all create operations completed with `done`), skip to <<creating-user-access-key,next section>>.
+
+However, if there are some errors like:
+----
+07b9730387a3: Already exists
+6dbdee9d6fa5: Already exists
+477f45823c5d: Pull complete
+ebc261256063: Pull complete
+Digest: sha256:b7bdf0878904579a8fe3fae637e14b6bf4e48e0f28307d256c23f3e5ebc40375
+Status: Downloaded newer image for dawidbuchwald/hacsec-test-frontend:latest
+Creating test-app-redis   ... done
+Creating test-app-cdn   ... done
+Creating test-app-db    ... done
+Creating test-app-adminer ... done
+Creating test-app-api     ... done
+Creating test-app-frontend ... error
+----
+
+In such case stop the application using `stop.bat` script:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>stop.bat
+Stopping test-app-api     ... done
+Stopping test-app-adminer ... done
+Stopping test-app-redis   ... done
+Stopping test-app-db      ... done
+Stopping test-app-cdn     ... done
+Removing test-app-frontend ... done
+Removing test-app-api      ... done
+Removing test-app-adminer  ... done
+Removing test-app-redis    ... done
+Removing test-app-db       ... done
+Removing test-app-cdn      ... done
+Removing network compatibilitytool_default
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+And restart Docker from System Tray by r-clicking on Docker icon and selecting Restart option:
+
+image::docker_tray.jpg["Docker image in System Tray"]
+
+image::restart_docker.jpg["Restart Docker"]
+
+Confirm restart in next window:
+
+image::confirm_restart.jpg["Confirm Docker restart"]
+
+Try running the application again using `start.bat` script:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>start.bat
+Creating network "compatibilitytool_default" with the default driver
+Creating test-app-cdn     ... done
+Creating test-app-db    ... done
+Creating test-app-redis   ... done
+Creating test-app-adminer ... done
+Creating test-app-api     ... done
+Creating test-app-frontend ... done
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+If the issue persists, please contact author of this document.
+
+[[creating-user-access-key]]
+Creating user access key
+~~~~~~~~~~~~~~~~~~~~~~~~
+Run the browser pointing to your application using the `start http://localhost:8080` command (if using custom port, replacing with your own number) or `start http://localhost` (if using default `80`):
+----
+C:\Users\dawid.buchwald\CompatibilityTool>start http://localhost:8080
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+WARNING: If your default browser is Internet Explorer, the page will not open. Try using some other browser (even Microsoft Edge will do for now), preferably Google Chrome.
+
+Your browser will open:
+
+image::landing_page.jpg["Landing page of Compatibility Tool application"]
+
+Enter your e-mail address into form and click Encrypt button to generate your unique hackathon access key - this will be the proof that you are prepared to run hackathon application on your laptop.
+
+image::encrypted.jpg["Access key generated"]
+
+Click the Send confirmation e-mail button to open your mail client with pre-populated e-mail message. Send it to confirm that you are ready to hack:
+
+image::email.jpg["Sending e-mail"]
+
+Now that you are done, stop the application using `stop.bat` script:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>stop.bat
+Stopping test-app-frontend ... done
+Stopping test-app-api      ... done
+Stopping test-app-adminer  ... done
+Stopping test-app-cdn      ... done
+Stopping test-app-db       ... done
+Stopping test-app-redis    ... done
+Removing test-app-frontend ... done
+Removing test-app-api      ... done
+Removing test-app-adminer  ... done
+Removing test-app-cdn      ... done
+Removing test-app-db       ... done
+Removing test-app-redis    ... done
+Removing network compatibilitytool_default
+----
+
+That's all, Folks!
