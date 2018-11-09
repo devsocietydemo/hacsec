@@ -38,6 +38,13 @@ services:
     image: cgi/hacsec-cdn:0.0.1
     restart: always
 
+  fake-login:
+    container_name: acmebank-fake-login
+    image: cgi/hacsec-fake-login:0.0.1
+    ports:
+      - 8005:8005
+    restart: always
+
   frontend:
     container_name: acmebank-frontend
     image: cgi/hacsec-frontend:0.0.1
