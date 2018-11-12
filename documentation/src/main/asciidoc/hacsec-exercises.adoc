@@ -1,0 +1,181 @@
+Security Hackathon Exercises
+============================
+:Author: Dawid Buchwald 
+:Email: dawid.buchwald@cgi.com
+:version: 1.0
+:linkattrs:
+
+image::hackathon.jpg["Hackathon"]
+
+Introduction
+------------
+The purpose of this document is to present some techniques that will be used during the hackathon event to break into banking application. Performing these exercises is by no means obligatory, but it strongly recommended, as they illustrate some of the basic techniques to be used during the event.
+
+Prerequisites
+~~~~~~~~~~~~~
+Before you start reading this document, make sure you have completed all the instructions described in the link:hacsec-intro.html[Security Hackathon Introduction] document - you have installed Docker for Windows, found available port, used Docker Compose to run Compatibility Test Application and sent confirmation e-mail to organizer. If any of the above is not true, go back to the Introduction document and complete it.
+
+To complete these exercises you need modern browser - Google Chrome being recommended one, so if you don't have it, get it from https://www.google.com/chrome/[official page]. Download, install, make sure it runs.
+
+Also, if you have stopped Compatibility Test Application, start it up again. All you need to do is to open the folder where you copied CompatibilityTool folder (most likely something like `C:\Users\dawid.buchwald\CompatibilityTool`) and run the `start.bat` script.
+
+Exercises summary
+~~~~~~~~~~~~~~~~~
+As you might have noticed when typing your e-mail address in the Compatibility Test Application, second field in the form, (Hostname) was read only, and automatically populated with the name of your PC. You probably guessed that both e-mail address and hostname were used to generate your unique access key - and this is indeed what happened. The reason to do it that way, was to ensure that each participant generates his/her own key on his/her own PC - otherwise some people could decide to skip the installation process and use colleague's PC to generate their key for their own e-mail address.
+
+Now, the exercises we are about to perform aim to illustrate, how such a simple ``security'' measure can be broken using just your browser. You will learn how to analyze communication between client (browser) and server, how to debug it, and how to introduce malicious payload to exploit security flaws.
+
+NOTE: Yes, there are other ways to hack this system - you can change `start.bat` script, you can get inside Docker containers and simply read the code that generates the key and do it yourself. These, however, are out of scope - as in real-life scenario these attacks require access to internal system infrastructure, making them much more difficult to carry out.
+
+Getting between client and server
+---------------------------------
+The first thing you need to do, before you start hacking any application, is to analyze how it works, and with client-server applications (like every single web page you use on daily basis), this requires being able to intercept messages between the parties. Luckily, today each browser can do it (better or worse, obviously) and we will use this feature to understand flow of the data.
+
+Make sure your Google Chrome is working and your Compatibility Test Application is running, start your Chrome and open the landing page:
+
+image::landing_page.jpg["Landing page of Compatibility Tool application"]
+
+If this doesn't work, refer to link:hacsec-intro.html[Security Hackathon Introduction] document - chances are you forgot something, like custom port number.
+
+Now, let's assume it worked, page was rendered correctly and hostname was correctly filled in the form. Open new tab in Chrome, and before you navigate anywhere, enable Developer Tools. There are various ways to do it, but let's use the simplest one - keyboard shortcut: press `Ctrl + Shift + I`. You will see something like:
+
+image::chrome_devtools_default.jpg["Default layout of Chrome DevTools"]
+
+If you don't like in on the right side of your screen, you can move DevTools to bottom using the three vertical dots button to customize layout:
+
+image::chrome_devtools_customize.jpg["Move DevTools to bottom of the screen"]
+
+NOTE: When using mulitple screens it might be more convenient to undock the DevTools and move it to another screen.
+
+Now that you have DevTools open, navigate to the *Network* tab and select *XHR* to filter the traffic to the communication between client and server only:
+
+image::chrome_network_xhr.jpg["Network tab with XHR filter"]
+
+Now you are all set, let's see what happens if you load the application. Enter Compatibility Test Application URL (default http://localhost, but you might be using custom port!) into Chrome address bar and press `Enter` to load page. Observe what happens in the DevTools:
+
+image::chrome_network_init_session.jpg["First call to server is init"]
+
+Click on the *init* row to see the details:
+
+image::chrome_network_init_details.jpg["Details of the init call"]
+
+In the Headers section you will see that the *init* call was invoked against the following URL: http://localhost/api/v1/init, operation type was POST and the status of the call was 200 OK, which means everything went fine.
+
+Usually, when using POST operation, some information is sent to the server - let's see what it is, by scrolling the Headers section to the bottom:
+
+image::chrome_network_init_payload.jpg["Payload sent to the server"]
+
+What you can see here is that during *init* operation our browser sends some random id used by the server to establish the session. You can reload page couple of times to see that each consecutive *init* contains different id. 
+
+OK, so we know what is sent to the server, but what is server's response? To check that, navigate to Response section:
+
+image::chrome_network_init_response.jpg["Response from the server"]
+
+In the response we see two pieces of information: first one is *sessionId*, used in the communication between client and server to recognize each other, and *hostname* - name of the machine on which the application is running.
+
+Awesome, you just sniffed on client-server communication using nothing more but your browser!
+
+Analysis of the encryption transaction
+--------------------------------------
+Now that you know how to use Network tab of Google Chrome, use it to analyze the actual encryption operation. Start with reloading the page to generate new *sessionId*:
+
+image::chrome_network_encrypt_init.jpg["New session generated"]
+
+Enter your e-mail address and click on Encrypt button to generate your access key. You will see new communication between client and server:
+
+image::chrome_network_encrypt_done.jpg["New access key generated"]
+
+When you click on the *encrypt* row, switch to Headers section and scroll all the way down you will notice two things: first, *sessionId* just generated was sent to the server (in one of the HTTP Headers, not in payload!), and the payload consists of three data elements: e-mail address as entered by user, hostname (received earlier from the server, during *init* operation) and random id that was sent to the server during *init* operation.
+
+image::chrome_network_encrypt_request.jpg["Encryption request details"]
+
+When looking at the response, you will notice that all you get in return is the access key:
+
+image::chrome_network_encrypt_response.jpg["Encryption response details"]
+
+Great, so now we have some information about how this application works. Let's summarize it.
+
+Analysis summary
+~~~~~~~~~~~~~~~~
+Based on our analysis, we know now how the application works:
+
+. When landing page is loaded, browser generates unique id that will be used to establish session on the server,
+. After page is loaded and displayed, *init* message is sent to the server to generate new session. As an input parameter, generated id is sent, and in response sessionId and hostname is received,
+. Hostname is populated to the form, and user is prompted to enter e-mail address. When done and Encrypt button is pressed, *encrypt* operation is invoked,
+. Input parameters to *encrypt* operation are: e-mail address, hostname and generated id. Additionally, sessionId is sent back for session validity verification. Response from *encrypt* operation contains unique access key generated for the given e-mail and hostname.
+
+NOTE: You can verify that generated id nor sessionId are not used in access key generation - it doesn't matter how many times you generate the key, as long as the e-mail address and hostname are the same, the same key is received in return.
+
+So, one of the things that seems a bit weird here is that the hostname parameter is sent back to the server as an input to *encrypt* operation - after all, when you think about it, server already knows the hostname, since it's server that is providing it to the client during *init* operation. Maybe we could change it somehow during the call to *encrypt* operation to calculate the key for another hostname? Let's try that!
+
+Introducing malicious input
+---------------------------
+Note down you key for your actual e-mail address and correct hostname. Let's see if we can change the data so that system generates the key for modified hostname.
+
+Repeat encryption operation, and open *encrypt* row in Network tab of Chrome DevTools, but this time close the details panel using the X button:
+
+image::chrome_network_encrypt_close_details.jpg["Close details tab"]
+
+You will notice Initiator column now visible - hover your mouse pointer over the entry over *encrypt* row:
+
+image::chrome_network_encrypt_hover.jpg["Hover over initiator entry"]
+
+When you hover, the following window will appear:
+
+image::chrome_network_encrypt_stack.jpg["Call stack of the application"]
+
+Note the link listed as `api.js:28` - click on it to go directly to application source.
+
+NOTE: If you accidentally click another entry in the list, or simply want to explore, you can always return to the previous view by going to *Network* tab, closing details and hovering over the *encrypt* operation row in Initiator column.
+
+You might be wondering why we chose this particular entry - well, you can check the other ones, and see for yourself. During the hackathon you will have to find correct spots yourself.
+
+When you click on the `api.js:28` link, you will be automatically moved to the *Source* section of DevTools, where you will see page source displayed:
+
+image::chrome_source_api.jpg["Application source at api.js:28"]
+
+If you look at the details, you will notice that we found the part of the code responsible for sending the *encrypt* operation to the server. You see the name of the operation (`'encrypt'`), `sessionId` variable assigned to header with the same name and `data` variable assigned to POST operation body. This is what we were looking for. Click on the line number (35) to set Breakpoint there - this will make the browser stop processing and let you inspect variables in real-time. When set, Breakpoint will look like this:
+
+image::chrome_source_breakpoint.jpg["Breakpoint set"]
+
+You are now ready to perform your first attack against server-side application!
+
+Attacking the application
+-------------------------
+Reload the page, enter your e-mail address in the e-mail field and click on Encrypt button to see what happens:
+
+image::chrome_source_breakpoint_hit.jpg["Breakpoint hit in Chrome"]
+
+In the debug panel in the lower right corner scroll down to *Scope* section, and expand *Local* (if not expanded yet), locate *data* variable and expand it as well:
+
+image::chrome_source_data_variable.jpg["Contents of the data variable"]
+
+Double click on value of hostname field of data variable to enable edit mode:
+
+image::chrome_source_data_edit.jpg["Edit hostname field of data variable"]
+
+Enter ``maliciousInput'' to overwrite hostname field:
+
+image::chrome_source_data_modified.jpg["Variable modified"]
+
+Press the blue Play button to resume script execution and send modified data to the server:
+
+image::chrome_source_resume.jpg["Resume execution"]
+
+Now, it might happen that you made the changes too slow and your session expired in the meantime - this error will indicate that:
+
+image::chrome_encrypt_failed.jpg["Encryption failed"]
+
+If this happens, simply reload page and perform data modification faster. It should work:
+
+image::chrome_attack_successful.jpg["Successful attack"]
+
+Notice that the key you received this time is different - this means that you managed to fool the server into generating access key for some other hostname. Congratulations, you just hacked your first web application!
+
+Exercises summary
+-----------------
+During the course of these exercises you have learned basics of application security flaws analysis and exploitation. Obviously, there is more to it, but this should get you started for the hackathon event.
+
+Think also about how the application could be fixed - because clearly there was some error that enabled us to hack the system. 
+
+See you during the hackathon!
