@@ -9,7 +9,7 @@ image::hackathon.jpg["Hackathon"]
 
 Introduction
 ------------
-The purpose of this document is to present some techniques that will be used during the hackathon event to break into banking application. Performing these exercises is by no means obligatory, but it strongly recommended, as they illustrate some of the basic techniques to be used during the event.
+The purpose of this document is to present some techniques that will be used during the hackathon event to break into banking application. Performing these exercises is by no means obligatory, but it strongly recommended, as they will help you get started during the actual event.
 
 Prerequisites
 ~~~~~~~~~~~~~
@@ -110,7 +110,7 @@ So, one of the things that seems a bit weird here is that the hostname parameter
 
 Introducing malicious input
 ---------------------------
-Note down you key for your actual e-mail address and correct hostname. Let's see if we can change the data so that system generates the key for modified hostname.
+Note down your key for your actual e-mail address and correct hostname. Let's see if we can change the data so that system generates the key for modified hostname.
 
 Repeat encryption operation, and open *encrypt* row in Network tab of Chrome DevTools, but this time close the details panel using the X button:
 
@@ -146,15 +146,15 @@ Reload the page, enter your e-mail address in the e-mail field and click on Encr
 
 image::chrome_source_breakpoint_hit.jpg["Breakpoint hit in Chrome"]
 
-In the debug panel in the lower right corner scroll down to *Scope* section, and expand *Local* (if not expanded yet), locate *data* variable and expand it as well:
+Instead of sending *encrypt* request to the server, browser stopped processing at defined breakpoint and awaits your action. You can inspect current system state, variable values and so on in the debug panel in the lower right corner. Scroll down to *Scope* section, and expand *Local* (if not expanded yet), locate *data* variable and expand it as well:
 
 image::chrome_source_data_variable.jpg["Contents of the data variable"]
 
-Double click on value of hostname field of data variable to enable edit mode:
+This is exactly what we want to change! Double click on value of hostname field of data variable to enable edit mode:
 
 image::chrome_source_data_edit.jpg["Edit hostname field of data variable"]
 
-Enter ``maliciousInput'' to overwrite hostname field:
+Enter `"maliciousInput"` to overwrite hostname field:
 
 image::chrome_source_data_modified.jpg["Variable modified"]
 
@@ -170,12 +170,12 @@ If this happens, simply reload page and perform data modification faster. It sho
 
 image::chrome_attack_successful.jpg["Successful attack"]
 
-Notice that the key you received this time is different - this means that you managed to fool the server into generating access key for some other hostname. Congratulations, you just hacked your first web application!
+Notice that the key you received this time is different - this means that you managed to fool the server into generating access key for some invalid hostname. Congratulations, you just hacked your first web application!
 
 Exercises summary
 -----------------
 During the course of these exercises you have learned basics of application security flaws analysis and exploitation. Obviously, there is more to it, but this should get you started for the hackathon event.
 
-Think also about how the application could be fixed - because clearly there was some error that enabled us to hack the system. 
+Think also about how the application could be fixed - because clearly there was some error that enabled us to hack the system, and you have all the necessary information to figure out how we could prevent this attack on server side.
 
 See you during the hackathon!
