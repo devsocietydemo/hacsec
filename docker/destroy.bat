@@ -5,3 +5,4 @@ docker image rm --force cgi/hacsec-cdn:0.0.1
 docker image rm --force cgi/hacsec-redis:0.0.1
 docker image rm --force cgi/hacsec-adminer:0.0.1
 docker image rm --force cgi/hacsec-frontend:0.0.1
+docker image rm cgi/hacsec-fake-login:0.0.1 --force
