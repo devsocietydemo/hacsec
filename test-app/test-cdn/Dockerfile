@@ -1,4 +1,6 @@
-FROM httpd:2
+ARG HTTPD_VERSION
+
+FROM httpd:${HTTPD_VERSION}
 
 WORKDIR /usr/local/apache2/conf/
 
