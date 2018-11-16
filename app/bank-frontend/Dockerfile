@@ -1,4 +1,7 @@
-FROM node:8 as builder
+ARG NODE_VERSION
+ARG HTTPD_VERSION
+
+FROM node:${NODE_VERSION} as builder
 
 WORKDIR /usr/src/app/
 
@@ -10,7 +13,7 @@ COPY . .
 
 RUN yarn build
 
-FROM httpd:2
+FROM httpd:${HTTPD_VERSION}
 
 WORKDIR /usr/local/apache2/conf/
 

@@ -1,4 +1,6 @@
-FROM node:8
+ARG NODE_VERSION
+
+FROM node:${NODE_VERSION}
 
 # Create app directory
 WORKDIR /usr/src/app

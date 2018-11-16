@@ -1,4 +1,6 @@
-FROM mysql:8
+ARG MYSQL_VERSION
+
+FROM mysql:${MYSQL_VERSION}
 
 ENV MYSQL_ROOT_PASSWORD=rootpassword
 
