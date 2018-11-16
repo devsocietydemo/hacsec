@@ -73,7 +73,7 @@ You can also access database directly:
 
   http://localhost/adminer
 
-Login using testappuser/TestUserPassword credentials, open database testdb and query some tables - data should be selected correctly.
+Login using testappuser/TestAppPassword credentials, open database testdb and query some tables - data should be selected correctly.
 
 # Banking Application
 
