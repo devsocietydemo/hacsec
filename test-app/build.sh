@@ -1,1 +1,1 @@
-docker-compose build
+HOST_HOSTNAME=`hostname` docker-compose build
