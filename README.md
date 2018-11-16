@@ -75,24 +75,6 @@ You can also access database directly:
 
 Login using testappuser/TestUserPassword credentials, open database testdb and query some tables - data should be selected correctly.
 
-Test the API by opening the following URL:
-
-  http://localhost/api/v1/customers
-
-You can also retrieve specific customer data using direct URL:
-
-  http://localhost/api/v1/customers/2241
-
-  http://localhost/api/v1/customers/2242
-
-  http://localhost/api/v1/customers/2242/accounts
-
-  http://localhost/api/v1/accounts/86436
-
-  http://localhost/api/v1/accounts/86436/transactions
-
-  http://localhost/api/v1/transactions/12316133
-
 # Banking Application
 
 This is the final application to be used during the hackathon event, consisting of the following modules:
