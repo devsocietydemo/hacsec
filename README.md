@@ -2,47 +2,41 @@
 
 __Table of contents__
 
-- [Backend](#backend)
-	- [Automated build instructions](#automated-build-instructions)
-	- [Testing the build](#testing-the-build)
-	- [Manual build instructions](#manual-build-instructions)
-	- [Manual destroy instructions](#manual-destroy-instructions)
-- [Frontend](#frontend)
-	- [Installation](#installation)
+- [Compatibility Test Application](#compatibility-test-application)
+	- [Automated build instructions (Test)](#automated-build-instructions-test)
+	- [Testing the build (Test)](#testing-the-build-test)
+- [Banking Application](#banking-application)
+	- [Automated build instructions (Bank)](#automated-build-instructions-bank)
+	- [Testing the build (Bank)](#testing-the-build-bank)
 	- [How to play with that?](#how-to-play-with-that)
 
-# Backend
+# Compatibility Test Application
 
-The backend of application consists of
+This application was created to test participants' machines compatibility with the final bank application. It consists of the following modules:
 
 - node.js express server - used as a REST API
 
 - MySQL Database - used as a main database
 
-- Redis storage - used as a storage of sessions in REST.
+- Adminer - database administration tool
 
-### Automated build instructions
+- Redis storage - used as a storage of sessions
 
-__You can use the shellscripts in /docker to build all the stack...__
+- Apache HTTPD - used as CDN
+
+- Apache HTTPD - used as frontend node and reverse proxy to backend systems
+
+### Automated build instructions (Test)
+
+__All the scripts are available in test-app folder__
 
 Windows:
 ```console
-  .\build.bat
+  build.bat
 ```
 Unix:
 ```console
   .\build.sh
-```
-
-__or destroy the stack.__
-
-Windows:
-```console
-  .\destroy.bat
-```
-Unix:
-```console
-  .\destroy.sh
 ```
 
 ### Running application
@@ -51,7 +45,7 @@ After build is completed, start the application using automatic start script:
 
 Windows:
 ```console
-  .\start.bat
+  start.bat
 ```
 Unix:
 ```console
@@ -62,14 +56,14 @@ Stop the application using automatic stop script:
 
 Windows:
 ```console
-  .\stop.bat
+  stop.bat
 ```
 Unix:
 ```console
   .\stop.sh
 ```
 
-### Testing the build
+### Testing the build (Test)
 
 Confirm that the application is working fine, by going to:
 
@@ -77,9 +71,9 @@ Confirm that the application is working fine, by going to:
 
 You can also access database directly:
 
-  http://localhost:8080
+  http://localhost/adminer
 
-Login using bankappuser/AppUserPassword credentials, open database bankdb and query some tables - data should be selected correctly
+Login using testappuser/TestUserPassword credentials, open database testdb and query some tables - data should be selected correctly.
 
 Test the API by opening the following URL:
 
@@ -99,115 +93,92 @@ You can also retrieve specific customer data using direct URL:
 
   http://localhost/api/v1/transactions/12316133
 
-### Manual build instructions
+# Banking Application
 
-***__IMPORTANT:__***
-__All the following commands takes a /docker as a root directory.__
+This is the final application to be used during the hackathon event, consisting of the following modules:
 
-__Start with building database image:__
+- node.js express server - used as a REST API
 
-Windows:
-```console
-  cd database && call build_image.bat && cd ..
-```
-Unix:
-```console
-  cd database && sh build_image.sh && cd ..
-```
+- MySQL Database - used as a main database
 
+- Adminer - database administration tool
 
-__Build API image:__
+- Redis storage - used as a storage of sessions
 
-Windows:
-```console
-  cd api && call build_image.bat && cd ..
-```
-Unix:
-```console
-  cd api && sh build_image.sh && cd ..
-```
+- Apache HTTPD - used as CDN
 
+- Apache HTTPD - used as frontend node and reverse proxy to backend systems
 
-__Build CDN image:__
+### Automated build instructions (Bank)
+
+__All the scripts are available in app folder__
 
 Windows:
 ```console
-  cd cdn && call build_image.bat && cd ..
+  build.bat
 ```
 Unix:
 ```console
-  cd cdn && sh build_image.sh && cd ..
+  .\build.sh
 ```
 
+### Running application
 
-__Build Redis image:__
+After build is completed, start the application using automatic start script:
 
 Windows:
 ```console
-  cd redis && call build_image.bat && cd .. 
+  start.bat
 ```
 Unix:
 ```console
-  cd redis && sh build_image.sh && cd ..
+  .\start.sh
 ```
 
-
-__Build Adminer image:__
+Stop the application using automatic stop script:
 
 Windows:
 ```console
-  cd adminer && call build_image.bat && cd ..
+  stop.bat
 ```
 Unix:
 ```console
-  cd adminer && sh build_image.sh && cd ..
+  .\stop.sh
 ```
 
+### Testing the build (Bank)
 
-__Build Frontend image:__
+Confirm that the application is working fine, by going to:
 
-Windows:
-```console
-  cd frontend && call build_image.bat && cd ..
-```
-Unix:
-```console
-  cd frontend && sh build_image.sh && cd ..
-```
+  http://localhost
 
+You can also access database directly:
 
-__Then, start the application using Docker Compose:__
+  http://localhost/adminer
 
-```console
-  docker-compose up -d
-```
+Login using bankappuser/AppUserPassword credentials, open database testdb and query some tables - data should be selected correctly.
 
-### Manual destroy instructions
+Test the API by opening the following URL:
 
-__Stop the application__
-```console
-  docker-compose down
-```
+  http://localhost/api/v1/customers
 
-__Destroy stopped containers__
-```console
-  docker container prune --force
-```
+You can also retrieve specific customer data using direct URL:
 
-__Delete images to ensure they are rebuilt correctly__
-```console
-  docker image rm cgi/hacsec-mysql:0.0.1 --force
-  docker image rm cgi/hacsec-api:0.0.1 --force
-  docker image rm cgi/hacsec-cdn:0.0.1 --force
-  docker image rm cgi/hacsec-redis:0.0.1 --force
-  docker image rm cgi/hacsec-adminer:0.0.1 --force
-  docker image rm cgi/hacsec-frontend:0.0.1 --force
-```
+  http://localhost/api/v1/customers/2241
 
-# Frontend
+  http://localhost/api/v1/customers/2242
+
+  http://localhost/api/v1/customers/2242/accounts
+
+  http://localhost/api/v1/accounts/86436
+
+  http://localhost/api/v1/accounts/86436/transactions
+
+  http://localhost/api/v1/transactions/12316133
+
+### How to play with that?
 
 Log in using customer ID and password: 2241/password.
 
 You should be redirected to accounts list. Click on the accounts to preview the balance.
 
-This UI app contains proxy to the REST API (to the port :3000). The proxy is defined in package.json.
