@@ -1,6 +1,7 @@
-const composePath = (...elements) => '/' + elements.filter(el => !!el).join('/');
+const composePath = (...elements) => '/' + elements.filter(el => !!el).join('/'); 
 
-const fetchBankApi = (path, ...options) => fetch(
+const fetchBankApi = (path, ...options) => 
+  fetch(
     composePath('api', 'v1', ...path),
     ...options
   )
@@ -15,59 +16,122 @@ const fetchBankApi = (path, ...options) => fetch(
     return response.json()
   });
 
-export const getCustomer = (id) => fetchBankApi(['customers', id]);
-export const getTransaction = (id) => fetchBankApi(['transactions', id]);
-export const getUserAccounts = (id, sessionId) => fetchBankApi(['customers', id, 'accounts'], {
-  headers: {
-    'sessionId': sessionId
-  }
-});
-export const getAccount = (id) => fetchBankApi(['accounts', id]);
-export const getAccountTransactions = (id = null) => fetchBankApi(['accounts', id, 'transactions']);
 
-export const getContacts = (id) => fetchBankApi(['contacts', id]);
-export const addContact = (id, data) => fetchBankApi(['contacts', id], {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
+export const getCustomer = function(id) {
+  var params = [];
+  params.push('customers');
+  params.push(id);
+  return fetchBankApi(params);
+}
+export const getTransaction = function(id) {
+  var params = [];
+  params.push('transactions');
+  params.push(id);
+  return fetchBankApi(params);
+}
 
-export const importContacts = (id, xml) => fetchBankApi(['contacts', id, 'xml'], {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    contactsXml: xml
-  })
-});
+export const getUserAccounts = function(id, sessionId) {
+  var params = [];
+  params.push('customers');
+  params.push(id);
+  params.push('accounts');
+  return fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
+}
+export const getAccount = function(id) {
+  var params = [];
+  params.push('accounts');
+  params.push(id);
+  return fetchBankApi(params);
+}
 
-export const sendNormalTransfer = (data) => fetchBankApi(['transactions'], {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
+export const getAccountTransactions = function(id = null) {
+  var params = [];
+  params.push('accounts');
+  params.push(id);
+  params.push('transactions');
+  return fetchBankApi(params);
+}
 
-export const processLoginOperation = (data) => fetchBankApi(['login'], {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
+export const getContacts = function(id) { 
+  var params = [];
+  params.push('contacts');
+  params.push(id);
+  return fetchBankApi(params);
+}
+export const addContact = function(id, data) { 
+  var params = [];
+  params.push('contacts');
+  params.push(id);
+  return fetchBankApi(params, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+}
 
-//export const listActiveSessions = () => fetchBankApi(['login', 'sessions']);
+export const importContacts = function(id, xml) {
+  var params = [];
+  params.push('contacts');
+  params.push(id);
+  params.push('xml')
+  return fetchBankApi(params, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      contactsXml: xml
+    })
+  });
+}
 
-export const processLogoutOperation = (sessionId) => fetchBankApi(['logout'], {
-  headers: {
-    'sessionId': sessionId
-  }
-});
+export const sendNormalTransfer = function(data) {
+  var params = [];
+  params.push('transactions');
+  return fetchBankApi(params, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+export const processLoginOperation = function(data) {
+  var params = [];
+  params.push('login');
+  return fetchBankApi(params, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+// export const listActiveSessions = function() {
+//   var params = [];
+//   params.push('login');
+//   params.push('sessions');
+//   return fetchBankApi(params);
+// }
+
+export const processLogoutOperation = function(sessionId) {
+  var params = [];
+  params.push('logout');
+  fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
+}

@@ -1,1 +1,1 @@
-docker-compose rm
+docker-compose rm --force
