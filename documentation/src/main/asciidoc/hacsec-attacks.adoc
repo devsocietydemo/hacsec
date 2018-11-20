@@ -1,0 +1,90 @@
+Security Hackathon Attacks Guide
+================================
+:Author: Dawid Buchwald 
+:Email: dawid.buchwald@cgi.com
+:version: 1.0
+:linkattrs:
+
+image::hackathon.jpg["Hackathon"]
+
+Introduction
+------------
+The purpose of this document is to provide some hints for attacks to be performed during Security Hackathon.
+
+OWASP Top 10 2017
+~~~~~~~~~~~~~~~~~
+List of attacks is based on the 2017 report from OWASP, describing the top 10 of attacks vectors used against real-world applications. Simple as they might seem (and easy to exploit, as you will see) they are constantly effective, as developers keep making the same mistakes over and over. Reading the report and considering it in daily development activities is critical to ensuring safety of your systems, so take time to understand it!
+
+SQL Injection (A1:2017)
+-----------------------
+This is the most commonly exposed vulnerability for years now, even though this is really easy one to prevent. Attack mechanism is always the same: passing specially prepared data to server to extract or modify data the user should not have access to. Assuming that payment identifier `paymentId` is passed to `fetchPaymentDetails` operation, server executes the following query:
+[source, SQL]
+---
+SELECT * FROM PAYMENTS WHERE PAYMENT_ID=:paymentId
+---
+
+Obviously, when given correct `paymentId` (like `123`) this operation will return only single entry. However, when attacker sends parameter `123 or 1=1` it will cause the query to look like this:
+[source, SQL]
+---
+SELECT * FROM PAYMENTS WHERE PAYMENT_ID=123 or 1=1
+---
+
+This query, in turn, returns all the payment entries, including those that the attacker should not have access to.
+
+IMPORTANT: As OWASP report states, using object-relational mapping libraries like Hibernate that don't necessarily use SQL directly, doesn't prevent this attack, as custom query languages are prone to these attacks just as well. Moreover, there are variants of this attack using other languages/protocols, like LDAP. Basically - not using SQL at all doesn't prevent this category of attacks!
+
+Broken Authentication (A2:2017)
+-------------------------------
+This vulnerability covers range of issues with application authentication model, and at least two scenarios are to be successfully exploited in hackathon application.
+
+First issue is related to using standard, default passwords and security configurations to restrict access to production servers. Hackers will always try to use these first, just to see if they work. You would be surprised what default configurations allow!
+
+Second issue is depending on passwords only as authentication mechanism. This, combined with weak hashing (or none at all!) can lead to very easy credential theft. The consequence of this is even worse if you consider users reusing passwords frequently.
+
+Third issue is related to session management - sometimes you don't need to steal user password at all (and sometimes it doesn't suffice, if user enabled two-factor authentication), but you can hijack user session directly. If application fails to handle sessions correctly, they might be reused even after user logged out.
+
+Sensitive Data Exposure (A3:2017)
+---------------------------------
+As with the above, there are several issues in this category: using plain text to store passwords or credit card numbers (or using default database encryption), not forcing TLS for traffic between server and client and using unsalted or weak hashes.
+
+TIP: Forget about TLS and HTTPS - we are not using it in our application, but the attacks we enabled would work just the same over HTTPS.
+
+It might seem that using strong hashing mechanism (like SHA256) should suffice to prevent credentials discovery. Unfortunately, when not using proper ``salt'' (random string appended to password) it turns out that reversing strong hash algorithm is pretty easy. There are whole databases of unsalted password dictionaries for reverse lookup (Rainbow Tables), you just need to paste your hash into Google search and you will get the password. 
+
+XML External Entities (A4:2017)
+-------------------------------
+This vulnerability is not very well known, since it appeared in OWASP report in 2017 for the first time, but this one is really nasty! It can be used to extract otherwise well protected system files, to probe internal network behind firewall or to perform denial-of-service attack. First case will be presented below.
+[source, XML]
+---
+<?xml version="1.0" encoding="ISO-8859-1"?>
+  <!DOCTYPE foo [
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+  <foo>&xxe;</foo>
+---
+
+When parsed by default XML parser, it will retrieve data from External Entity (in that case `/etc/passwd` file), save it to variable `xxe` and later substitute this variable with file contents (inside `foo` tag).
+
+If your application allows users to upload (or any other way provide content later passed to) XML files, chances are your system is vulnerable!
+
+Broken Access Control (A5:2017)
+-------------------------------
+There are two potential attacks here: first one requires attacker to modify parameter of API call to access data that should not be displayed to him, second is based on allowing access to restricted pages just by changing URL. Both attacks are possible because developers tend to assume that users will always follow the designed application path and forget that each call to backend server can be modified, and each of them should be treated as potential attack.
+
+Security Misconfiguration (A6:2017)
+-----------------------------------
+Forgetting to remove sample (or development-only purposes) code from the application servers could enable the attackers to exploit known vulnerabilities in this code. Remeber - it doesn't matter whether it's called anywhere in the application, if the endpoint on the server is open, somebody will eventually find it.
+
+The other thing is being able to access application source code (even compiled one) if directory listing wasn't disabled on the server. Decompiled Java classes could then be analyzed for otherwise hard to find vulnerabilities.
+
+Detailed error messages (like stack traces) presented to the user or returned from API can contain information about flaws in the code, insecure libraries, etc. Be careful!
+
+Cross-Site Scripting (A7:2017)
+------------------------------
+User input fields might be used to store custom HTML or JavaScript code to be executed during page rendering - this can be used to redirect users to unsafe pages, send session tokens to attacker website, etc.
+
+It might seem like this attack can be executed only when intercepting traffic between victim client session and server, but combined with SQL Injection or Broken Access Control it can be used to encourage user to follow unsafe links. 
+
+Other vulnerabilities
+---------------------
+We actually hid a few more easter eggs for you to find, so even if you found all the seven attacks above, there is still something epic waiting for you to discover. Have fun looking for it!
