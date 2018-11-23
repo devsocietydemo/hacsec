@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE foo [<!ELEMENT foo ANY >
-<!ENTITY bar SYSTEM "file:///etc/passwd" >]>
 <contacts>
   <contact>
     <name>John Doe</name>
-    <iban>PL00 0000 0000 0000 0000</iban>
+    <iban>PL12 3456 7890 1234 5678</iban>
   </contact>
 
   <contact>
     <name>Business Mike</name>
-    <iban>&bar;</iban>
+    <iban>DE13 2435 4546 3123</iban>
   </contact>
 </contacts>

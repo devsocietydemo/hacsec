@@ -19,15 +19,15 @@ SQL Injection (A1:2017)
 -----------------------
 This is the most commonly exposed vulnerability for years now, even though this is really easy one to prevent. Attack mechanism is always the same: passing specially prepared data to server to extract or modify data the user should not have access to. Assuming that payment identifier `paymentId` is passed to `fetchPaymentDetails` operation, server executes the following query:
 [source, SQL]
----
+----
 SELECT * FROM PAYMENTS WHERE PAYMENT_ID=:paymentId
----
+----
 
 Obviously, when given correct `paymentId` (like `123`) this operation will return only single entry. However, when attacker sends parameter `123 or 1=1` it will cause the query to look like this:
 [source, SQL]
----
+----
 SELECT * FROM PAYMENTS WHERE PAYMENT_ID=123 or 1=1
----
+----
 
 This query, in turn, returns all the payment entries, including those that the attacker should not have access to.
 
@@ -55,13 +55,13 @@ XML External Entities (A4:2017)
 -------------------------------
 This vulnerability is not very well known, since it appeared in OWASP report in 2017 for the first time, but this one is really nasty! It can be used to extract otherwise well protected system files, to probe internal network behind firewall or to perform denial-of-service attack. First case will be presented below.
 [source, XML]
----
+----
 <?xml version="1.0" encoding="ISO-8859-1"?>
   <!DOCTYPE foo [
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
   <foo>&xxe;</foo>
----
+----
 
 When parsed by default XML parser, it will retrieve data from External Entity (in that case `/etc/passwd` file), save it to variable `xxe` and later substitute this variable with file contents (inside `foo` tag).
 

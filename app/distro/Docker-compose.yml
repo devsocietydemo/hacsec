@@ -1,0 +1,54 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: dawidbuchwald/hacsec-mysql:latest
+    container_name: acmebank-db
+    restart: always
+
+  redis:
+    image: dawidbuchwald/hacsec-redis:latest
+    container_name: acmebank-redis
+    restart: always
+
+  api:
+    image: dawidbuchwald/hacsec-api:latest
+    container_name: acmebank-api
+    depends_on:
+      - db
+      - redis
+    environment:
+      BANKAPI_DB_HOSTNAME: db
+      BANKAPI_REDIS_HOSTNAME: redis
+      BANKAPI_REDIS_PORT: 6379
+    restart: always
+
+  adminer:
+    image: dawidbuchwald/hacsec-adminer:latest
+    container_name: acmebank-adminer
+    depends_on:
+      - db
+    restart: always
+
+  cdn:
+    image: dawidbuchwald/hacsec-cdn:latest
+    container_name: acmebank-cdn
+    restart: always
+
+  fake-login:
+    image: dawidbuchwald/hacsec-fake-login:latest
+    container_name: acmebank-fake-login
+    ports:
+      - 8005:8005
+    restart: always
+
+  frontend:
+    image: dawidbuchwald/hacsec-frontend:latest
+    container_name: acmebank-frontend
+    depends_on:
+      - api
+      - cdn
+    ports:
+      - 80:80
+    restart: always

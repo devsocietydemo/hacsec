@@ -1,0 +1,157 @@
+Security Hackathon Getting Started
+==================================
+:Author: Dawid Buchwald 
+:Email: dawid.buchwald@cgi.com
+:version: 1.0
+:linkattrs:
+
+image::hackathon.jpg["Hackathon"]
+
+Introduction
+------------
+The purpose of this document is to provide all the information needed to start running application during Security Hackathon.
+
+[[checking-port-80]]
+Finding available port
+----------------------
+Start with opening Windows Command Prompt. To do it, start by opening command prompt using `Windows + R` shortcut again and entering `cmd` as command:
+
+image::run_cmd.jpg["Running Windows Command Prompt"]
+
+Our application by default uses port `80` to listen, so when you run it in next chapter, it will be available to your browser on http://localhost (browsers use port `80` by default).
+
+Unfortunately, on some laptops port `80` might already be in use by another application, and we will have to use another one. To verify it, run the following command in Windows Command Prompt: `netstat -an | findstr LISTEN | findstr ":80\>"`. You expect no entries in response, like that:
+----
+C:\Users\dawid.buchwald>netstat -an | findstr LISTEN | findstr ":80\>"
+
+C:\Users\dawid.buchwald>
+----
+
+If this is what you get (no output), move on to <<running-compatibility-test-application,next chapter>>. Otherwise, if you got something like:
+----
+C:\Users\dawid.buchwald>netstat -an | findstr LISTEN | findstr ":80\>"
+  TCP    0.0.0.0:80            0.0.0.0:0              LISTENING
+  TCP    [::]:80               [::]:0                 LISTENING
+
+C:\Users\dawid.buchwald>
+----
+
+This means that the port `80` is already in use on your machine, and you have to try to use another one. Some of the numbers to try are: `81`, `8080`, `8081`, `8082`. Keep checking them until you find one that is not used (there will be no output, like below):
+----
+C:\Users\dawid.buchwald>netstat -an | findstr LISTEN | findstr ":81\>"   <1>
+  TCP    0.0.0.0:81            0.0.0.0:0              LISTENING
+  TCP    [::]:81               [::]:0                 LISTENING
+
+C:\Users\dawid.buchwald>netstat -an | findstr LISTEN | findstr ":8081\>" <2>
+  TCP    0.0.0.0:8081          0.0.0.0:0              LISTENING
+  TCP    [::]:8081             [::]:0                 LISTENING
+
+C:\Users\dawid.buchwald>netstat -an | findstr LISTEN | findstr ":8080\>" <3>
+
+C:\Users\dawid.buchwald>
+----
+
+<1> - port 81 is used, since there is some output,
+<2> - port 8081 is also used, since there is some output,
+<3> - port 8080 is available, since there is no output. *Note it down and continue*.
+
+Installing application locally
+------------------------------
+Run the following command in Windows Command Prompt to get the files (Please note: this is single line command!) `xcopy /r /y /i \\morgana.ams.com\Public\Hackathons\Security\BankingApp BankingApp`:
+----
+C:\Users\dawid.buchwald>xcopy /r /y /i \\morgana.ams.com\Public\Hackathons\Security\BankingApp BankingApp
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\contacts.xml
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\destroy.bat
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\destroy.sh
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\Docker-compose.yml
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\start.bat
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\start.sh
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\stop.bat
+\\morgana.ams.com\Public\Hackathons\Security\BankingApp\stop.sh
+8 File(s) copied
+
+C:\Users\dawid.buchwald>
+----
+
+Go to `BankingApp` folder using `cd BankingApp` command:
+----
+C:\Users\dawid.buchwald>cd BankingApp
+
+----
+
+List directory contents using `dir` command:
+----
+C:\Users\dawid.buchwald\BankingApp>dir
+ Volume in drive C is Windows
+ Volume Serial Number is 204D-474E
+
+ Directory of C:\Users\dawid.buchwald\BankingApp
+
+23.11.2018  17:39    <DIR>          .
+23.11.2018  17:39    <DIR>          ..
+23.11.2018  17:38               266 contacts.xml       <1>
+23.11.2018  17:17                25 destroy.bat        <2>
+23.11.2018  17:17                25 destroy.sh         <3>
+23.11.2018  17:17             1 138 Docker-compose.yml <4>
+23.11.2018  17:17                20 start.bat          <5>
+23.11.2018  17:17                20 start.sh           <6>
+23.11.2018  17:17                21 stop.bat           <7>
+23.11.2018  17:17                19 stop.sh            <8>
+               8 File(s)          1 534 bytes
+               2 Dir(s)  385 772 048 384 bytes free
+
+C:\Users\dawid.buchwald\BankingApp>
+----
+
+The files are:
+
+<1> `contacts.xml` is sample file for contacts upload operation - you will need it for one of the attacks,
+<2> `destroy.bat` is the Windows script to remove locally modified version of the application - in case something goes really wrong and you would like to start over,
+<3> `destroy.sh` is the Linux/MacOS variant of the above,
+<4> `Docker-compose.yml` file contains application definition, it will be used by Docker to run the app,
+<5> `start.bat` is the Windows script used to run the application,
+<6> `start.sh` is the startup script to be used in Linux/MacOS environment,
+<7> `stop.bat` is the Windows script used to stop the application,
+<8> `stop.sh` is the shutdown script for Linux/MacOS systems.
+
+If your port 80 is not available, refer to link:hacsec-intro.html#running-compatibility-test-application[Security Hackathon Introduction] document for information about how to change port number in `Docker-compose.yml`.
+
+Start the application by running `start.bat` script:
+
+----
+C:\Users\dawid.buchwald\BankingApp>start.bat
+Creating network "bankingapp_default" with the default driver
+Pulling db (dawidbuchwald/hacsec-mysql:latest)...
+latest: Pulling from dawidbuchwald/hacsec-mysql
+----
+
+After some time it will finish downloading all the images, and (hopefully) it will display this message:
+----
+Pulling frontend (dawidbuchwald/hacsec-frontend:latest)...
+latest: Pulling from dawidbuchwald/hacsec-frontend
+a5a6f2f73cd8: Already exists
+ac13924397e3: Already exists
+91b81769f14a: Already exists
+fec7170426de: Already exists
+992c7790d5f3: Already exists
+bc3a6acac95c: Pull complete
+10bbc6ca47d9: Pull complete
+Creating acmebank-fake-login ... done
+Creating acmebank-redis      ... done
+Creating acmebank-cdn        ... done
+Creating acmebank-db         ... done
+Creating acmebank-adminer    ... done
+Creating acmebank-api        ... done
+Creating acmebank-frontend   ... done
+
+C:\Users\dawid.buchwald\BankingApp>
+----
+
+Open the browser by typing `start http://localhost` command. If you are using custom port, append it after colon.
+----
+C:\Users\dawid.buchwald\BankingApp>start http://localhost
+----
+
+Logging into the application for the first time
+-----------------------------------------------
+In order to log into banking system, use `2241` login and `password` password.

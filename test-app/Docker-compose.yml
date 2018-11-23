@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   db:
-    image: dbuchwald/hacsec-test-mysql:${TEST_APP_VERSION}
+    image: dawidbuchwald/hacsec-test-mysql:${TEST_APP_VERSION}
     build:
       context: test-database/
       args:
@@ -12,7 +12,7 @@ services:
     restart: always
 
   redis:
-    image: dbuchwald/hacsec-test-redis:${TEST_APP_VERSION}
+    image: dawidbuchwald/hacsec-test-redis:${TEST_APP_VERSION}
     build:
       context: test-redis/
       args:
@@ -21,7 +21,7 @@ services:
     restart: always
 
   api:
-    image: dbuchwald/hacsec-test-api:${TEST_APP_VERSION}
+    image: dawidbuchwald/hacsec-test-api:${TEST_APP_VERSION}
     build:
       context: test-api/
       args:
@@ -38,7 +38,7 @@ services:
     restart: always
 
   adminer:
-    image: dbuchwald/hacsec-test-adminer:${TEST_APP_VERSION}
+    image: dawidbuchwald/hacsec-test-adminer:${TEST_APP_VERSION}
     build:
       context: test-adminer/
       args:
@@ -49,7 +49,7 @@ services:
     restart: always
 
   cdn:
-    image: dbuchwald/hacsec-test-cdn:${TEST_APP_VERSION}
+    image: dawidbuchwald/hacsec-test-cdn:${TEST_APP_VERSION}
     build:
       context: test-cdn/
       args:
@@ -58,7 +58,7 @@ services:
     restart: always
 
   frontend:
-    image: dbuchwald/hacsec-test-frontend:${TEST_APP_VERSION}
+    image: dawidbuchwald/hacsec-test-frontend:${TEST_APP_VERSION}
     build:
       context: test-frontend/
       args:

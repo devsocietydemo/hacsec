@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   db:
-    image: dbuchwald/hacsec-mysql:${APP_VERSION}
+    image: dawidbuchwald/hacsec-mysql:${APP_VERSION}
     build:
       context: bank-database/
       args:
@@ -12,7 +12,7 @@ services:
     restart: always
 
   redis:
-    image: dbuchwald/hacsec-redis:${APP_VERSION}
+    image: dawidbuchwald/hacsec-redis:${APP_VERSION}
     build:
       context: bank-redis/
       args:
@@ -21,7 +21,7 @@ services:
     restart: always
 
   api:
-    image: dbuchwald/hacsec-api:${APP_VERSION}
+    image: dawidbuchwald/hacsec-api:${APP_VERSION}
     build:
       context: bank-api/
       args:
@@ -37,7 +37,7 @@ services:
     restart: always
 
   adminer:
-    image: dbuchwald/hacsec-adminer:${APP_VERSION}
+    image: dawidbuchwald/hacsec-adminer:${APP_VERSION}
     build:
       context: bank-adminer/
       args:
@@ -48,7 +48,7 @@ services:
     restart: always
 
   cdn:
-    image: dbuchwald/hacsec-cdn:${APP_VERSION}
+    image: dawidbuchwald/hacsec-cdn:${APP_VERSION}
     build:
       context: bank-cdn/
       args:
@@ -57,7 +57,7 @@ services:
     restart: always
 
   fake-login:
-    image: dbuchwald/hacsec-fake-login:${APP_VERSION}
+    image: dawidbuchwald/hacsec-fake-login:${APP_VERSION}
     build:
       context: bank-fake-login/
       args:
@@ -68,7 +68,7 @@ services:
     restart: always
 
   frontend:
-    image: dbuchwald/hacsec-frontend:${APP_VERSION}
+    image: dawidbuchwald/hacsec-frontend:${APP_VERSION}
     build:
       context: bank-frontend/
       args:
