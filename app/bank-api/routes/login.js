@@ -1,6 +1,7 @@
 var uid = require('uid-safe');
 var express = require('express');
 var sha256 = require('js-sha256');
+var async = require('async');
 var router = express.Router();
 
 router.post('/', function (req, res, next) {
@@ -10,7 +11,7 @@ router.post('/', function (req, res, next) {
 															'WHERE id=? AND password=?', [requestBody.id, sha256(requestBody.password)], 
 		function (error, results, fields) {
 			if (error) {
-				res.status(500).send({error: "Database query failed, error message: " + error});
+				res.status(500).send({error: `Database query failed, error message: ${error}`});
 			} else {
 				var loginResponse = { success: false, sessionId: null};
 				console.log(results);
@@ -19,7 +20,7 @@ router.post('/', function (req, res, next) {
 					loginResponse.sessionId = uid.sync(18);
 					res.locals.redisClient.set(loginResponse.sessionId, requestBody.id, function(err, status) {
 						if (err) {
-							res.status(500).send({error: "Session initialization failed, error message: " + err});
+							res.status(500).send({error: `Session initialization failed, error message: ${err}`});
 						} else {
 							res.status(200).send(loginResponse);
 						}
@@ -34,9 +35,21 @@ router.post('/', function (req, res, next) {
 router.get('/sessions', function (req, res, next) {
 	res.locals.redisClient.keys('*', function(err, replies) {
 		if (err) {
-			res.status(500).send({error: "Redis query failed, error message: " + err});
+			res.status(500).send({error: `Redis query failed, error message: ${err}`});
 		} else {
-			res.status(200).send(replies);
+			async.map(replies, function(key, callback) {
+				res.locals.redisClient.get(key, function(error, value) {
+					if (error) return callback(error);
+					var entry = { sessionId: key, customerId: value };
+					callback(null, entry);
+				})
+			}, function(error, results) {
+				if (error) {
+					res.status(500).send({error:`Error when querying Redis: ${error}`});
+				} else {
+					res.status(200).send(results);
+				}
+			})
 		}
 	});
 });
