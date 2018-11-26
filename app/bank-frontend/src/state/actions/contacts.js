@@ -21,6 +21,7 @@ export const setContacts = (contacts) => ({
 
 export const initAddContact = () => (dispatch, getState) => {
   const currentUser = getState().session.currentUser;
+  const sessionId = getState().session.sessionId;
 
   const {name, iban} = getState().contacts.newContact
   const dataToSend = {
@@ -29,7 +30,7 @@ export const initAddContact = () => (dispatch, getState) => {
   };
 
   dispatch(startLoading());
-  return addContact(currentUser.id, dataToSend)
+  return addContact(currentUser.id, dataToSend, sessionId)
     .then(
       () => dispatch(selectOperation(OPERATION_CONTACTS)),
       error => dispatch(setError(ERROR_ADD_CONTACT_FAILED, error.message))
@@ -39,9 +40,10 @@ export const initAddContact = () => (dispatch, getState) => {
 export const initImportContacts = () => (dispatch, getState) => {
   const currentUser = getState().session.currentUser;
   const dataToSend = getState().contacts.newContact.importXml;
+  const sessionId = getState().session.sessionId;
 
   dispatch(startLoading());
-  return importContacts(currentUser.id, dataToSend)
+  return importContacts(currentUser.id, dataToSend, sessionId)
     .then(
       () => dispatch(selectOperation(OPERATION_CONTACTS)),
       error => dispatch(setError(ERROR_IMPORT_CONTACT_FAILED, error.message))

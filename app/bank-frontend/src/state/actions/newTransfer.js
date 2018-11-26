@@ -51,8 +51,10 @@ export const initTransferSend = () => (dispatch, getState) => {
     account_id
   };
 
+  const sessionId = getState().session.sessionId;
+
   dispatch(startLoading());
-  return sendNormalTransfer(dataToSend)
+  return sendNormalTransfer(dataToSend, sessionId)
     .then(
       () => dispatch(selectOperation(OPERATION_ACCOUNTS)),
       error => dispatch(setError(ERROR_TRANSFER_FAILED, error.message))

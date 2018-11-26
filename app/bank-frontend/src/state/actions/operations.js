@@ -49,8 +49,8 @@ export const selectOperation = (operation, params) => (dispatch, getState) => {
 
       dispatch(startLoading());
       return Promise.all([
-          getAccountTransactions(accountId),
-          getAccount(accountId)
+          getAccountTransactions(accountId, sessionId),
+          getAccount(accountId, sessionId)
         ])
         .then(
           ([txData, accountData]) => dispatch(setCurrentBalance(accountData[0], txData)),

@@ -3,7 +3,6 @@ import { setUser, removeUser, setUserSessionId } from '../../sessionManager';
 import { startLoading } from './spinner';
 import { OPERATION_ACCOUNTS, selectOperation } from './operations';
 import { ERROR_LOGIN_NOT_FOUND, ERROR_LOGIN_FETCH_FAILED, setError } from './errors';
-import { sha256 } from "js-sha256";
 
 export const SET_LOGIN_STATE = 'setLoginState';
 export const SET_LOGIN_ERROR = 'setLoginError';
@@ -30,7 +29,7 @@ export const setSessionId = (sessionId) => ({
 
 export const authenticate = () => (dispatch, getState) => {
   const {login} = getState().session;
-  const credentials = {id: getState().session.login, password: sha256(getState().session.password)};
+  const credentials = {id: getState().session.login, password: getState().session.password};
 
 
   dispatch(startLoading());
@@ -40,7 +39,7 @@ export const authenticate = () => (dispatch, getState) => {
         if (data.success) {
           dispatch(setSessionId(data.sessionId));
           setUserSessionId(data.sessionId);
-          getCustomer(login)
+          getCustomer(login,data.sessionId)
           .then(
             data => {
               if (data.length > 0) {

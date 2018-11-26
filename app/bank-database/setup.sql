@@ -24,25 +24,26 @@ DROP TABLE IF EXISTS customers;
 
 CREATE TABLE customers(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                        name VARCHAR(60) NOT NULL,
-					   nationality CHAR(2) NOT NULL DEFAULT 'PL',
-						 password CHAR(64) NOT NULL);
+					             nationality CHAR(2) NOT NULL DEFAULT 'PL',
+                       salt CHAR(64) NOT NULL,
+						           password CHAR(64) NOT NULL);
 
 ALTER TABLE customers AUTO_INCREMENT=2241;
 
 CREATE TABLE accounts(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                       iban VARCHAR(26) NOT NULL UNIQUE,
-					  balance NUMERIC(15,2) NOT NULL,
-					  currency CHAR(3) NOT NULL DEFAULT 'EUR');
+					            balance NUMERIC(15,2) NOT NULL,
+					            currency CHAR(3) NOT NULL DEFAULT 'EUR');
 
 ALTER TABLE accounts AUTO_INCREMENT=86433;
 
 CREATE TABLE account_ownership(customer_id INTEGER NOT NULL,
                                account_id INTEGER NOT NULL,
-							   ownership_mode ENUM('O', 'P'),
-							   account_name VARCHAR(50),
-							   PRIMARY KEY(customer_id, account_id),
-							   FOREIGN KEY(customer_id) REFERENCES customers(id),
-							   FOREIGN KEY(account_id) REFERENCES accounts(id));
+							                 ownership_mode ENUM('O', 'P'),
+							                 account_name VARCHAR(50),
+							                 PRIMARY KEY(customer_id, account_id),
+							                 FOREIGN KEY(customer_id) REFERENCES customers(id),
+							                 FOREIGN KEY(account_id) REFERENCES accounts(id));
 
 CREATE TABLE transactions(id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
                           account_id INTEGER NOT NULL,
@@ -70,7 +71,8 @@ LOAD DATA INFILE '/tmp/customers.csv'
 INTO TABLE customers
 FIELDS TERMINATED BY ','
 (id, name, nationality, @password)
-SET password = SHA2(TRIM(TRAILING '\r' FROM @password), 256);
+SET password = SHA2(TRIM(TRAILING '\r' FROM @password), 256),
+    salt = MD5(rand());
 
 LOAD DATA INFILE '/tmp/accounts.csv'
 INTO TABLE accounts

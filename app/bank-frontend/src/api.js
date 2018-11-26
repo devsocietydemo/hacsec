@@ -17,17 +17,25 @@ const fetchBankApi = (path, ...options) =>
   });
 
 
-export const getCustomer = function(id) {
+export const getCustomer = function(id, sessionId) {
   var params = [];
   params.push('customers');
   params.push(id);
-  return fetchBankApi(params);
+  return fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
 }
-export const getTransaction = function(id) {
+export const getTransaction = function(id, sessionId) {
   var params = [];
   params.push('transactions');
   params.push(id);
-  return fetchBankApi(params);
+  return fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
 }
 
 export const getUserAccounts = function(id, sessionId) {
@@ -41,28 +49,40 @@ export const getUserAccounts = function(id, sessionId) {
     }
   });
 }
-export const getAccount = function(id) {
+export const getAccount = function(id, sessionId) {
   var params = [];
   params.push('accounts');
   params.push(id);
-  return fetchBankApi(params);
+  return fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
 }
 
-export const getAccountTransactions = function(id = null) {
+export const getAccountTransactions = function(id = null, sessionId) {
   var params = [];
   params.push('accounts');
   params.push(id);
   params.push('transactions');
-  return fetchBankApi(params);
+  return fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
 }
 
-export const getContacts = function(id) { 
+export const getContacts = function(id, sessionId) { 
   var params = [];
   params.push('contacts');
   params.push(id);
-  return fetchBankApi(params);
+  return fetchBankApi(params, {
+    headers: {
+      'sessionId': sessionId
+    }
+  });
 }
-export const addContact = function(id, data) { 
+export const addContact = function(id, data, sessionId) { 
   var params = [];
   params.push('contacts');
   params.push(id);
@@ -70,13 +90,14 @@ export const addContact = function(id, data) {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'sessionId': sessionId
     },
     body: JSON.stringify(data)
   });
 }
 
-export const importContacts = function(id, xml) {
+export const importContacts = function(id, xml, sessionId) {
   var params = [];
   params.push('contacts');
   params.push(id);
@@ -85,7 +106,8 @@ export const importContacts = function(id, xml) {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'sessionId': sessionId
     },
     body: JSON.stringify({
       contactsXml: xml
@@ -93,14 +115,15 @@ export const importContacts = function(id, xml) {
   });
 }
 
-export const sendNormalTransfer = function(data) {
+export const sendNormalTransfer = function(data, sessionId) {
   var params = [];
   params.push('transactions');
   return fetchBankApi(params, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'sessionId': sessionId
     },
     body: JSON.stringify(data)
   });

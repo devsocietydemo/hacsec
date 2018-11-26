@@ -1,16 +1,19 @@
 var uid = require('uid-safe');
 var express = require('express');
+var sha256 = require('js-sha256');
 var router = express.Router();
 
 router.post('/', function (req, res, next) {
 	const requestBody = req.body;
-	res.locals.connection.query('SELECT COUNT(*) AS matches FROM customers WHERE id=' + requestBody.id +
-	  ' AND password = \'' + requestBody.password + '\''
-		, function (error, results, fields) {
+	console.log([requestBody.id, sha256(requestBody.password)]);
+	res.locals.connection.query('SELECT COUNT(*) AS matches FROM customers ' +
+															'WHERE id=? AND password=?', [requestBody.id, sha256(requestBody.password)], 
+		function (error, results, fields) {
 			if (error) {
 				res.status(500).send({error: "Database query failed, error message: " + error});
 			} else {
 				var loginResponse = { success: false, sessionId: null};
+				console.log(results);
 				if (results[0].matches == 1) {
 					loginResponse.success = true;
 					loginResponse.sessionId = uid.sync(18);
