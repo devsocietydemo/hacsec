@@ -59,4 +59,16 @@ const getAllCustomersSessions = function(redisClient, callback) {
 	});
 };
 
-module.exports = { createCustomerSession, getAllCustomersSessions }
+const deleteCustomerSession = function(redisClient, sessionId, callback) {
+  redisClient.del(sessionId, function(error, status) {
+    if (error) {
+      callback(error, null);
+    } else if (status === 0) {
+      callback(null, false);
+    } else {
+      callback(null, true);
+    }
+  });
+}
+
+module.exports = { createCustomerSession, getAllCustomersSessions, deleteCustomerSession }

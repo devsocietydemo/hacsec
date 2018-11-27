@@ -153,6 +153,7 @@ export const processLogoutOperation = function(sessionId) {
   var params = [];
   params.push('logout');
   fetchBankApi(params, {
+    method: 'POST',
     headers: {
       'sessionId': sessionId
     }
