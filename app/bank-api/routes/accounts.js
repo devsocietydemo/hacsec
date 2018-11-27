@@ -46,7 +46,7 @@ router.get('/:id/transactions', function(req, res, next) {
 			} else {
 				res.locals.connection.query('SELECT tr.id, tr.transaction_date, tr.amount, tr.description, tr.target_iban from accounts acc, transactions tr where acc.id = tr.account_id and acc.id = ?', [accountId], function (error, results, fields) {
 					if (error) {
-						res.status(500).send({error: "Database query failed, error message: " + error});
+						res.status(500).send({error: `Database query failed, error message: ${error}`});
 					} else {
 						res.status(200).send(results);
 					}

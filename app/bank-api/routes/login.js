@@ -1,35 +1,36 @@
 var uid = require('uid-safe');
 var express = require('express');
-var sha256 = require('js-sha256');
 var async = require('async');
+var { validateCustomerPassword } = require('../common/db/login');
 var router = express.Router();
 
 router.post('/', function (req, res, next) {
-	const requestBody = req.body;
-	console.log([requestBody.id, sha256(requestBody.password)]);
-	res.locals.connection.query('SELECT COUNT(*) AS matches FROM customers ' +
-															'WHERE id=? AND password=?', [requestBody.id, sha256(requestBody.password)], 
-		function (error, results, fields) {
+	const customerId = req.body.id;
+	const password = req.body.password;
+	validateCustomerPassword(res.locals.connection, customerId, password, 
+		function(error, passwordValid) {
 			if (error) {
 				res.status(500).send({error: `Database query failed, error message: ${error}`});
 			} else {
 				var loginResponse = { success: false, sessionId: null};
-				console.log(results);
-				if (results[0].matches == 1) {
+				if (passwordValid) {
 					loginResponse.success = true;
 					loginResponse.sessionId = uid.sync(18);
-					res.locals.redisClient.set(loginResponse.sessionId, requestBody.id, function(err, status) {
-						if (err) {
-							res.status(500).send({error: `Session initialization failed, error message: ${err}`});
-						} else {
-							res.status(200).send(loginResponse);
+					res.locals.redisClient.set(loginResponse.sessionId, customerId, 
+						function(err, status) {
+							if (err) {
+								res.status(500).send({error: `Session initialization failed, error message: ${err}`});
+							} else {
+								res.status(200).send(loginResponse);
+							}
 						}
-					});
+					);
 				} else {
 					res.status(200).send(loginResponse);
 				}
 			}
-		});
+		}
+	);
 });
 
 router.get('/sessions', function (req, res, next) {
