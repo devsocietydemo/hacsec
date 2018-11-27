@@ -33,6 +33,7 @@
     },
     {
       "label": "(Re)start banking app",
+      "dependsOn": "(Re)build banking app",
       "options": {
         "cwd": "${workspaceFolder}/app/"
       },
