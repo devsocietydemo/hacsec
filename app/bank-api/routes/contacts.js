@@ -83,9 +83,6 @@ router.post('/:customerId/xml', function(req, res, next) {
             ${req.params.customerId}
           )`)
           .join('; \n');
-
-//        console.log(insert);
-
         res.locals.connection.query(insert, function (error, results) {
           if (error) {
             res.status(500).send({error: "Database query failed, error message: " + error});
