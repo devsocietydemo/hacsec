@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var {validateCustomerSession} = require('../common/security');
+var {validateCustomerSession} = require('../common/redis/sessions');
 
 // router.get('/', function(req, res, next) {
 // 	res.locals.connection.query('SELECT * from customers', function (error, results, fields) {

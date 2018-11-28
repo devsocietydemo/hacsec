@@ -1,5 +1,5 @@
 var express = require('express');
-var { validateCustomerAccessToAccount } = require('../common/security');
+var { validateCustomerAccessToAccount } = require('../common/redis/sessions');
 var router = express.Router();
 
 // router.get('/', function(req, res, next) {

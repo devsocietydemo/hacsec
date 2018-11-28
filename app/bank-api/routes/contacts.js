@@ -1,6 +1,6 @@
 var express = require('express');
 var libxmljs = require('libxmljs');
-var { validateCustomerSession } = require('../common/security')
+var { validateCustomerSession } = require('../common/redis/sessions')
 
 var libxmlParseOptions = {
   nocdata: true,
