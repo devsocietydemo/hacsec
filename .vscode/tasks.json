@@ -9,10 +9,10 @@
         "cwd": "${workspaceFolder}/app/"
       },
       "linux": {
-        "command": "build.sh"
+        "command": "./build.sh"
       },
       "osx": {
-        "command": "build.sh"
+        "command": "./build.sh"
       },
       "windows": {
         "command": "build.bat"
@@ -38,10 +38,10 @@
         "cwd": "${workspaceFolder}/app/"
       },
       "linux": {
-        "command": "start.sh"
+        "command": "./start.sh"
       },
       "osx": {
-        "command": "start.sh"
+        "command": "./start.sh"
       },
       "windows": {
         "command": "start.bat"
@@ -66,10 +66,10 @@
         "cwd": "${workspaceFolder}/app/"
       },
       "linux": {
-        "command": "stop.sh"
+        "command": "./stop.sh"
       },
       "osx": {
-        "command": "stop.sh"
+        "command": "./stop.sh"
       },
       "windows": {
         "command": "stop.bat"
@@ -94,10 +94,10 @@
         "cwd": "${workspaceFolder}/app/"
       },
       "linux": {
-        "command": "destroy.sh"
+        "command": "./destroy.sh"
       },
       "osx": {
-        "command": "destroy.sh"
+        "command": "./destroy.sh"
       },
       "windows": {
         "command": "destroy.bat"

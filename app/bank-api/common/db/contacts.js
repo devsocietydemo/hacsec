@@ -22,4 +22,16 @@ const addCustomerContact = function(connection, customerId, name, iban, callback
   );
 }
 
-module.exports = { getAllCustomerContacts, addCustomerContact }
+const deleteAllCustomerContacts = function(connection, customerId, callback) {
+  connection.query('DELETE FROM contacts WHERE customer_id = ?', [customerId],
+    function(error, results) {
+      if (error) {
+        callback(`Database query failed, error message: ${error}`);
+      } else {
+        callback(null);
+      }
+    }
+  );
+}
+
+module.exports = { getAllCustomerContacts, addCustomerContact, deleteAllCustomerContacts }

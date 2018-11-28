@@ -1,6 +1,6 @@
 var express = require('express');
 var libxmljs = require('libxmljs');
-var { getAllCustomerContacts, addCustomerContact } = require('../common/db/contacts');
+var { getAllCustomerContacts, addCustomerContact, deleteAllCustomerContacts } = require('../common/db/contacts');
 var { validateCustomerSession } = require('../common/redis/sessions')
 
 var libxmlParseOptions = {
@@ -70,26 +70,31 @@ router.post('/:customerId/xml', function(req, res, next) {
     'iban': el.get('iban').text()
   }));
 
-  res.locals.connection.query('DELETE FROM contacts WHERE customer_id = ?', [customerId], 
-    function (error, results, fields) {
+  deleteAllCustomerContacts(res.locals.connection, customerId, 
+    function (error) {
       if (error) {
-        res.status(500).send({error: `Database query failed, error message: ${error}`});
+        res.status(500).send({error: `${error}`});
       } else {
         const insert = contactObjects
-          .map(obj => `INSERT INTO contacts (\`name\`, \`iban\`, \`customer_id\`)
-          VALUES (
-            "${obj.name.replace(/\n/g, '')}",
-            "${obj.iban.replace(/\n/g, '')}",
-            ${req.params.customerId}
-          )`)
-          .join('; \n');
-        res.locals.connection.query(insert, function (error, results) {
-          if (error) {
-            res.status(500).send({error: "Database query failed, error message: " + error});
-          } else {
-            res.status(200).send(contactObjects);
-          }
-        });
+          .map(obj => new Promise( function(resolve, reject) {
+            addCustomerContact(res.locals.connection, 
+                               req.params.customerId,
+                               `${obj.name.replace(/\n/g, '')}`,
+                               `${obj.iban.replace(/\n/g, '')}`, 
+              function(error, results) {
+                if (error) {
+                  reject (error);
+                } else {
+                  resolve (results);
+                }
+              }
+            )
+          }));
+        Promise.all(insert).then(function() {
+          res.status(200).send(contactObjects);
+        }).catch(function(error) {
+          res.status(500).send({error: `${error}`});
+        });  
       }
     }
   );
