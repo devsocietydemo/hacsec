@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var {validateCustomerSession} = require('../common/redis/sessions');
+var { getCustomer, getAllCustomerAccounts } = require('../common/db/customers');
+var { validateCustomerSession } = require('../common/redis/sessions');
 
 router.get('/:id', function(req, res, next) {
-	const id = req.params.id;
-	res.locals.connection.query('SELECT * from customers where id = ' + id, function (error, results, fields) {
+	const customerId = req.params.id;
+	getCustomer(res.locals.connection, customerId, function (error, results) {
 		if (error) {
-			res.status(500).send({error: "Database query failed, error message: " + error});
+			res.status(500).send({error: `${error}`});
 		} else {
 			res.status(200).send(results);
 		}
@@ -14,30 +15,16 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.get('/:id/accounts', function(req, res, next) {
-	const id = req.params.id;
+	const customerId = req.params.id;
 	const sessionId = req.headers.sessionid;
-	validateCustomerSession(res.locals.redisClient, sessionId, id, function(err, success) {
-		if (err) {
-			res.status(500).send({error: `Session validation failed, error message: ${err}`});
+	validateCustomerSession(res.locals.redisClient, sessionId, customerId, function(error, success) {
+		if (error) {
+			res.status(500).send({error: `Session validation failed, error message: ${error}`});
 		} else if (success) {
-			res.locals.connection.query('SELECT ' + 
-																	'  o.account_id as id, ' + 
-																	'  o.ownership_mode, ' + 
-																	'  o.account_name, ' +
-																	'  a.iban, ' + 
-																	'  a.currency, ' + 
-																	'  a.balance ' +
-																	'FROM ' +
-																	'  account_ownership o ' +
-																	'JOIN ' +
-																	'  accounts a ' +
-																	'ON ' +
-																	'  (a.id = o.account_id) ' +
-																	'WHERE ' +
-																	'  customer_id = ?', [id], 
-				function (error, results, fields) {
+      getAllCustomerAccounts(res.locals.connection, customerId, 
+				function (error, results) {
 					if (error) {
-						res.status(500).send({error: "Database query failed, error message: " + error});
+						res.status(500).send({error: `${error}`});
 					} else {
 						res.status(200).send(results);
 					}
