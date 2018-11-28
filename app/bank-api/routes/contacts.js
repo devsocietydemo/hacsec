@@ -1,5 +1,6 @@
 var express = require('express');
 var libxmljs = require('libxmljs');
+var { getAllCustomerContacts, addCustomerContact } = require('../common/db/contacts');
 var { validateCustomerSession } = require('../common/redis/sessions')
 
 var libxmlParseOptions = {
@@ -17,10 +18,10 @@ router.get('/:customerId', function(req, res, next) {
       if (error) {
         res.status(500).send({error: `Session validation failed: ${error}`});
       } else if (success) {
-        res.locals.connection.query('SELECT * from contacts WHERE customer_id = ?', [customerId], 
-          function (error, results, fields) {
+        getAllCustomerContacts(res.locals.connection, customerId, 
+          function (error, results) {
             if (error) {
-              res.status(500).send({error: `Database query failed, error message: ${error}`});
+              res.status(500).send({error: `${error}`});
             } else {
               res.status(200).send(results);
             }
@@ -42,11 +43,10 @@ router.post('/:customerId', function(req, res, next) {
       if (error) {
         res.status(500).send({error: `Session validation failed: ${error}`});
       } else if (success) {
-        res.locals.connection.query(
-          'INSERT INTO contacts (name, iban, customer_id) VALUES (?, ?, ?)', [name,iban,customerId],
-          function (error, results, fields) {
+        addCustomerContact(res.locals.connection, customerId, name, iban, 
+          function (error, results) {
             if (error) {
-              res.status(500).send({error: `Database query failed, error message: ${error}`});
+              res.status(500).send({error: `${error}`});
             } else {
               res.status(200).send(results);
             }
