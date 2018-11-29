@@ -91,3 +91,9 @@ FIELDS TERMINATED BY ','
 (id, account_id, amount, @transaction_date, description, @target_iban)
 SET target_iban = nullif(TRIM(TRAILING '\r' FROM @target_iban), ''),
     transaction_date = STR_TO_DATE(@transaction_date, '%d.%m.%Y %H:%i:%s');
+
+LOAD DATA INFILE '/tmp/contacts.csv'
+INTO TABLE contacts
+FIELDS TERMINATED BY ','
+(contact_id, name, iban, customer_id)
+

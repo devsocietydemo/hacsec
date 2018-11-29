@@ -8,6 +8,7 @@ COPY customers.csv /tmp/
 COPY accounts.csv /tmp/
 COPY account_ownership.csv /tmp/
 COPY transactions.csv /tmp/
+COPY contacts.csv /tmp/
 
 ADD setup.sql /docker-entrypoint-initdb.d/
 
