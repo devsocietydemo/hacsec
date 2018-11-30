@@ -1,28 +1,34 @@
 var uid = require('uid-safe');
 var async = require('async');
 
-const createCustomerSession = function(redisClient, customerId, callback) {
-  uid(18, 
-    function(error, sessionId) {
-      if (error) {
-        callback(`Safe-UID generate failed with error: ${error}`, null);
-      } else if (sessionId) {
-        redisClient.set(sessionId, customerId, 
-          function(error, status) {
-            if (error) {
-              callback(`Session initialization failed in Redis: ${error}`, null);
-            } else if (status === 'OK') {
-              callback(null, sessionId);
-            } else {
-              callback(`Session initialization in Redis responded with ${status}`, null);
-            }
-         }
-        )
-      } else {
-        callback(`Unable to generate Safe-UID`, null);
+const establishSessionInRedis = function (redisClient, customerId, sessionId) {
+  return new Promise (function (resolve, reject) {
+    redisClient.set(sessionId, customerId, 
+      function(error, status) {
+        if (error) {
+          reject(`Session initialization failed in Redis: ${error}`);
+        } else if (status === 'OKI') {
+          resolve(sessionId);
+        } else {
+          reject(`Session initialization in Redis responded with ${status}`);
+        }
       }
-    }
-  );
+    );
+  });
+}
+
+const createCustomerSession = function(redisClient, customerId) {
+  return new Promise (function (resolve, reject) {
+    uid(18, function(error, sessionId) {
+      if (error) {
+        reject(`Safe-UID generate failed with error: ${error}`);
+      } else if (sessionId) {
+        resolve(establishSessionInRedis(redisClient, customerId, sessionId));
+      } else {
+        reject('Unable to generate Safe-UID')
+      }
+    })
+  });
 }
 
 const getCustomerIdFromSession = function(redisClient, sessionId, callback) {
