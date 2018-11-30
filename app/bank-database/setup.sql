@@ -95,5 +95,6 @@ SET target_iban = nullif(TRIM(TRAILING '\r' FROM @target_iban), ''),
 LOAD DATA INFILE '/tmp/contacts.csv'
 INTO TABLE contacts
 FIELDS TERMINATED BY ','
-(contact_id, name, iban, customer_id)
+(contact_id, name, @iban, customer_id)
+SET iban = nullif(TRIM(TRAILING '\r' FROM @iban), '');
 
