@@ -90,6 +90,7 @@
     },
     {
       "label": "Destroy banking app",
+      "dependsOn": "Stop banking app",
       "options": {
         "cwd": "${workspaceFolder}/app/"
       },
