@@ -7,7 +7,7 @@ const establishSessionInRedis = function (redisClient, customerId, sessionId) {
       function(error, status) {
         if (error) {
           reject(`Session initialization failed in Redis: ${error}`);
-        } else if (status === 'OKI') {
+        } else if (status === 'OK') {
           resolve(sessionId);
         } else {
           reject(`Session initialization in Redis responded with ${status}`);
