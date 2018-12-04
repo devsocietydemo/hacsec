@@ -3,7 +3,7 @@ var { getAccountDetails, getAccountOwnership, validateAccountOwnership } = requi
 var { getAllAccountTransactions } = require('../common/db/transactions');
 var { getCustomerIdFromSession } = require('../common/redis/sessions');
 var { sendCorrectResult, sendErrorMessage } = require('../common/http/handler');
-var { APP_ERROR_CODES, STANDARD_ACCESS_DENIED_ERROR } = require('../common/app/errors');
+var { STANDARD_ACCESS_DENIED_ERROR } = require('../common/app/errors');
 var router = express.Router();
 
 router.get('/:id', function(req, res) {

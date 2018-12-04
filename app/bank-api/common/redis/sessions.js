@@ -90,15 +90,17 @@ const deleteCustomerSession = function(redisClient, sessionId, callback) {
   });
 }
 
-const validateCustomerSession = function(redisClient, sessionId, customerId, callback) {
-  redisClient.get(sessionId, function(err, data) {
-    if (err) {
-      callback(err, null)
-    } else if (data == customerId) {
-      callback(null, true);
-    } else {
-      callback(null, false);
-    }
+const validateCustomerSession = function(redisClient, sessionId, customerId) {
+  return new Promise(function(resolve, reject) {
+    redisClient.get(sessionId, function(error, data) {
+      if (error) {
+        reject({code: REDIS_ERROR_CODES.REDIS_QUERY_FAILED, message: `Redis query failed: ${error}`});
+      } else if (data == customerId) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
   });
 };
 

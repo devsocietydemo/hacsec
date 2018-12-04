@@ -1,5 +1,6 @@
 const { REDIS_ERROR_CODES } = require('../redis/errors');
 const { MYSQL_ERROR_CODES } = require('../db/errors');
+const { XML_ERROR_CODES } = require('../xml/errors');
 const { APP_ERROR_CODES } = require('../app/errors');
 
 const HTTP_OK = 200;
@@ -13,6 +14,7 @@ const mapSystemErrorCodesToHttpCodes = function(errorCode) {
     case REDIS_ERROR_CODES.REDIS_QUERY_FAILED:
     case REDIS_ERROR_CODES.SESSION_DESTROY_FAILED:
     case MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED:
+    case XML_ERROR_CODES.XML_PARSE_FAILED:
       return HTTP_INTERNAL_SERVER_ERROR;
     case APP_ERROR_CODES.APP_ACCESS_DENIED:
       return HTTP_FORBIDDEN;
