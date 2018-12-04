@@ -4,7 +4,7 @@ const getAllAccountTransactions = function(connection, accountId) {
                      'FROM transactions tr WHERE tr.account_id = ?', [accountId], 
       function (error, results) {
         if (error) {
-          reject({code:500, message: `Database query failed: ${error}`});
+          reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message: `Database query failed, error message: ${error}`});
         } else {
           resolve(results);
         }
@@ -13,17 +13,19 @@ const getAllAccountTransactions = function(connection, accountId) {
   });
 }
 
-const createNewTransaction = function(connection, accountId, transactionDate, amount, description, targetIBAN, callback) {
-  connection.query('INSERT INTO transactions (account_id, transaction_date, amount, description, target_iban) VALUES (?, ?, ?, ?, ?)',
-                   [accountId, transactionDate, amount, description, targetIBAN],
-    function (error, results) {
-      if (error) {
-        callback(`Database query failed, error message: ${error}`, null);
-      } else {
-        callback(null, results)
+const createNewTransaction = function(connection, accountId, transactionDate, amount, description, targetIBAN) {
+  return new Promise(function(resolve, reject) {
+    connection.query('INSERT INTO transactions (account_id, transaction_date, amount, description, target_iban) VALUES (?, ?, ?, ?, ?)',
+                    [accountId, transactionDate, amount, description, targetIBAN],
+      function (error, results) {
+        if (error) {
+          reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message: `Database query failed, error message: ${error}`});
+        } else {
+          resolve(results);
+        }
       }
-    }
-  );
+    );
+  });
 }
 
 module.exports = { getAllAccountTransactions, createNewTransaction }

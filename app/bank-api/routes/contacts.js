@@ -50,51 +50,6 @@ router.post('/:customerId/xml', function(req, res) {
     sendErrorMessage(res, STANDARD_ACCESS_DENIED_ERROR);
   }
 
-  // validateCustomerSession(res.locals.redisClient, sessionId, customerId, function(error, success) {
-  //   if (error) {
-  //     res.status(500).send({error: `Session validation failed: ${error}`});
-  //   } else if (success) {
-  //     const contacts = req.body.contactsXml;
-  //     const parsedXml = libxmljs.parseXmlString(contacts, libxmlParseOptions);
-  //     const content = parsedXml.find('//contacts/contact');
-    
-  //     const contactObjects = content.map(el => ({
-  //       'name': el.get('name').text(),
-  //       'iban': el.get('iban').text()
-  //     }));
-    
-  //     deleteAllCustomerContacts(res.locals.connection, customerId, 
-  //       function (error) {
-  //         if (error) {
-  //           res.status(500).send({error: `${error}`});
-  //         } else {
-  //           const insert = contactObjects
-  //             .map(obj => new Promise( function(resolve, reject) {
-  //               addCustomerContact(res.locals.connection, 
-  //                                  req.params.customerId,
-  //                                  `${obj.name.replace(/\n/g, '')}`,
-  //                                  `${obj.iban.replace(/\n/g, '')}`, 
-  //                 function(error, results) {
-  //                   if (error) {
-  //                     reject (error);
-  //                   } else {
-  //                     resolve (results);
-  //                   }
-  //                 }
-  //               )
-  //             }));
-  //           Promise.all(insert).then(function() {
-  //             res.status(200).send(contactObjects);
-  //           }).catch(function(error) {
-  //             res.status(500).send({error: `${error}`});
-  //           });  
-  //         }
-  //       }
-  //     );
-  //   } else {
-  //     res.status(401).send({error: `Access denied`});
-  //   }
-  // });
 });
 
 module.exports = router;
