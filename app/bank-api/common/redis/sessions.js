@@ -44,38 +44,32 @@ const getCustomerIdFromSession = function(redisClient, sessionId) {
   })
 }
 
-const getAllCustomersSessions = function(redisClient, callback) {
-	redisClient.keys('*', function(error, replies) {
-		if (error) {
-			callback(`Redis query failed, error message: ${error}`, null);
-		} else {
-			async.map(replies, function(key, cb) {
-				redisClient.get(key, function(error, value) {
-					if (error) return cb(error);
-					var entry = { customerId: value, sessionId: key };
-					cb(null, entry);
-				})
-			}, function(error, results) {
-				if (error) {
-					callback(`Error when querying Redis: ${error}`, null);
-				} else {
-					callback(null, results.reduce(
-            function(acc, curr) 
-              { 
-                var key = curr.customerId;
-                if (!acc[key]) { 
-                  acc[key] = []
-                }
-                acc[key].push(curr.sessionId);
-                return acc;
-              },
-            {}
-            )
-          );
-				}
-			})
-		}
-	});
+const getAllKeysFromRedis = function(redisClient) {
+  return new Promise(function(resolve, reject) {
+    redisClient.keys('*', function(error, replies) {
+      if (error) {
+        reject({code: REDIS_ERROR_CODES.REDIS_QUERY_FAILED, message: `Fetching all keys failed: ${error}`});
+      } else {
+        resolve(replies);
+      }
+    });
+  });
+}
+
+const getAllCustomersSessions = function(redisClient) {
+  return getAllKeysFromRedis(redisClient)
+    .then(sessions => Promise.all(sessions.map(sessionId => getCustomerIdFromSession(redisClient, sessionId).then(customerId => ({customerId, sessionId})))))
+    .then(results => results.reduce(
+      function(acc, curr) {
+        var key = curr.customerId;
+        if (!acc[key]) { 
+          acc[key] = []
+        }
+        acc[key].push(curr.sessionId);
+        return acc;
+      },
+    {}))
+    .then(results => Object.keys(results).map(key => ({customerId: key, sessions: results[key]})))
 };
 
 const deleteCustomerSession = function(redisClient, sessionId) {

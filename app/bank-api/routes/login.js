@@ -17,13 +17,9 @@ router.post('/', function (req, res) {
 });
 
 router.get('/sessions', function (req, res, next) {
-	getAllCustomersSessions(res.locals.redisClient, function(error, results) {
-		if (error) {
-			res.status(500).send({error: `Redis query failed, error message: ${err}`});
-		} else {
-			res.status(200).send(results);
-		}
-	})
+	getAllCustomersSessions(res.locals.redisClient)
+		.then( results => sendCorrectResult(res, results) )
+		.catch( error => sendErrorMessage(res, error) );
 });
 
 module.exports = router;
