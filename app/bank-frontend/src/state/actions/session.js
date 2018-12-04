@@ -62,8 +62,9 @@ export const authenticate = () => (dispatch, getState) => {
 };
 
 export const logout = () => (dispatch, getState) => {
+  const sessionId = getState().session.sessionId;
   removeUser();
   dispatch(setLoginState(null));
   // @TODO: uncomment following line, when backend guys will deliever it
-  // processLogoutOperation().then( () => dispatch(setLoginState(null)) );
+  // processLogoutOperation(sessionId).then( () => dispatch(setLoginState(null)) );
 }

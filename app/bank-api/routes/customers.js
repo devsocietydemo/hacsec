@@ -7,9 +7,15 @@ var router = express.Router();
 
 router.get('/:id', function(req, res, next) {
   const customerId = req.params.id;
-  getCustomer(res.locals.connection, customerId)
-    .then( results => sendCorrectResult(res, results) )
-    .catch( error => sendErrorMessage(res, error) )
+  const sessionId = req.headers.sessionid;
+  if (sessionId) {
+    validateCustomerSession(res.locals.redisClient, sessionId, customerId)
+      .then( () => getCustomer(res.locals.connection, customerId) )
+      .then( results => sendCorrectResult(res, results) )
+      .catch( error => sendErrorMessage(res, error) )
+  } else {
+    sendErrorMessage(res, STANDARD_ACCESS_DENIED_ERROR);
+  }
 });
 
 router.get('/:id/accounts', function(req, res, next) {

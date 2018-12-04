@@ -78,15 +78,17 @@ const getAllCustomersSessions = function(redisClient, callback) {
 	});
 };
 
-const deleteCustomerSession = function(redisClient, sessionId, callback) {
-  redisClient.del(sessionId, function(error, status) {
-    if (error) {
-      callback(error, null);
-    } else if (status === 0) {
-      callback(null, false);
-    } else {
-      callback(null, true);
-    }
+const deleteCustomerSession = function(redisClient, sessionId) {
+  return new Promise(function(resolve, reject) {
+    redisClient.del(sessionId, function(error, status) {
+      if (error) {
+        reject({code: REDIS_ERROR_CODES.SESSION_DESTROY_FAILED, message:`Session deletion failed: ${error}`});
+      } else if (status === 0) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
   });
 }
 
