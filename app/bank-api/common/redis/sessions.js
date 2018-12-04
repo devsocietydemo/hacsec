@@ -6,11 +6,11 @@ const establishSessionInRedis = function (redisClient, customerId, sessionId) {
     redisClient.set(sessionId, customerId, 
       function(error, status) {
         if (error) {
-          reject(`Session initialization failed in Redis: ${error}`);
+          reject({code: 500, message: `Session initialization failed in Redis: ${error}`});
         } else if (status === 'OK') {
           resolve(sessionId);
         } else {
-          reject(`Session initialization in Redis responded with ${status}`);
+          reject({code: 500, message: `Session initialization in Redis responded with ${status}`});
         }
       }
     );
@@ -21,24 +21,26 @@ const createCustomerSession = function(redisClient, customerId) {
   return new Promise (function (resolve, reject) {
     uid(18, function(error, sessionId) {
       if (error) {
-        reject(`Safe-UID generate failed with error: ${error}`);
+        reject({code: 500, message:`Safe-UID generate failed with error: ${error}`});
       } else if (sessionId) {
         resolve(establishSessionInRedis(redisClient, customerId, sessionId));
       } else {
-        reject('Unable to generate Safe-UID')
+        reject({code: 500, message: 'Unable to generate Safe-UID'})
       }
     })
   });
 }
 
-const getCustomerIdFromSession = function(redisClient, sessionId, callback) {
-  redisClient.get(sessionId, function(error, data) {
-    if (error) {
-      callback(error, null)
-    } else {
-      callback(null, data);
-    }
-  });
+const getCustomerIdFromSession = function(redisClient, sessionId) {
+  return new Promise (function (resolve, reject) {
+    redisClient.get(sessionId, function(error, data) {
+      if (error) {
+        reject({code: 500, message: error})
+      } else {
+        resolve(data);
+      }
+    });
+  })
 }
 
 const getAllCustomersSessions = function(redisClient, callback) {

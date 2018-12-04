@@ -4,7 +4,7 @@ const validateCustomerPassword = function(connection, customerId, password) {
                      'WHERE id=? AND password=SHA2(?, 256)', [customerId, password], 
       function (error, results) {
         if (error) {
-          reject(`Database query failed, error message: ${error}`);
+          reject({code: 500, message: `Database query failed, error message: ${error}`});
         } else {
           resolve(results[0].matches === 1);
         }

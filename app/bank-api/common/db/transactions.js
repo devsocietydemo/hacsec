@@ -1,11 +1,15 @@
-const getAllAccountTransactions = function(connection, accountId, callback) {
-  connection.query('SELECT id, transaction_date, amount, description, target_iban ' +
-                   'FROM transactions tr WHERE tr.account_id = ?', [accountId], function (error, results) {
-    if (error) {
-      callback(`Database query failed: ${error}`, null);
-    } else {
-      callback(null, results);
-    }
+const getAllAccountTransactions = function(connection, accountId) {
+  return new Promise(function(resolve, reject) {
+    connection.query('SELECT id, transaction_date, amount, description, target_iban ' +
+                     'FROM transactions tr WHERE tr.account_id = ?', [accountId], 
+      function (error, results) {
+        if (error) {
+          reject({code:500, message: `Database query failed: ${error}`});
+        } else {
+          resolve(results);
+        }
+      }
+    );
   });
 }
 
