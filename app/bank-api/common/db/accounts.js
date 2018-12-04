@@ -1,3 +1,6 @@
+const { MYSQL_ERROR_CODES } = require('./errors');
+const { APP_ERROR_CODES, STANDARD_ACCESS_DENIED_ERROR } = require('../app/errors');
+
 const getAccountDetails = function (connection, customerId, accountId) {
   return new Promise(function(resolve, reject) {
     connection.query('SELECT a.id, a.iban, a.balance, a.currency, o.account_name ' + 
@@ -5,7 +8,7 @@ const getAccountDetails = function (connection, customerId, accountId) {
                      'WHERE a.id = ? and o.customer_id = ?', [accountId, customerId], 
       function (error, results) {
         if (error) {
-          reject({code: 500, message: `Database query failed, error message: ${error}`});
+          reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message: `Database query failed, error message: ${error}`});
         } else {
           resolve(results);
         }
@@ -21,7 +24,7 @@ const getAccountOwnership = function(connection, customerId, accountId) {
                      [accountId, customerId], 
       function(error, results) {
         if (error) {
-          reject({code: 500, message: `Database query failed, error message: ${error}`});
+          reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message: `Database query failed, error message: ${error}`});
         } else {
           if (results[0]) {
             resolve(results[0].ownership_mode);
@@ -36,7 +39,7 @@ const getAccountOwnership = function(connection, customerId, accountId) {
 
 const validateAccountOwnership = function(accountOwnership) {
   if (accountOwnership !== 'O' && accountOwnership !== 'P') {
-    return Promise.reject({code: 401, message: 'Access denied'});
+    return Promise.reject(STANDARD_ACCESS_DENIED_ERROR);
   } else {
     return Promise.resolve(); 
   }

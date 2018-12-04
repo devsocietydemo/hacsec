@@ -1,0 +1,5 @@
+const MYSQL_ERROR_CODES = {
+  MYSQL_QUERY_FAILED: 'MYSQL_QUERY_FAILED'
+}
+
+module.exports = { MYSQL_ERROR_CODES }

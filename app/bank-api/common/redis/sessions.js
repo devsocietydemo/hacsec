@@ -1,16 +1,17 @@
 var uid = require('uid-safe');
 var async = require('async');
+const { REDIS_ERROR_CODES } = require('./errors');
 
 const establishSessionInRedis = function (redisClient, customerId, sessionId) {
   return new Promise (function (resolve, reject) {
     redisClient.set(sessionId, customerId, 
       function(error, status) {
         if (error) {
-          reject({code: 500, message: `Session initialization failed in Redis: ${error}`});
+          reject({code: REDIS_ERROR_CODES.SESSION_INIT_FAILED, message: `Session initialization failed in Redis: ${error}`});
         } else if (status === 'OK') {
           resolve(sessionId);
         } else {
-          reject({code: 500, message: `Session initialization in Redis responded with ${status}`});
+          reject({code: REDIS_ERROR_CODES.SESSION_INIT_FAILED, message: `Session initialization in Redis responded with ${status}`});
         }
       }
     );
@@ -21,11 +22,11 @@ const createCustomerSession = function(redisClient, customerId) {
   return new Promise (function (resolve, reject) {
     uid(18, function(error, sessionId) {
       if (error) {
-        reject({code: 500, message:`Safe-UID generate failed with error: ${error}`});
+        reject({code: REDIS_ERROR_CODES.UID_GENERATE_FAILED, message:`Safe-UID generate failed with error: ${error}`});
       } else if (sessionId) {
         resolve(establishSessionInRedis(redisClient, customerId, sessionId));
       } else {
-        reject({code: 500, message: 'Unable to generate Safe-UID'})
+        reject({code: REDIS_ERROR_CODES.UID_GENERATE_FAILED, message: 'Unable to generate Safe-UID'})
       }
     })
   });
@@ -35,7 +36,7 @@ const getCustomerIdFromSession = function(redisClient, sessionId) {
   return new Promise (function (resolve, reject) {
     redisClient.get(sessionId, function(error, data) {
       if (error) {
-        reject({code: 500, message: error})
+        reject({code: REDIS_ERROR_CODES.REDIS_QUERY_FAILED, message: error})
       } else {
         resolve(data);
       }
