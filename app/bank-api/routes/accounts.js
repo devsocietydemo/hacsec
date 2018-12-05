@@ -10,7 +10,7 @@ router.get('/:id', function(req, res) {
   const sessionId = req.headers.sessionid;
   var fetchedCustomerId;
   checkIfSessionExists(sessionId)
-    .then ( sessionId => getCustomerIdFromSession(res.locals.redisClient, sessionId))
+    .then( sessionId => getCustomerIdFromSession(res.locals.redisClient, sessionId))
     .then( customerId => fetchedCustomerId = customerId )
     .then( customerId => customerId ? getAccountOwnership(res.locals.connection, customerId, accountId) : null)
     .then( validateAccountOwnership )
