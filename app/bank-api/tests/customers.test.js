@@ -1,12 +1,9 @@
+var { USERNAME, UNAUTHORIZED_USERNAME, VALID_PASSWORD, URL } = require('./common');
+
 var chakram = require('chakram');
 var expect = chakram.expect;
 
 describe('Customers API', function() {
-
-  const USERNAME = 2241;
-  const UNAUTHORIZED_USERNAME = 2242;
-  const VALID_PASSWORD = 'password';
-  const URL = process.env.API_HOST_URL || 'http://localhost';
 
   describe('api/v1/customers GET', function() {
     it('Should fail when trying to invoke GET on customers path', function() {

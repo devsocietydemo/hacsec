@@ -1,12 +1,8 @@
+var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL } = require('./common');
 var chakram = require('chakram');
 var expect = chakram.expect;
 
 describe('Login API', function() {
-
-  const USERNAME = 2241;
-  const VALID_PASSWORD = 'password';
-  const INVALID_PASSWORD = 'incorrect';
-  const URL = process.env.API_HOST_URL || 'http://localhost';
 
   describe('api/v1/login POST', function() {
 
