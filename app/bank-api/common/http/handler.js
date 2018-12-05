@@ -1,7 +1,7 @@
 const { REDIS_ERROR_CODES } = require('../redis/errors');
 const { MYSQL_ERROR_CODES } = require('../db/errors');
 const { XML_ERROR_CODES } = require('../xml/errors');
-const { APP_ERROR_CODES } = require('../app/errors');
+const { APP_ERROR_CODES, STANDARD_ACCESS_DENIED_ERROR } = require('../app/errors');
 
 const HTTP_OK = 200;
 const HTTP_INTERNAL_SERVER_ERROR = 500;
@@ -23,6 +23,14 @@ const mapSystemErrorCodesToHttpCodes = function(errorCode) {
   }
 }
 
+const checkIfSessionExists = function(sessionId) {
+  if (sessionId && sessionId !== '') {
+    return Promise.resolve(sessionId);
+  } else {
+    return Promise.reject(STANDARD_ACCESS_DENIED_ERROR);
+  }
+}
+
 const sendCorrectResult = function(response, result) {
   response.status(HTTP_OK).send(result);
 }
@@ -40,4 +48,4 @@ const sendErrorMessage = function(response, result) {
   }
 }
 
-module.exports = { sendCorrectResult, sendErrorMessage }
+module.exports = { checkIfSessionExists, sendCorrectResult, sendErrorMessage }

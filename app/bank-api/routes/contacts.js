@@ -4,52 +4,41 @@ var { getAllCustomerContacts, addCustomerContact, replaceCustomerContacts } = re
 var { validateCustomerSession } = require('../common/redis/sessions')
 var { parseContactsXml } = require('../common/xml/contacts');
 var { STANDARD_ACCESS_DENIED_ERROR } = require('../common/app/errors');
-var { sendCorrectResult, sendErrorMessage } = require('../common/http/handler')
+var { checkIfSessionExists, sendCorrectResult, sendErrorMessage } = require('../common/http/handler')
 
 var router = express.Router();
 
 router.get('/:customerId', function(req, res) {
   const customerId = req.params.customerId;
   const sessionId = req.headers.sessionid;
-  if (sessionId) {
-    validateCustomerSession(res.locals.redisClient, sessionId, customerId)
-      .then( success => success ? getAllCustomerContacts(res.locals.connection, customerId) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
-      .then( results => sendCorrectResult(res, results) )
-      .catch( error => sendErrorMessage(res, error) );
-  } else {
-    sendErrorMessage(res, STANDARD_ACCESS_DENIED_ERROR);
-  }
+  checkIfSessionExists(sessionId)
+    .then( sessionId => validateCustomerSession(res.locals.redisClient, sessionId, customerId))
+    .then( success => success ? getAllCustomerContacts(res.locals.connection, customerId) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
+    .then( results => sendCorrectResult(res, results) )
+    .catch( error => sendErrorMessage(res, error) );
 });
 
 router.post('/:customerId', function(req, res) {
   const {name, iban} = req.body;
   const customerId = req.params.customerId;
   const sessionId = req.headers.sessionid;
-  if (sessionId) {
-    validateCustomerSession(res.locals.redisClient, sessionId, customerId)
-      .then( success => success ? addCustomerContact(res.locals.connection, customerId, name, iban) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
-      .then( results => sendCorrectResult(res, results) )
-      .catch( error => sendErrorMessage(res, error) )
-  } else {
-    sendErrorMessage(res, STANDARD_ACCESS_DENIED_ERROR);
-  }
+  checkIfSessionExists(sessionId)
+    .then( sessionId => validateCustomerSession(res.locals.redisClient, sessionId, customerId))
+    .then( success => success ? addCustomerContact(res.locals.connection, customerId, name, iban) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
+    .then( results => sendCorrectResult(res, results) )
+    .catch( error => sendErrorMessage(res, error) )
 });
 
 router.post('/:customerId/xml', function(req, res) {
   const sessionId = req.headers.sessionid;
   const customerId = req.params.customerId;
   const contactsXml = req.body.contactsXml;
-
-  if (sessionId) {
-    validateCustomerSession(res.locals.redisClient, sessionId, customerId)
-      .then( success => success ? parseContactsXml(contactsXml) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
-      .then( contacts => replaceCustomerContacts(res.locals.connection, customerId, contacts))
-      .then( contacts => sendCorrectResult(res, contacts))
-      .catch( error => sendErrorMessage(res, error))
-  } else {
-    sendErrorMessage(res, STANDARD_ACCESS_DENIED_ERROR);
-  }
-
+  checkIfSessionExists(sessionId)
+    .then( sessionId => validateCustomerSession(res.locals.redisClient, sessionId, customerId))
+    .then( success => success ? parseContactsXml(contactsXml) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
+    .then( contacts => replaceCustomerContacts(res.locals.connection, customerId, contacts))
+    .then( contacts => sendCorrectResult(res, contacts))
+    .catch( error => sendErrorMessage(res, error))
 });
 
 module.exports = router;
