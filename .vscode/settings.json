@@ -1,0 +1,6 @@
+{
+  "mochaExplorer.cwd": "app/bank-api",
+  "mochaExplorer.files": "app/bank-api/tests/*.js",
+  "mochaExplorer.optsFile": "app/bank-api/tests/mocha.opts",
+  "mochaExplorer.exit": true,
+}

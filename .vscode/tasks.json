@@ -120,16 +120,26 @@
         "cwd": "${workspaceFolder}/app/"
       },
       "command": "docker-compose",
-      "args": ["logs", "-f"],
+      "args": [
+        "logs",
+        "-f"
+      ],
       "group": "none",
       "presentation": {
         "echo": false,
         "reveal": "always",
         "focus": false,
-        "panel": "new",        
+        "panel": "new",
         "showReuseMessage": false,
         "clear": true
       },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run all API tests",
+      "type": "npm",
+      "script": "test",
+      "path": "app/bank-api/",
       "problemMatcher": []
     }
   ]
