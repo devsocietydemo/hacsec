@@ -1,3 +1,5 @@
+var { MYSQL_ERROR_CODES } = require('../db/errors');
+
 const getAllAccountTransactions = function(connection, accountId) {
   return new Promise(function(resolve, reject) {
     connection.query('SELECT id, transaction_date, amount, description, target_iban ' +

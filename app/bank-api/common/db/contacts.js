@@ -35,7 +35,7 @@ const deleteAllCustomerContacts = function(connection, customerId) {
         if (error) {
           reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message:`Database query failed, error message: ${error}`});
         } else {
-          resolve(null);
+          resolve(results);
         }
       }
     );

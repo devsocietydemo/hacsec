@@ -17,7 +17,7 @@ router.post('/', function (req, res) {
 router.get('/sessions', function (req, res) {
   const sessionId =req.headers.sessionid;
   checkIfSessionExists(sessionId)
-	  .then ( () => getAllCustomersSessions(res.locals.redisClient))
+    .then ( () => getAllCustomersSessions(res.locals.redisClient))
 		.then( results => sendCorrectResult(res, results) )
 		.catch( error => sendErrorMessage(res, error) );
 });

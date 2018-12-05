@@ -1,5 +1,5 @@
 const { MYSQL_ERROR_CODES } = require('./errors');
-const { APP_ERROR_CODES, STANDARD_ACCESS_DENIED_ERROR } = require('../app/errors');
+const { STANDARD_ACCESS_DENIED_ERROR } = require('../app/errors');
 
 const getAccountDetails = function (connection, customerId, accountId) {
   return new Promise(function(resolve, reject) {

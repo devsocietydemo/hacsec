@@ -5,7 +5,7 @@ var { checkIfSessionExists, sendCorrectResult, sendErrorMessage } = require('../
 var { STANDARD_ACCESS_DENIED_ERROR } = require('../common/app/errors');
 var router = express.Router();
 
-router.get('/:id', function(req, res, next) {
+router.get('/:id', function(req, res) {
   const customerId = req.params.id;
   const sessionId = req.headers.sessionid;
   checkIfSessionExists(sessionId)
@@ -15,7 +15,7 @@ router.get('/:id', function(req, res, next) {
     .catch( error => sendErrorMessage(res, error) )
 });
 
-router.get('/:id/accounts', function(req, res, next) {
+router.get('/:id/accounts', function(req, res) {
 	const customerId = req.params.id;
   const sessionId = req.headers.sessionid;
   checkIfSessionExists(sessionId)

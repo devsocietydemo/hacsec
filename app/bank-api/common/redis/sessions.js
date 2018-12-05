@@ -1,5 +1,4 @@
 var uid = require('uid-safe');
-var async = require('async');
 const { REDIS_ERROR_CODES } = require('./errors');
 
 const establishSessionInRedis = function (redisClient, customerId, sessionId) {
