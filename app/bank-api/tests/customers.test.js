@@ -1,4 +1,4 @@
-var { USERNAME, UNAUTHORIZED_USERNAME, VALID_PASSWORD, URL } = require('./common');
+var { USERNAME, UNAUTHORIZED_USERNAME, VALID_PASSWORD, WEAK_PASSWORD_HASH, URL } = require('./common');
 
 var chakram = require('chakram');
 var expect = chakram.expect;
@@ -40,7 +40,7 @@ describe('Customers API', function() {
       expect(response).to.have.status(200);
       expect(response).to.have.json( json => {
         expect(json).to.be.array;
-        expect(json.length).to.be.equal(1);
+        expect(json).to.have.length(1);
         expect(json[0]).to.not.be.null;
         expect(json[0].id).to.be.equal(USERNAME);
         expect(json[0].name).to.not.be.null;
@@ -51,12 +51,23 @@ describe('Customers API', function() {
       return chakram.wait();
     })
 
+    it('Application should not use weak password hashing', function() {
+      var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}`, {headers:{sessionid:currentSessionId}});
+      expect(response).to.have.status(200);
+      expect(response).to.have.json( json => {
+        expect(json).to.be.array;
+        expect(json.length).to.be.equal(1);
+        expect(json[0].password).to.not.be.equal(WEAK_PASSWORD_HASH);
+      })
+      return chakram.wait();
+    })
+
     it('Should not list all customer data when SQL injection is used', function() {
       var response=chakram.get(`${URL}/api/v1/customers/${USERNAME} or 1=1`, {headers:{sessionid:currentSessionId}});
       expect(response).to.have.status(200);
       expect(response).to.have.json( json => {
         expect(json).to.be.array;
-        expect(json.length).to.be.equal(1);
+        expect(json).to.have.lengthOf(1);
         expect(json[0]).to.not.be.null;
         expect(json[0].id).to.be.equal(USERNAME);
         expect(json[0].name).to.not.be.null;
