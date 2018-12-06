@@ -95,7 +95,7 @@ describe('Customers API', function() {
 
   describe('api/v1/customers/{id} POST', function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      var response=chakram.post(`${URL}/api/v1/customers/{USERNAME}`, {});
+      var response=chakram.post(`${URL}/api/v1/customers/${USERNAME}`, {});
       expect(response).to.have.status(404);    
       return chakram.wait();
     })
@@ -143,7 +143,7 @@ describe('Customers API', function() {
 
   describe('api/v1/customers/{id}/accounts POST', function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      var response=chakram.post(`${URL}/api/v1/customers/{USERNAME}/accounts`, {});
+      var response=chakram.post(`${URL}/api/v1/customers/${USERNAME}/accounts`, {});
       expect(response).to.have.status(404);    
       return chakram.wait();
     })
