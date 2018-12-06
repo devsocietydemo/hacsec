@@ -31,6 +31,36 @@ describe('Attacks', function() {
     })
   })
 
+  describe('A2:2017 - Broken Authentication', function() {
+
+    var currentSessionId;
+
+    before('Log in to obtain valid session id', function() {
+      return chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:VALID_PASSWORD})
+        .then( response => { currentSessionId = response.body.sessionId; return expect(response.body.success).to.be.true})
+    })
+  
+    it('Logout should not invalidate session', function() {
+        return chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:currentSessionId}})
+          .then( () => {
+            var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}`, {headers:{sessionid:currentSessionId}});
+            expect(response).to.have.status(200);
+            expect(response).to.have.json( json => {
+              expect(json).to.be.array;
+              expect(json.length).to.be.equal(1);
+              expect(json[0]).to.not.be.null;
+              expect(json[0].id).to.be.equal(USERNAME);
+              expect(json[0].name).to.not.be.null;
+              expect(json[0].nationality).to.not.be.null;
+              expect(json[0].salt).to.not.be.null;
+              expect(json[0].password).to.not.be.null;
+            });
+          return chakram.wait();
+          })
+    })
+
+  })
+
   describe('A3:2017 - Sensitive Data Exposure', function() {
 
     var currentSessionId;

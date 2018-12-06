@@ -82,6 +82,23 @@ describe('Login API', function() {
       expect(response).to.comprise.of.json({error: 'Access denied'});
       return chakram.wait();
     })
+
+    it('Logout should invalidate session correctly', function() {
+      var storedSessionId;
+      return chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:VALID_PASSWORD})
+        .then(result => {
+          storedSessionId = result.body.sessionId;
+          var response=chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:result.body.sessionId}});
+          expect(response).to.have.status(200);
+          return response;          
+        })
+        .then( () => {
+          var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}`, {headers:{sessionid:storedSessionId}});
+          expect(response).to.have.status(401);
+          expect(response).to.comprise.of.json({error: 'Access denied'});
+          return chakram.wait();
+        })
+    })
   })
 
   describe('api/v1/logout GET', function() {
