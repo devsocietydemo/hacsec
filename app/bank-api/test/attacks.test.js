@@ -58,7 +58,6 @@ describe('Attacks', function() {
           return chakram.wait();
           })
     })
-
   })
 
   describe('A3:2017 - Sensitive Data Exposure', function() {
@@ -119,6 +118,27 @@ describe('Attacks', function() {
 
     it('Should allow to create new transaction to unauthorized account', function() {
       var response=chakram.post(`${URL}/api/v1/transactions`, {account_id:UNAUTHORIZED_ACCOUNT_NUMBER, amount:10.49, description:'Test transaction', target_iban:'PL12 3456 7890'} , {headers:{sessionid:currentSessionId}});
+      expect(response).to.have.status(200);
+      return chakram.wait();
+    })
+  })
+
+  describe('A6:2017 - Security Misconfiguration', function() {
+
+    it('Should allow access MySQL Adminer Console', function() {
+      var response=chakram.get(`${URL}/adminer`);
+      expect(response).to.have.status(200);
+      return chakram.wait();
+    })
+
+    it('Should allow to list CDN directory', function() {
+      var response=chakram.get(`${URL}/cdn`);
+      expect(response).to.have.status(200);
+      return chakram.wait();
+    })
+
+    it('Should allow access to access.php file', function() {
+      var response=chakram.get(`${URL}/cdn/access.php`);
       expect(response).to.have.status(200);
       return chakram.wait();
     })
