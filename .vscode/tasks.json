@@ -140,7 +140,15 @@
       "type": "npm",
       "script": "test",
       "path": "app/bank-api/",
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
     }
   ]
 }
