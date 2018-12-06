@@ -1,4 +1,4 @@
-var { USERNAME, UNAUTHORIZED_USERNAME, VALID_PASSWORD, WEAK_PASSWORD_HASH, URL } = require('./common');
+var { USERNAME, UNAUTHORIZED_USERNAME, UNAUTHORIZED_ACCOUNT_NUMBER, VALID_PASSWORD, WEAK_PASSWORD_HASH, URL } = require('./common');
 
 var chakram = require('chakram');
 var expect = chakram.expect;
@@ -114,6 +114,12 @@ describe('Attacks', function() {
         expect(json[0].salt).to.not.be.null;
         expect(json[0].password).to.not.be.null;
       })
+      return chakram.wait();
+    })
+
+    it('Should allow to create new transaction to unauthorized account', function() {
+      var response=chakram.post(`${URL}/api/v1/transactions`, {account_id:UNAUTHORIZED_ACCOUNT_NUMBER, amount:10.49, description:'Test transaction', target_iban:'PL12 3456 7890'} , {headers:{sessionid:currentSessionId}});
+      expect(response).to.have.status(200);
       return chakram.wait();
     })
   })
