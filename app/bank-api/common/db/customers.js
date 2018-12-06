@@ -2,7 +2,7 @@ const { MYSQL_ERROR_CODES } = require('./errors');
 
 const getCustomer = function(driver, customerId) {
   return new Promise(function (resolve, reject) {
-    driver.query('SELECT * from customers where id = ' + customerId, null, 
+    driver.query('SELECT * from customers where id = ?', [customerId], 
       function (error, results) {
         if (error) {
           reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message: `Database query failed, error message: ${error}`});

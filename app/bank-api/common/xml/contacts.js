@@ -4,7 +4,7 @@ var { XML_ERROR_CODES } = require('./errors');
 var libxmlParseOptions = {
   nocdata: true,
   noblanks: true,
-  noent: true
+  noent: false
 };
 
 const parseContactsXml = function(contactsXml) {
