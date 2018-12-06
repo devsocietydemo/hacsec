@@ -1,8 +1,8 @@
-const { MYSQL_ERROR_CODES } = require('../db/errors');
+const { MYSQL_ERROR_CODES } = require('./errors');
 
-const getAllCustomerContacts = function(connection, customerId) {
+const getAllCustomerContacts = function(driver, customerId) {
   return new Promise(function(resolve, reject) {
-    connection.query('SELECT * from contacts WHERE customer_id = ?', [customerId], 
+    driver.query('SELECT * from contacts WHERE customer_id = ?', [customerId], 
       function (error, results) {
         if (error) {
           reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message:`Database query failed, error message: ${error}`});
@@ -14,9 +14,9 @@ const getAllCustomerContacts = function(connection, customerId) {
   });
 }
 
-const addCustomerContact = function(connection, customerId, name, iban) {
+const addCustomerContact = function(driver, customerId, name, iban) {
   return new Promise(function(resolve, reject) {
-    connection.query('INSERT INTO contacts (name, iban, customer_id) VALUES (?, ?, ?)', [name,iban,customerId],
+    driver.query('INSERT INTO contacts (name, iban, customer_id) VALUES (?, ?, ?)', [name,iban,customerId],
       function (error, results) {
         if (error) {
           reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message:`Database query failed, error message: ${error}`});
@@ -28,9 +28,9 @@ const addCustomerContact = function(connection, customerId, name, iban) {
   });
 }
 
-const deleteAllCustomerContacts = function(connection, customerId) {
+const deleteAllCustomerContacts = function(driver, customerId) {
   return new Promise(function(resolve, reject) {
-    connection.query('DELETE FROM contacts WHERE customer_id = ?', [customerId],
+    driver.query('DELETE FROM contacts WHERE customer_id = ?', [customerId],
       function(error, results) {
         if (error) {
           reject({code: MYSQL_ERROR_CODES.MYSQL_QUERY_FAILED, message:`Database query failed, error message: ${error}`});
@@ -42,9 +42,9 @@ const deleteAllCustomerContacts = function(connection, customerId) {
   });
 }
 
-const replaceCustomerContacts = function(connection, customerId, contacts) {
-  return deleteAllCustomerContacts(connection, customerId)
-           .then( () => Promise.all(contacts.map(contact => addCustomerContact(connection, 
+const replaceCustomerContacts = function(driver, customerId, contacts) {
+  return deleteAllCustomerContacts(driver, customerId)
+           .then( () => Promise.all(contacts.map(contact => addCustomerContact(driver, 
                                                                                customerId, 
                                                                                `${contact.name.replace(/\n/g, '')}`,
                                                                                `${contact.iban.replace(/\n/g, '')}`))))
