@@ -10,7 +10,7 @@ router.get('/:id', function(req, res) {
   const sessionId = req.headers.sessionid;
   checkIfSessionExists(sessionId)
     .then( sessionId => validateCustomerSession(res.locals.redisClient, sessionId, customerId))
-    .then( () => getCustomer(res.locals.driver, customerId) )
+    .then( success => success ? getCustomer(res.locals.driver, customerId) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR) )
     .then( results => sendCorrectResult(res, results) )
     .catch( error => sendErrorMessage(res, error) )
 });

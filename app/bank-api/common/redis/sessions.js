@@ -73,7 +73,7 @@ const getAllCustomersSessions = function(redisClient) {
 
 const deleteCustomerSession = function(redisClient, sessionId) {
   return new Promise(function(resolve, reject) {
-    redisClient.get(sessionId, function(error, status) {
+    redisClient.del(sessionId, function(error, status) {
       if (error) {
         reject({code: REDIS_ERROR_CODES.SESSION_DESTROY_FAILED, message:`Session deletion failed: ${error}`});
       } else if (status === 0) {

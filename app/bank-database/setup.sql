@@ -71,9 +71,9 @@ LOAD DATA INFILE '/tmp/customers.csv'
 INTO TABLE customers
 FIELDS TERMINATED BY ','
 (id, name, nationality, @password)
-SET password = SHA2(TRIM(TRAILING '\r' FROM @password), 256),
-    salt = MD5(rand());
-
+SET salt = MD5(rand()),
+    password = SHA2(CONCAT(TRIM(TRAILING '\r' FROM @password), salt), 256);
+    
 LOAD DATA INFILE '/tmp/accounts.csv'
 INTO TABLE accounts
 FIELDS TERMINATED BY ','

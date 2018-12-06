@@ -1,8 +1,8 @@
 var express = require('express');
+var { getAccountOwnership, validateAccountOwnership } = require('../common/db/accounts');
 var { createNewTransaction } = require('../common/db/transactions');
 var { getCustomerIdFromSession, validateCustomerSession } = require('../common/redis/sessions');
 var { checkIfSessionExists, sendCorrectResult, sendErrorMessage } = require('../common/http/handler');
-var { STANDARD_ACCESS_DENIED_ERROR } = require('../common/app/errors');
 var router = express.Router();
 
 router.post('/', function (req, res) {
@@ -13,7 +13,9 @@ router.post('/', function (req, res) {
     .then( sessionId => getCustomerIdFromSession(res.locals.redisClient, sessionId))
     .then( customerId => fetchedCustomerId = customerId)
     .then( validateCustomerSession(res.locals.redisClient, sessionId, fetchedCustomerId) )
-    .then( success => success ? createNewTransaction(res.locals.driver, requestBody.account_id, new Date().toLocaleString(), requestBody.amount, requestBody.description, requestBody.target_iban) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
+    .then( success => success ? getAccountOwnership(res.locals.driver, fetchedCustomerId, requestBody.account_id) : null)
+    .then( validateAccountOwnership )    
+    .then( () => createNewTransaction(res.locals.driver, requestBody.account_id, new Date().toLocaleString(), requestBody.amount, requestBody.description, requestBody.target_iban) )
     .then( results => sendCorrectResult(res, results) )
     .catch( error => sendErrorMessage(res, error) )
 });
