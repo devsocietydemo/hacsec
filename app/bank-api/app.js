@@ -14,6 +14,13 @@ var transactionsRouter = require('./routes/transactions');
 var contactsRouter = require('./routes/contacts');
 
 var app = express();
+var connectionPool = mysql.createPool({
+  host: process.env.BANKAPI_DB_HOSTNAME,
+  user: 'bankappuser',
+  password: 'AppUserPassword',
+  database: 'bankdb',
+  multipleStatements: true
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,15 +35,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(function (req, res, next) {
-	res.locals.connection = mysql.createConnection({
-		host: process.env.BANKAPI_DB_HOSTNAME,
-		user: 'bankappuser',
-		password: 'AppUserPassword',
-		database: 'bankdb',
-		multipleStatements: true
-	});
-	res.locals.connection.connect();
-	next();
+
+  connectionPool.getConnection(function(error, connection){
+    if (error) {
+      throw(`Fetching connection from pool failed: ${error}`);
+    } else {
+      res.locals.connection = connection;
+      next();
+    }
+  });
 });
 
 app.use(function (req, res, next) {
