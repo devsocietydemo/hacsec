@@ -54,7 +54,7 @@ describe('Customers API', function() {
     it('Application should not use weak password hashing', function() {
       var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}`, {headers:{sessionid:currentSessionId}});
       expect(response).to.have.status(200);
-      expect(response).to.have.json( json => {
+      expect(response).to.have.json( json => {        
         expect(json).to.be.array;
         expect(json.length).to.be.equal(1);
         expect(json[0].password).to.not.be.equal(WEAK_PASSWORD_HASH);
