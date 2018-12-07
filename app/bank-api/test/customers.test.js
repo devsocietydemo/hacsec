@@ -63,20 +63,25 @@ describe('Customers API', function() {
     })
 
     it('Should not list all customer data when SQL injection is used', function() {
-      var response=chakram.get(`${URL}/api/v1/customers/${USERNAME} or 1=1`, {headers:{sessionid:currentSessionId}});
-      expect(response).to.have.status(200);
-      expect(response).to.have.json( json => {
-        expect(json).to.be.array;
-        expect(json).to.have.lengthOf(1);
-        expect(json[0]).to.not.be.null;
-        expect(json[0].id).to.be.equal(USERNAME);
-        expect(json[0].name).to.not.be.null;
-        expect(json[0].nationality).to.not.be.null;
-        expect(json[0].salt).to.not.be.null;
-        expect(json[0].password).to.not.be.null;
+      return chakram.get(`${URL}/api/v1/customers/${USERNAME} or 1=1`, {headers:{sessionid:currentSessionId}})
+        .then(response => { 
+          if (response.response.statusCode === 200) {
+            expect(response).to.have.json( json => {
+              expect(json).to.be.array;
+              expect(json).to.have.lengthOf(1);
+              expect(json[0]).to.not.be.null;
+              expect(json[0].id).to.be.equal(USERNAME);
+              expect(json[0].name).to.not.be.null;
+              expect(json[0].nationality).to.not.be.null;
+              expect(json[0].salt).to.not.be.null;
+              expect(json[0].password).to.not.be.null;
+            })
+          } else {
+            expect(response).to.have.status(401);
+          }
+          return chakram.wait();
+        })
       })
-      return chakram.wait();
-    })
 
     it('Should not list customer data when unathorized user is used', function() {
       var response=chakram.get(`${URL}/api/v1/customers/${UNAUTHORIZED_USERNAME}`, {headers:{sessionid:currentSessionId}});

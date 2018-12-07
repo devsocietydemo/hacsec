@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha test/suite.test.js"
+    "test": "mocha test/suite.test.js",
+    "test-intercept": "env API_HOST_URL=http://localhost:8080 mocha test/suite.test.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",

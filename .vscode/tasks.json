@@ -149,6 +149,21 @@
         "showReuseMessage": true,
         "clear": true
       }
+    },
+    {
+      "label": "Run all API tests (via Intercepting Proxy)",
+      "type": "npm",
+      "script": "test-intercept",
+      "path": "app/bank-api/",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
     }
   ]
 }

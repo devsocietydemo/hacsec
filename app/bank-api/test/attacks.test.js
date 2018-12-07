@@ -161,7 +161,7 @@ describe('Attacks', function() {
     })
 
     it('Should allow to list CDN directory', function() {
-      var response=chakram.get(`${URL}/cdn`);
+      var response=chakram.get(`${URL}/cdn/`);
       expect(response).to.have.status(200);
       return chakram.wait();
     })
