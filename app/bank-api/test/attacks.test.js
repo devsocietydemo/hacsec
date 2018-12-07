@@ -43,19 +43,14 @@ describe('Attacks', function() {
     it('Logout should not invalidate session', function() {
         return chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:currentSessionId}})
           .then( () => {
-            var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}`, {headers:{sessionid:currentSessionId}});
+            var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}/accounts`, {headers:{sessionid:currentSessionId}});
             expect(response).to.have.status(200);
             expect(response).to.have.json( json => {
               expect(json).to.be.array;
-              expect(json.length).to.be.equal(1);
-              expect(json[0]).to.not.be.null;
-              expect(json[0].id).to.be.equal(USERNAME);
-              expect(json[0].name).to.not.be.null;
-              expect(json[0].nationality).to.not.be.null;
-              expect(json[0].salt).to.not.be.null;
-              expect(json[0].password).to.not.be.null;
-            });
-          return chakram.wait();
+              expect(json.length).to.be.equal(3);
+              expect(json.map(entry=> {return {id:entry.id, iban:entry.iban}})).to.have.deep.members([{id:86433, iban:'PL12 5234 4143 8746 7665'}, {id:86434, iban:'PL13 5127 6900 0411 5593'}, {id:86435, iban:'PL53 5324 1702 1359 0846'}]);
+            })
+            return chakram.wait();
           })
     })
   })

@@ -93,7 +93,7 @@ describe('Login API', function() {
           return response;          
         })
         .then( () => {
-          var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}`, {headers:{sessionid:storedSessionId}});
+          var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}/accounts`, {headers:{sessionid:storedSessionId}});
           expect(response).to.have.status(401);
           expect(response).to.comprise.of.json({error: 'Access denied'});
           return chakram.wait();
