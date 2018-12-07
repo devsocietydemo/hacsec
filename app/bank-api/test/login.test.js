@@ -4,6 +4,14 @@ var expect = chakram.expect;
 
 describe('Login API', function() {
 
+  before('Validate system healthcheck', function() {
+    return chakram.get(`${URL}/api/v1/health`)
+      .then( response => { 
+        expect(response).to.have.status(200)
+        expect(response).to.comprise.of.json({status:'OK'});
+      })
+  })
+
   describe('api/v1/login POST', function() {
 
     it('Should allow login with correct user and password', function() {

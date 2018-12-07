@@ -5,6 +5,14 @@ var expect = chakram.expect;
 
 describe('Accounts API', function() {
 
+  before('Validate system healthcheck', function() {
+    return chakram.get(`${URL}/api/v1/health`)
+      .then( response => { 
+        expect(response).to.have.status(200)
+        expect(response).to.comprise.of.json({status:'OK'});
+      })
+  })
+
   describe('api/v1/accounts GET', function() {
     it('Should fail when trying to invoke GET on accounts path', function() {
       var response=chakram.get(`${URL}/api/v1/accounts`);
