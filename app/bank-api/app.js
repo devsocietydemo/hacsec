@@ -1,4 +1,3 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -6,6 +5,7 @@ var logger = require('morgan');
 var driver = require('./common/db/driver');
 var redis = require('redis');
 var bodyParser = require('body-parser');
+var healthRouter = require('./routes/health');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
 var customersRouter = require('./routes/customers');
@@ -42,6 +42,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
+app.use('/api/v1/health', healthRouter);
 app.use('/api/v1/login', loginRouter);
 app.use('/api/v1/logout', logoutRouter);
 app.use('/api/v1/customers', customersRouter);
@@ -50,7 +51,7 @@ app.use('/api/v1/transactions', transactionsRouter);
 app.use('/api/v1/contacts', contactsRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (req, res) {
   res.status(404).send('Not found');
 	//next(createError(404));
 });

@@ -1,6 +1,22 @@
 var uid = require('uid-safe');
 const { REDIS_ERROR_CODES } = require('./errors');
 
+const getRedisConnectionStatus = function(redisClient) {
+  return new Promise (function (resolve, reject) {
+    redisClient.get('no-such-session', function(error, data) {
+      if (error) {
+        reject({code: REDIS_ERROR_CODES.REDIS_QUERY_FAILED, message: error})
+      } else {
+        if (data) {
+          resolve(true);
+        } else {
+          resolve(true);
+        }
+      }
+    });
+  })
+}
+
 const establishSessionInRedis = function (redisClient, customerId, sessionId) {
   return new Promise (function (resolve, reject) {
     redisClient.set(sessionId, customerId, 
@@ -99,4 +115,4 @@ const validateCustomerSession = function(redisClient, sessionId, customerId) {
   });
 };
 
-module.exports = { createCustomerSession, getCustomerIdFromSession, getAllCustomersSessions, deleteCustomerSession, validateCustomerSession }
+module.exports = { getRedisConnectionStatus, createCustomerSession, getCustomerIdFromSession, getAllCustomersSessions, deleteCustomerSession, validateCustomerSession }

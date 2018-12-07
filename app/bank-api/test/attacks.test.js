@@ -5,6 +5,14 @@ var expect = chakram.expect;
 
 describe('Attacks', function() {
 
+  before('Validate system healthcheck', function() {
+    return chakram.get(`${URL}/api/v1/health`)
+      .then( response => { 
+        expect(response).to.have.status(200)
+        expect(response).to.comprise.of.json({status:'OK'});
+      })
+  })
+
   describe('A1:2017 - SQL Injection', function() {
 
     var currentSessionId;
