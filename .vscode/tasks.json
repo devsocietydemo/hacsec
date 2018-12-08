@@ -80,15 +80,6 @@
       "problemMatcher": []
     },
     {
-      "label": "Full rebuild banking app",
-      "dependsOn": ["(Re)start banking app", "Destroy banking app"],
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-    },
-    {
       "label": "Destroy banking app",
       "dependsOn": "Stop banking app",
       "options": {
@@ -111,6 +102,34 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Full rebuild banking app",
+      "options": {
+        "cwd": "${workspaceFolder}/app/"
+      },
+      "linux": {
+        "command": "./rebuild.sh"
+      },
+      "osx": {
+        "command": "./rebuild.sh"
+      },
+      "windows": {
+        "command": "rebuild.bat"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
       },
       "problemMatcher": []
     },
