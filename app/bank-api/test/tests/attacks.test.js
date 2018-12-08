@@ -1,10 +1,9 @@
+const runAttacksTests = function(chai, config) {
+
 var { USERNAME, UNAUTHORIZED_USERNAME, UNAUTHORIZED_ACCOUNT_NUMBER, URL, WEAK_PASSWORD_HASH, CONTACTS_URI, 
   CUSTOMERS_URI, TRANSACTIONS_URI, ADMINER_URI, CDN_URI, validateHealthCheck, 
-  logInUser, logOutUser } = require('./common');
-var chai = require('chai');
-var chaiHttp = require('chai-http');
+  logInUser, logOutUser } = config;
 var expect = chai.expect;
-chai.use(chaiHttp);
 
 describe('Attacks', function() {
 
@@ -182,3 +181,6 @@ describe('Attacks', function() {
     })
   })
 })
+}
+
+module.exports = { runAttacksTests };

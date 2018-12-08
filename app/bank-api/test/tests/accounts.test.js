@@ -1,10 +1,10 @@
+const runAccountsAPITests = function(chai, config) {
+
 var { ACCOUNT_NUMBER, UNAUTHORIZED_ACCOUNT_NUMBER, URL, 
       ACCOUNTS_URI, METHOD_GET, METHOD_POST, validateHealthCheck, 
-      expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = require('./common');
-var chai = require('chai');
-var chaiHttp = require('chai-http');
+      expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = config;
+
 var expect = chai.expect;
-chai.use(chaiHttp);
 
 describe('Accounts API', function() {
 
@@ -120,3 +120,6 @@ describe('Accounts API', function() {
   })
 
 })
+}
+
+module.exports = { runAccountsAPITests };
