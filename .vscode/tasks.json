@@ -89,6 +89,11 @@
       "problemMatcher": []
     },
     {
+      "label": "Full rebuild banking app",
+      "dependsOn": ["(Re)start banking app", "Destroy banking app"],
+      "problemMatcher": []
+    },
+    {
       "label": "Destroy banking app",
       "dependsOn": "Stop banking app",
       "options": {
