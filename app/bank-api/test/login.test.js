@@ -1,7 +1,5 @@
 var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL, HEALTH_URI, 
       LOGIN_URI, SESSIONS_URI, LOGOUT_URI, CUSTOMERS_URI } = require('./common');
-//var chakram = require('chakram');
-//var expect = chakram.expect;
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = chai.expect;
@@ -118,7 +116,7 @@ describe('Login API', function() {
         })
         .then(response => {
           expect(response).to.have.status(200);
-          expect(response.body.status).to.be.true;
+          expect(response.body.success).to.be.true;
         })
         .then( () => {
           return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME}/accounts`)
