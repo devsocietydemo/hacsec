@@ -7,6 +7,15 @@ const INVALID_PASSWORD = 'incorrect';
 const WEAK_PASSWORD_HASH = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
 const URL = process.env.API_HOST_URL || 'http://localhost';
 
+const HEALTH_URI = '/api/v1/health';
+const LOGIN_URI = '/api/v1/login';
+const SESSIONS_URI = `${LOGIN_URI}/sessions`
+const LOGOUT_URI = '/api/v1/logout'
+const CUSTOMERS_URI = '/api/v1/customers';
+const ACCOUNTS_URI = '/api/v1/accounts';
+const TRANSACTIONS_URI = '/api/v1/transactions';
+const CONTACTS_URI = '/api/v1/contacts'
+
 module.exports = { USERNAME, 
                    ACCOUNT_NUMBER,
                    UNAUTHORIZED_USERNAME, 
@@ -14,4 +23,12 @@ module.exports = { USERNAME,
                    VALID_PASSWORD, 
                    INVALID_PASSWORD, 
                    WEAK_PASSWORD_HASH, 
-                   URL }
+                   URL,
+                   HEALTH_URI,
+                   LOGIN_URI,
+                   SESSIONS_URI,
+                   LOGOUT_URI,
+                   CUSTOMERS_URI,
+                   ACCOUNTS_URI,
+                   TRANSACTIONS_URI,
+                   CONTACTS_URI }

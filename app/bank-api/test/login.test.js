@@ -1,119 +1,142 @@
-var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL } = require('./common');
-var chakram = require('chakram');
-var expect = chakram.expect;
+var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL, HEALTH_URI, 
+      LOGIN_URI, SESSIONS_URI, LOGOUT_URI, CUSTOMERS_URI } = require('./common');
+//var chakram = require('chakram');
+//var expect = chakram.expect;
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+var expect = chai.expect;
+chai.use(chaiHttp);
 
 describe('Login API', function() {
-
+ 
   before('Validate system healthcheck', function() {
-    return chakram.get(`${URL}/api/v1/health`)
-      .then( response => { 
+    return chai.request(URL).get(HEALTH_URI)
+      .then( response => {
         expect(response).to.have.status(200)
-        expect(response).to.comprise.of.json({status:'OK'});
+        expect(response).to.be.json;
+        expect(response.body.status).to.be.equal('OK');
       })
   })
-
-  describe('api/v1/login POST', function() {
-
+ 
+  describe(`${LOGIN_URI} POST`, function() {
+ 
     it('Should allow login with correct user and password', function() {
-      var response=chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:VALID_PASSWORD});
-      expect(response).to.have.status(200);
-      expect(response).to.have.body;
-      expect(response).to.have.json( json => {
-        expect(json.success).to.be.true;
-        expect(json.sessionId).not.to.be.empty;
+      return chai.request(URL).post(LOGIN_URI)
+        .send({id:USERNAME, password:VALID_PASSWORD})
+        .then( response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body.success).to.be.true;
+          expect(response.body.sessionId).not.to.be.empty;
+        });
       });
-      return chakram.wait();
-    });
-
+ 
     it('Should not allow login with incorrect password', function() {
-      var response=chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:INVALID_PASSWORD})
-      expect(response).to.have.status(200);
-      expect(response).to.comprise.of.json({success:false, sessionId:null});
-      return chakram.wait();
+      return chai.request(URL).post(LOGIN_URI)
+        .send({id:USERNAME, password:INVALID_PASSWORD})
+        .then( response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body.success).to.be.false;
+          expect(response.body.sessionId).to.be.null;
+      })
     });
-
   });
 
-  describe('api/v1/login GET', function() {
+  describe(`${LOGIN_URI} GET`, function() {
 
     it('Should fail when trying to invoke GET on login path', function() {
-      var response=chakram.get(`${URL}/api/v1/login`);
-      expect(response).to.have.status(404);    
-      return chakram.wait();
+      return chai.request(URL).get(LOGIN_URI)
+        .then (response => {
+          expect(response).to.have.status(404);    
+        })
     })
 
   });
 
-  describe('api/v1/login/sessions GET', function() {
+  describe(`${SESSIONS_URI} GET`, function() {
     it('Should list all the active sessions when session id is provided', function() {
-      var response=chakram.get(`${URL}/api/v1/login/sessions`, {headers:{sessionid:'not_empty'}});
-      expect(response).to.have.status(200);
-      expect(response).to.have.json( json => {
-        expect(json).to.be.array;
-        expect(json[0]).to.not.be.null;
-        expect(json[0].customerId).to.not.be.null;
-        expect(json[0].sessions).to.be.array;
-        expect(json[0].sessions[0]).to.not.be.null;
-      })
-      return chakram.wait();
+      return chai.request(URL).get(SESSIONS_URI).set('sessionid','not_empty')
+        .then (response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body[0]).not.to.be.null;
+          expect(response.body[0].customerId).not.to.be.null;
+          expect(response.body[0].sessions).to.be.an('array');
+          expect(response.body[0].sessions).not.to.be.null;
+        })
     })
 
     it('Should fail when trying to list sessions without session id', function() {
-      var response=chakram.get(`${URL}/api/v1/login/sessions`);
-      expect(response).to.have.status(401);
-      expect(response).to.comprise.of.json({error: 'Access denied'});
-      return chakram.wait();
+      return chai.request(URL).get(SESSIONS_URI)
+        .then(response => {
+          expect(response).to.have.status(401);
+          expect(response.body.error).to.be.equal('Access denied');
+        })
     })
   })
 
-  describe('api/v1/logout POST', function() {
+  describe(`${LOGOUT_URI} POST`, function() {
     it('Should work correctly with valid session id provided', function() {
-      return chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:VALID_PASSWORD})
+      return chai.request(URL).post(LOGIN_URI)
+        .send({id:USERNAME, password:VALID_PASSWORD})
         .then(result => {
-          var response=chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:result.body.sessionId}});
+          return chai.request(URL).post(LOGOUT_URI, {})
+            .set('sessionid', result.body.sessionId)})
+        .then(response => {
           expect(response).to.have.status(200);
-          expect(response).to.comprise.of.json({success:true});
-          return chakram.wait();
+          expect(response.body.success).to.be.true;
         })
     })
 
     it('Should work correctly with invalid session id provided', function() {
-      var response=chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:'invalid'}});
-      expect(response).to.have.status(200);
-      expect(response).to.comprise.of.json({success:false});
-      return chakram.wait();
+      return chai.request(URL).post(LOGOUT_URI, {})
+        .set('sessionid', 'invalid')
+        .then(response => {
+          expect(response).to.have.status(200);
+          expect(response.body.success).to.be.false;
+        })
     })
 
     it('Should fail when trying to log out without session id', function() {
-      var response=chakram.post(`${URL}/api/v1/logout`);
-      expect(response).to.have.status(401);
-      expect(response).to.comprise.of.json({error: 'Access denied'});
-      return chakram.wait();
+      return chai.request(URL).post(LOGOUT_URI, {})
+        .then(response => {
+          expect(response).to.have.status(401);
+          expect(response.body.error).to.be.equal('Access denied');
+        })
     })
 
     it('Logout should invalidate session correctly', function() {
       var storedSessionId;
-      return chakram.post(`${URL}/api/v1/login`, {id:USERNAME, password:VALID_PASSWORD})
+      return chai.request(URL).post(LOGIN_URI)
+        .send({id:USERNAME, password:VALID_PASSWORD})
         .then(result => {
           storedSessionId = result.body.sessionId;
-          var response=chakram.post(`${URL}/api/v1/logout`, {}, {headers:{sessionid:result.body.sessionId}});
+          return chai.request(URL).post(LOGOUT_URI, {})
+            .set('sessionid', result.body.sessionId)
+        })
+        .then(response => {
           expect(response).to.have.status(200);
-          return response;          
+          expect(response.body.status).to.be.true;
         })
         .then( () => {
-          var response=chakram.get(`${URL}/api/v1/customers/${USERNAME}/accounts`, {headers:{sessionid:storedSessionId}});
+          return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME}/accounts`)
+            .set('sessionId', storedSessionId);         
+        })
+        .then( response => {
           expect(response).to.have.status(401);
-          expect(response).to.comprise.of.json({error: 'Access denied'});
-          return chakram.wait();
+          expect(response.body.error).to.be.equal('Access denied');
         })
     })
   })
 
   describe('api/v1/logout GET', function() {
     it('Should fail when trying to invoke GET on logout path', function() {
-      var response=chakram.get(`${URL}/api/v1/logout`);
-      expect(response).to.have.status(404);    
-      return chakram.wait();
+      return chai.request(URL).get(LOGOUT_URI)
+        .then(response => {
+          expect(response).to.have.status(404);
+        })
     })
   });
-});
+})
