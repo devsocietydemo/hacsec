@@ -17,10 +17,7 @@
       "windows": {
         "command": "build.bat"
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
+      "group": "build",
       "presentation": {
         "echo": false,
         "reveal": "always",
@@ -46,10 +43,7 @@
       "windows": {
         "command": "start.bat"
       },
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
+      "group": "build",
       "presentation": {
         "echo": false,
         "reveal": "always",
@@ -74,10 +68,7 @@
       "windows": {
         "command": "stop.bat"
       },
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
+      "group": "build",
       "presentation": {
         "echo": false,
         "reveal": "always",
@@ -86,11 +77,6 @@
         "showReuseMessage": true,
         "clear": false
       },
-      "problemMatcher": []
-    },
-    {
-      "label": "Full rebuild banking app",
-      "dependsOn": ["(Re)start banking app", "Destroy banking app"],
       "problemMatcher": []
     },
     {
@@ -120,6 +106,34 @@
       "problemMatcher": []
     },
     {
+      "label": "Full rebuild banking app",
+      "options": {
+        "cwd": "${workspaceFolder}/app/"
+      },
+      "linux": {
+        "command": "./rebuild.sh"
+      },
+      "osx": {
+        "command": "./rebuild.sh"
+      },
+      "windows": {
+        "command": "rebuild.bat"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Observe docker log files",
       "options": {
         "cwd": "${workspaceFolder}/app/"
@@ -130,6 +144,7 @@
         "-f"
       ],
       "group": "none",
+      "isBackground": true,
       "presentation": {
         "echo": false,
         "reveal": "always",
@@ -145,6 +160,10 @@
       "type": "npm",
       "script": "test",
       "path": "app/bank-api/",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
       "problemMatcher": [],
       "presentation": {
         "echo": false,
@@ -161,6 +180,7 @@
       "script": "test-intercept",
       "path": "app/bank-api/",
       "problemMatcher": [],
+      "group": "test",
       "presentation": {
         "echo": false,
         "reveal": "always",
