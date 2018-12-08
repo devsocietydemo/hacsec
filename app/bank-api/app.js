@@ -42,6 +42,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
+app.use('/api/v1/test', express.static('test'));
 app.use('/api/v1/health', healthRouter);
 app.use('/api/v1/login', loginRouter);
 app.use('/api/v1/logout', logoutRouter);

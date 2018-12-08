@@ -5,7 +5,7 @@ const UNAUTHORIZED_ACCOUNT_NUMBER = 86436;
 const VALID_PASSWORD = 'password';
 const INVALID_PASSWORD = 'incorrect';
 const WEAK_PASSWORD_HASH = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
-const URL = process.env.API_HOST_URL || 'http://localhost';
+var URL = 'http://localhost';
 
 const HEALTH_URI = '/api/v1/health';
 const LOGIN_URI = '/api/v1/login';

@@ -1,10 +1,9 @@
+const runContactsAPITests = function(chai, config) {
+
 var { USERNAME, UNAUTHORIZED_USERNAME, URL, 
   CONTACTS_URI, METHOD_GET, METHOD_POST, validateHealthCheck, 
-  expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = require('./common');
-var chai = require('chai');
-var chaiHttp = require('chai-http');
+  expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = config;
 var expect = chai.expect;
-chai.use(chaiHttp);
   
 describe('Contacts API', function() {
 
@@ -213,3 +212,6 @@ describe('Contacts API', function() {
     })
   })
 })
+}
+
+module.exports = { runContactsAPITests };

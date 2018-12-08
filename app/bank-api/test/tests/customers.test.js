@@ -1,10 +1,9 @@
-var { USERNAME, UNAUTHORIZED_USERNAME, WEAK_PASSWORD_HASH, URL, 
+const runCustomersAPITests = function(chai, config) {
+
+  var { USERNAME, UNAUTHORIZED_USERNAME, WEAK_PASSWORD_HASH, URL, 
       CUSTOMERS_URI, METHOD_GET, METHOD_POST, validateHealthCheck, 
-      expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = require('./common');
-var chai = require('chai');
-var chaiHttp = require('chai-http');
+      expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = config;
 var expect = chai.expect;
-chai.use(chaiHttp);
 
 describe('Customers API', function() {
 
@@ -144,3 +143,6 @@ describe('Customers API', function() {
     })
   })
 })
+}
+
+module.exports = { runCustomersAPITests };

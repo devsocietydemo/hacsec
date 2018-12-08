@@ -1,11 +1,10 @@
+const runTransactionsAPITests = function(chai, config) {
+
 var { ACCOUNT_NUMBER, UNAUTHORIZED_ACCOUNT_NUMBER, URL, 
   TRANSACTIONS_URI, METHOD_GET, validateHealthCheck, 
-  expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = require('./common');
+  expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = config;
 
-var chai = require('chai');
-var chaiHttp = require('chai-http');
 var expect = chai.expect;
-chai.use(chaiHttp);
 
 describe('Transactions API', function() {
 
@@ -55,3 +54,6 @@ describe('Transactions API', function() {
     })
   })
 })
+}
+
+module.exports = { runTransactionsAPITests };
