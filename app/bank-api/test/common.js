@@ -15,6 +15,8 @@ const CUSTOMERS_URI = '/api/v1/customers';
 const ACCOUNTS_URI = '/api/v1/accounts';
 const TRANSACTIONS_URI = '/api/v1/transactions';
 const CONTACTS_URI = '/api/v1/contacts';
+const ADMINER_URI = '/adminer';
+const CDN_URI = '/cdn';
 
 const METHOD_GET = 'GET';
 const METHOD_POST = 'POST';
@@ -88,6 +90,8 @@ module.exports = { USERNAME,
                    ACCOUNTS_URI,
                    TRANSACTIONS_URI,
                    CONTACTS_URI,
+                   ADMINER_URI,
+                   CDN_URI,
                    METHOD_GET,
                    METHOD_POST,
                    validateHealthCheck,
