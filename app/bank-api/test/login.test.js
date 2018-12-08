@@ -1,5 +1,6 @@
-var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL, HEALTH_URI, 
-      LOGIN_URI, SESSIONS_URI, LOGOUT_URI, CUSTOMERS_URI } = require('./common');
+var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL, LOGIN_URI, 
+      SESSIONS_URI, LOGOUT_URI, CUSTOMERS_URI, METHOD_GET, validateHealthCheck, 
+      expectAccessDenied, ensureURLDoesNotExist } = require('./common');
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = chai.expect;
@@ -8,12 +9,7 @@ chai.use(chaiHttp);
 describe('Login API', function() {
  
   before('Validate system healthcheck', function() {
-    return chai.request(URL).get(HEALTH_URI)
-      .then( response => {
-        expect(response).to.have.status(200)
-        expect(response).to.be.json;
-        expect(response.body.status).to.be.equal('OK');
-      })
+    return validateHealthCheck(chai);
   })
  
   describe(`${LOGIN_URI} POST`, function() {
@@ -27,7 +23,7 @@ describe('Login API', function() {
           expect(response.body.success).to.be.true;
           expect(response.body.sessionId).not.to.be.empty;
         });
-      });
+    });
  
     it('Should not allow login with incorrect password', function() {
       return chai.request(URL).post(LOGIN_URI)
@@ -44,12 +40,8 @@ describe('Login API', function() {
   describe(`${LOGIN_URI} GET`, function() {
 
     it('Should fail when trying to invoke GET on login path', function() {
-      return chai.request(URL).get(LOGIN_URI)
-        .then (response => {
-          expect(response).to.have.status(404);    
-        })
+      return ensureURLDoesNotExist(chai, LOGIN_URI, METHOD_GET)
     })
-
   });
 
   describe(`${SESSIONS_URI} GET`, function() {
@@ -68,10 +60,7 @@ describe('Login API', function() {
 
     it('Should fail when trying to list sessions without session id', function() {
       return chai.request(URL).get(SESSIONS_URI)
-        .then(response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response));
     })
   })
 
@@ -99,10 +88,7 @@ describe('Login API', function() {
 
     it('Should fail when trying to log out without session id', function() {
       return chai.request(URL).post(LOGOUT_URI, {})
-        .then(response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response));
     })
 
     it('Logout should invalidate session correctly', function() {
@@ -122,19 +108,13 @@ describe('Login API', function() {
           return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME}/accounts`)
             .set('sessionId', storedSessionId);         
         })
-        .then( response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response))
     })
   })
 
-  describe('api/v1/logout GET', function() {
+  describe(`${LOGOUT_URI} GET`, function() {
     it('Should fail when trying to invoke GET on logout path', function() {
-      return chai.request(URL).get(LOGOUT_URI)
-        .then(response => {
-          expect(response).to.have.status(404);
-        })
+      return ensureURLDoesNotExist(chai, LOGOUT_URI, METHOD_GET);
     })
   });
 })

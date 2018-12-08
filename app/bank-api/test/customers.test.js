@@ -1,5 +1,6 @@
-var { USERNAME, UNAUTHORIZED_USERNAME, VALID_PASSWORD, WEAK_PASSWORD_HASH, URL, 
-      HEALTH_URI, LOGIN_URI, LOGOUT_URI, CUSTOMERS_URI } = require('./common');
+var { USERNAME, UNAUTHORIZED_USERNAME, WEAK_PASSWORD_HASH, URL, 
+      CUSTOMERS_URI, METHOD_GET, METHOD_POST, validateHealthCheck, 
+      expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = require('./common');
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = chai.expect;
@@ -8,29 +9,18 @@ chai.use(chaiHttp);
 describe('Customers API', function() {
 
   before('Validate system healthcheck', function() {
-    return chai.request(URL).get(HEALTH_URI)
-      .then( response => {
-        expect(response).to.have.status(200)
-        expect(response).to.be.json;
-        expect(response.body.status).to.be.equal('OK');
-      })
+    return validateHealthCheck(chai);
   })
  
   describe(`${CUSTOMERS_URI} GET`, function() {
     it('Should fail when trying to invoke GET on customers path', function() {
-      return chai.request(URL).get(CUSTOMERS_URI)
-        .then(response => {
-          expect(response).to.have.status(404);
-        })
+      return ensureURLDoesNotExist(chai, CUSTOMERS_URI, METHOD_GET)
     })
   })
 
   describe(`${CUSTOMERS_URI} POST`, function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      return chai.request(URL).post(CUSTOMERS_URI)
-        .then(response => {
-          expect(response).to.have.status(404);
-        })
+      return ensureURLDoesNotExist(chai, CUSTOMERS_URI, METHOD_POST)
     })
   })
 
@@ -39,24 +29,11 @@ describe('Customers API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return chai.request(URL).post(LOGIN_URI)
-        .send({id:USERNAME, password:VALID_PASSWORD})
-        .then( response => {
-          expect(response).to.have.status(200);
-          expect(response).to.be.json;
-          expect(response.body.success).to.be.true;
-          expect(response.body.sessionId).not.to.be.empty;
-          currentSessionId = response.body.sessionId;
-        })
+      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return chai.request(URL).post(LOGOUT_URI)
-        .set('sessionid', currentSessionId)
-        .then(response => {
-          expect(response).to.have.status(200);
-          expect(response.body.success).to.be.true;
-        })
+      return logOutUser(chai, currentSessionId);
     })
 
     it('Should list customer data correctly when valid session is used', function() {
@@ -72,7 +49,6 @@ describe('Customers API', function() {
           expect(response.body[0].nationality).not.to.be.null;
           expect(response.body[0].salt).not.to.be.null;
           expect(response.body[0].password).not.to.be.null;
-  
         })
     })
 
@@ -85,7 +61,6 @@ describe('Customers API', function() {
           expect(response.body).to.be.an('array');
           expect(response.body).to.have.lengthOf(1);
           expect(response.body[0].password).not.to.be.equal(WEAK_PASSWORD_HASH);
-  
         })
     })
 
@@ -103,9 +78,8 @@ describe('Customers API', function() {
             expect(response.body[0].nationality).not.to.be.null;
             expect(response.body[0].salt).not.to.be.null;
             expect(response.body[0].password).not.to.be.null;
-          } else {
-            expect(response).to.have.status(401);
-            expect(response.body.error).to.be.equal('Access denied');
+          } else { 
+            return expectAccessDenied(chai, response);
           }
         })
     })
@@ -113,27 +87,18 @@ describe('Customers API', function() {
     it('Should not list customer data when unathorized user is used', function() {
       return chai.request(URL).get(`${CUSTOMERS_URI}/${UNAUTHORIZED_USERNAME}`)
         .set('sessionid',currentSessionId)
-        .then(response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response))
     })
 
     it('Should fail when session id is not provided', function() {
       return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME}`)
-        .then(response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response));
     })
   })
 
   describe(`${CUSTOMERS_URI}/{id} POST`, function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      return chai.request(URL).post(`${CUSTOMERS_URI}/${USERNAME}`)
-        .then(response => {
-          expect(response).to.have.status(404);
-      })
+      return ensureURLDoesNotExist(chai, `${CUSTOMERS_URI}/${USERNAME}`, METHOD_POST);
     })
   })
 
@@ -142,32 +107,16 @@ describe('Customers API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return chai.request(URL).post(LOGIN_URI)
-        .send({id:USERNAME, password:VALID_PASSWORD})
-        .then( response => {
-          expect(response).to.have.status(200);
-          expect(response).to.be.json;
-          expect(response.body.success).to.be.true;
-          expect(response.body.sessionId).not.to.be.empty;
-          currentSessionId = response.body.sessionId;
-        })
+      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return chai.request(URL).post(LOGOUT_URI)
-        .set('sessionid', currentSessionId)
-        .then(response => {
-          expect(response).to.have.status(200);
-          expect(response.body.success).to.be.true;
-        })
+      return logOutUser(chai, currentSessionId);
     })
 
     it('Should fail when session id is not provided', function() {
       return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME}/accounts`)
-        .then(response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response));
     })
 
     it('Should list customer accounts data correctly when valid session is used', function() {
@@ -185,19 +134,13 @@ describe('Customers API', function() {
     it('Should not list customer accounts data when unathorized user is used', function() {
       return chai.request(URL).get(`${CUSTOMERS_URI}/${UNAUTHORIZED_USERNAME}/accounts`)
         .set('sessionid', currentSessionId)
-        .then(response => {
-          expect(response).to.have.status(401);
-          expect(response.body.error).to.be.equal('Access denied');
-        })
+        .then(response => expectAccessDenied(chai, response))
     })
   })
 
-  describe('api/v1/customers/{id}/accounts POST', function() {
+  describe(`${CUSTOMERS_URI}/{id}/accounts POST`, function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      return chai.request(URL).post(`${CUSTOMERS_URI}/${USERNAME}/accounts`)
-        .then(response => {
-          expect(response).to.have.status(404);
-      })
+      return ensureURLDoesNotExist(chai, `${CUSTOMERS_URI}/${USERNAME}/accounts`, METHOD_POST);
     })
   })
 })
