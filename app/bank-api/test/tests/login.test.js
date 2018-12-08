@@ -1,10 +1,9 @@
-var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL, LOGIN_URI, 
-      SESSIONS_URI, LOGOUT_URI, CUSTOMERS_URI, METHOD_GET, validateHealthCheck, 
-      expectAccessDenied, ensureURLDoesNotExist } = require('./common');
-var chai = require('chai');
-var chaiHttp = require('chai-http');
+const runLoginAPITests = function(chai, config) {
+  var { USERNAME, VALID_PASSWORD, INVALID_PASSWORD, URL, LOGIN_URI, 
+    SESSIONS_URI, LOGOUT_URI, CUSTOMERS_URI, METHOD_GET, validateHealthCheck, 
+    expectAccessDenied, ensureURLDoesNotExist } = config;
+ 
 var expect = chai.expect;
-chai.use(chaiHttp);
 
 describe('Login API', function() {
  
@@ -118,3 +117,6 @@ describe('Login API', function() {
     })
   });
 })
+};
+
+module.exports = { runLoginAPITests };
