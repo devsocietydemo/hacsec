@@ -159,7 +159,7 @@ describe('Attacks', function() {
 
   describe('A6:2017 - Security Misconfiguration', function() {
 
-    it('Should allow access MySQL Adminer Console', function() {
+    it('Should allow access to MySQL Adminer Console', function() {
       return chai.request(URL).get(ADMINER_URI)
         .then(response => {
           expect(response).to.have.status(200);
