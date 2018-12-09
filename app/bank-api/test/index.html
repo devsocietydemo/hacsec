@@ -1,0 +1,61 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Automated security testing suite - Mocha/Chai/Chai-HTTP</title>
+    <link href="https://unpkg.com/mocha@4.0.1/mocha.css" rel="stylesheet" />
+</head>
+<body>
+<div id="mocha"></div>
+
+<script src="https://unpkg.com/chai@4.1.2/chai.js"></script>
+<script src="https://unpkg.com/mocha@4.0.1/mocha.js"></script>
+<script src="vendor/chai-http.js"></script>
+
+<script>mocha.setup('bdd')</script>
+<script src="common.js"></script>
+<script src="tests/login.test.js"></script>
+<script src="tests/customers.test.js"></script>
+<script src="tests/accounts.test.js"></script>
+<script src="tests/transactions.test.js"></script>
+<script src="tests/contacts.test.js"></script>
+<script src="tests/configuration.test.js"></script>
+<script src="tests/attacks.test.js"></script>
+<script>
+    chai.use(chaiHttp);
+    var config = { USERNAME, 
+                   ACCOUNT_NUMBER,
+                   UNAUTHORIZED_USERNAME, 
+                   UNAUTHORIZED_ACCOUNT_NUMBER,
+                   VALID_PASSWORD, 
+                   INVALID_PASSWORD, 
+                   WEAK_PASSWORD_HASH, 
+                   URL,
+                   HEALTH_URI,
+                   LOGIN_URI,
+                   SESSIONS_URI,
+                   LOGOUT_URI,
+                   CUSTOMERS_URI,
+                   ACCOUNTS_URI,
+                   TRANSACTIONS_URI,
+                   CONTACTS_URI,
+                   ADMINER_URI,
+                   CDN_URI,
+                   METHOD_GET,
+                   METHOD_POST,
+                   validateHealthCheck,
+                   expectAccessDenied,
+                   ensureURLDoesNotExist,
+                   logInUser,
+                   logOutUser };
+    runLoginAPITests(chai, config);
+    runCustomersAPITests(chai, config);
+    runAccountsAPITests(chai, config);
+    runTransactionsAPITests(chai, config);
+    runContactsAPITests(chai, config);
+    runConfigurationTests(chai, config);
+    runAttacksTests(chai, config);
+    mocha.checkLeaks();
+    mocha.run();
+</script>
+</body>
+</html>

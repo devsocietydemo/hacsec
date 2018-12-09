@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha test/suite.test.js",
+    "test-intercept": "env API_HOST_URL=http://localhost:8080 mocha test/suite.test.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
@@ -18,6 +20,10 @@
     "uid-safe": "^2.1.5"
   },
   "devDependencies": {
-    "eslint": "^5.9.0"
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "eslint": "^5.9.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "mocha": "^5.2.0"
   }
 }

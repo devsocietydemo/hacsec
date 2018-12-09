@@ -139,18 +139,56 @@
         "cwd": "${workspaceFolder}/app/"
       },
       "command": "docker-compose",
-      "args": ["logs", "-f"],
-      "isBackground": true,
+      "args": [
+        "logs",
+        "-f"
+      ],
       "group": "none",
+      "isBackground": true,
       "presentation": {
         "echo": false,
         "reveal": "always",
         "focus": false,
-        "panel": "new",        
+        "panel": "new",
         "showReuseMessage": false,
         "clear": true
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Run all API tests",
+      "type": "npm",
+      "script": "test",
+      "path": "app/bank-api/",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "Run all API tests (via Intercepting Proxy)",
+      "type": "npm",
+      "script": "test-intercept",
+      "path": "app/bank-api/",
+      "problemMatcher": [],
+      "group": "test",
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      }
     }
   ]
 }

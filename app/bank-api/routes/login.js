@@ -7,7 +7,7 @@ var router = express.Router();
 router.post('/', function (req, res) {
 	const customerId = req.body.id;
   const password = req.body.password;
-  validateCustomerPassword(res.locals.connection, customerId, password)
+  validateCustomerPassword(res.locals.driver, customerId, password)
     .then( validPassword => validPassword ? createCustomerSession(res.locals.redisClient, customerId) : null)
     .then( sessionId => sessionId ? {success:true, sessionId} : {success:false, sessionId})
     .then( loginResponse => sendCorrectResult(res, loginResponse) )

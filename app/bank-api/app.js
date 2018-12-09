@@ -1,11 +1,11 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mysql = require("mysql");
+var driver = require('./common/db/driver');
 var redis = require('redis');
 var bodyParser = require('body-parser');
+var healthRouter = require('./routes/health');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
 var customersRouter = require('./routes/customers');
@@ -14,13 +14,6 @@ var transactionsRouter = require('./routes/transactions');
 var contactsRouter = require('./routes/contacts');
 
 var app = express();
-var connectionPool = mysql.createPool({
-  host: process.env.BANKAPI_DB_HOSTNAME,
-  user: 'bankappuser',
-  password: 'AppUserPassword',
-  database: 'bankdb',
-  multipleStatements: true
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,16 +28,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(function (req, res, next) {
-
-  connectionPool.getConnection(function(error, connection){
-    if (error) {
-      throw(`Fetching connection from pool failed: ${error}`);
-    } else {
-      res.locals.connection = connection;
-      next();
-    }
-  });
+	res.locals.driver = driver;
+	next();
 });
+
 
 app.use(function (req, res, next) {
 	res.locals.redisClient = redis.createClient(process.env.BANKAPI_REDIS_PORT, process.env.BANKAPI_REDIS_HOSTNAME, { password: "redispassword" });
@@ -55,6 +42,8 @@ app.use(function (req, res, next) {
 	next();
 });
 
+app.use('/api/v1/test', express.static('test'));
+app.use('/api/v1/health', healthRouter);
 app.use('/api/v1/login', loginRouter);
 app.use('/api/v1/logout', logoutRouter);
 app.use('/api/v1/customers', customersRouter);
@@ -63,8 +52,9 @@ app.use('/api/v1/transactions', transactionsRouter);
 app.use('/api/v1/contacts', contactsRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-	next(createError(404));
+app.use(function (req, res) {
+  res.status(404).send('Not found');
+	//next(createError(404));
 });
 
 // error handler

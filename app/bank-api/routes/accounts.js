@@ -12,9 +12,9 @@ router.get('/:id', function(req, res) {
   checkIfSessionExists(sessionId)
     .then( sessionId => getCustomerIdFromSession(res.locals.redisClient, sessionId))
     .then( customerId => fetchedCustomerId = customerId )
-    .then( customerId => customerId ? getAccountOwnership(res.locals.connection, customerId, accountId) : null)
+    .then( customerId => customerId ? getAccountOwnership(res.locals.driver, customerId, accountId) : null)
     .then( validateAccountOwnership )
-    .then( () => getAccountDetails(res.locals.connection, fetchedCustomerId, accountId))
+    .then( () => getAccountDetails(res.locals.driver, fetchedCustomerId, accountId))
     .then( results => sendCorrectResult(res, results))
     .catch( error => sendErrorMessage(res, error));
 });
@@ -24,9 +24,9 @@ router.get('/:id/transactions', function(req, res) {
   const sessionId = req.headers.sessionid;
   checkIfSessionExists(sessionId)
     .then( sessionId => getCustomerIdFromSession(res.locals.redisClient, sessionId))
-    .then( customerId => customerId ? getAccountOwnership(res.locals.connection, customerId, accountId) : null)
+    .then( customerId => customerId ? getAccountOwnership(res.locals.driver, customerId, accountId) : null)
     .then( validateAccountOwnership )
-    .then( () => getAllAccountTransactions(res.locals.connection, accountId))
+    .then( () => getAllAccountTransactions(res.locals.driver, accountId))
     .then( results => sendCorrectResult(res, results) )
     .catch( error => sendErrorMessage(res, error) );
 });
