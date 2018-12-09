@@ -1,7 +1,7 @@
 const runAttacksTests = function(chai, config) {
 
 var { USERNAME, UNAUTHORIZED_USERNAME, UNAUTHORIZED_ACCOUNT_NUMBER, URL, WEAK_PASSWORD_HASH, CONTACTS_URI, 
-  CUSTOMERS_URI, TRANSACTIONS_URI, ADMINER_URI, CDN_URI, validateHealthCheck, 
+  CUSTOMERS_URI, TRANSACTIONS_URI, ADMINER_URI, CDN_URI, SESSIONS_URI, validateHealthCheck, 
   logInUser, logOutUser } = config;
 var expect = chai.expect;
 
@@ -144,6 +144,19 @@ describe('Attacks', function() {
   
     after('Log out customer to release session', function() {
       return logOutUser(chai, currentSessionId);
+    })
+
+    it('Should list all the active sessions', function() {
+      return chai.request(URL).get(SESSIONS_URI).set('sessionid','not_empty')
+        .then (response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body[0]).not.to.be.null;
+          expect(response.body[0].customerId).not.to.be.null;
+          expect(response.body[0].sessions).to.be.an('array');
+          expect(response.body[0].sessions).not.to.be.null;
+        })
     })
 
     it('Should allow access to customer data when unathorized user is used', function() {
