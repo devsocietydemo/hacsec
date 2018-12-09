@@ -65,6 +65,26 @@ describe('Accounts API', function() {
         .set('sessionid', currentSessionId)
         .then(response => expectAccessDenied(chai, response));
     })
+
+    it('Should not allow SQL Injection', function() {
+      return chai.request(URL).get(`${ACCOUNTS_URI}/${ACCOUNT_NUMBER} or 1=1`)
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          if (response.statusCode === 200){
+            expect(response).to.be.json;
+            expect(response.body).to.be.an('array');
+            expect(response.body).to.have.lengthOf(1);
+            expect(response.body[0]).to.not.be.null;
+            expect(response.body[0].id).to.be.equal(ACCOUNT_NUMBER);
+            expect(response.body[0].iban).to.be.equal('PL12 5234 4143 8746 7665');
+            expect(response.body[0].balance).to.not.be.null;
+            expect(response.body[0].currency).to.not.be.null;
+            expect(response.body[0].account_name).to.not.be.null;
+          } else {
+            return expectAccessDenied(chai, response);
+          }
+        })
+    })
   })
 
   describe(`${ACCOUNTS_URI}/{id} POST`, function() {
@@ -93,6 +113,7 @@ describe('Accounts API', function() {
           expect(response).to.be.json;
           expect(response.body).to.be.an('array');
           expect(response.body[0]).to.not.be.null;
+          expect(response.body[0].account_id).to.be.equal(ACCOUNT_NUMBER);
           expect(response.body[0].id).to.not.be.null;
           expect(response.body[0].transaction_date).to.not.be.null;
           expect(response.body[0].amount).to.not.be.null;
@@ -110,6 +131,26 @@ describe('Accounts API', function() {
       return chai.request(URL).get(`${ACCOUNTS_URI}/${UNAUTHORIZED_ACCOUNT_NUMBER}/transactions`)
         .set('sessionid', currentSessionId)
         .then(response => expectAccessDenied(chai, response));
+    })
+
+    it('Should not allow SQL Injection during transactions fetch operation', function() {
+      return chai.request(URL).get(`${ACCOUNTS_URI}/${ACCOUNT_NUMBER} or 1=1/transactions`)
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          if (response.statusCode === 200) {
+            expect(response).to.be.json;
+            expect(response.body).to.be.an('array');
+            expect(response.body[0]).to.not.be.null;
+            expect(response.body[0].account_id).to.be.equal(ACCOUNT_NUMBER);
+            expect(response.body[0].id).to.not.be.null;
+            expect(response.body[0].transaction_date).to.not.be.null;
+            expect(response.body[0].amount).to.not.be.null;
+            expect(response.body[0].description).to.not.be.null;
+            expect([...new Set(response.body.map(entry => entry.account_id))]).to.have.members([ACCOUNT_NUMBER]);
+          } else {
+            expectAccessDenied(chai, response);
+          }
+        })
     })
   })
 

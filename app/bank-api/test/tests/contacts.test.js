@@ -61,6 +61,20 @@ describe('Contacts API', function() {
       return chai.request(URL).get(`${CONTACTS_URI}/${USERNAME}`)
         .then(response => expectAccessDenied(chai, response));
     })
+
+    it('Should not allow SQL Injection', function() {
+      return chai.request(URL).get(`${CONTACTS_URI}/${USERNAME} or 1=1`)
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          if (response.statusCode === 200) {
+            expect(response).to.be.json;
+            expect(response.body).to.be.an('array');
+            expect([...new Set(response.body.map(entry => entry.customer_id))]).to.have.members([USERNAME]);
+          } else {
+            return expectAccessDenied(chai, response);
+          }
+        })
+    })
   })
 
   describe(`${CONTACTS_URI}/{id} POST`, function() {

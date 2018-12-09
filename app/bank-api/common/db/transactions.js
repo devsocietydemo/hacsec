@@ -2,7 +2,7 @@ var { MYSQL_ERROR_CODES } = require('./errors');
 
 const getAllAccountTransactions = function(driver, accountId) {
   return new Promise(function(resolve, reject) {
-    driver.query('SELECT id, transaction_date, amount, description, target_iban ' +
+    driver.query('SELECT account_id, id, transaction_date, amount, description, target_iban ' +
                  'FROM transactions tr WHERE tr.account_id = ?', [accountId], 
       function (error, results) {
         if (error) {

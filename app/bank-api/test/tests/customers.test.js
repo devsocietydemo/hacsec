@@ -141,6 +141,22 @@ describe('Customers API', function() {
         .set('sessionid', currentSessionId)
         .then(response => expectAccessDenied(chai, response))
     })
+
+    it('Should not allow SQL injection during accounts fetch operation', function() {
+      return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME} or 1=1/accounts`)
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          if (response.statusCode === 200) {
+            expect(response).to.be.json;
+            expect(response.body).to.be.an('array');
+            expect(response.body).to.have.lengthOf(3);
+            expect(response.body.map(entry=> {return {id:entry.id, iban:entry.iban}})).to.have.deep.members([{id:86433, iban:'PL12 5234 4143 8746 7665'}, {id:86434, iban:'PL13 5127 6900 0411 5593'}, {id:86435, iban:'PL53 5324 1702 1359 0846'}]);
+          } else {
+            return expectAccessDenied(chai, response);
+          }
+        })
+    })
+
   })
 
   describe(`${CUSTOMERS_URI}/{id}/accounts POST`, function() {
