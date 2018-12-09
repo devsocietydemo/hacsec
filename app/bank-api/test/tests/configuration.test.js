@@ -24,7 +24,7 @@ const runConfigurationTests = function (chai, config) {
     })
 
     it('Should not allow access to access.php file', function() {
-      return ensureURLDoesNotExist(chai, `${CDN_URI}/access.php`, METHOD_GET)
+      return ensureURLDoesNotExist(chai, `${CDN_URI}/access.php?${new Date().getTime()}`, METHOD_GET)
     })
   })
 }

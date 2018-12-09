@@ -174,7 +174,7 @@ describe('Attacks', function() {
     })
 
     it('Should allow access to access.php file', function() {
-      return chai.request(URL).get(`${CDN_URI}/access.php`)
+      return chai.request(URL).get(`${CDN_URI}/access.php?${new Date().getTime()}`)
         .then(response => {
           expect(response).to.have.status(200);
         })
