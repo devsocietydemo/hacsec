@@ -36,7 +36,7 @@ describe('Attacks', function() {
         })
     })
 
-    it('Should not allow to run multiple queries when SQL injection is used', function() {
+    it('Should allow to run multiple queries when SQL injection is used', function() {
       return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME};SELECT * FROM accounts;`)
         .set('sessionid',currentSessionId)
         .then(response => {
