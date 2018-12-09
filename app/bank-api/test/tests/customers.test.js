@@ -83,6 +83,12 @@ describe('Customers API', function() {
         })
     })
 
+    it('Should not allow to run multiple queries when SQL injection is used', function() {
+      return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME};SELECT * FROM accounts;`)
+        .set('sessionid',currentSessionId)
+        .then(response => expect(response).to.have.status(500))
+    })
+
     it('Should not list customer data when unathorized user is used', function() {
       return chai.request(URL).get(`${CUSTOMERS_URI}/${UNAUTHORIZED_USERNAME}`)
         .set('sessionid',currentSessionId)
