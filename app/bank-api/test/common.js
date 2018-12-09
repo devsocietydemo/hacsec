@@ -22,7 +22,7 @@ const METHOD_GET = 'GET';
 const METHOD_POST = 'POST';
 
 const validateHealthCheck=function(chai) {
-  return chai.request(URL).get(HEALTH_URI)
+  return chai.request(URL).get(`${HEALTH_URI}?${new Date().getTime()}`)
     .then( response => {
       chai.expect(response).to.have.status(200)
       chai.expect(response).to.be.json;
@@ -39,7 +39,7 @@ const ensureURLDoesNotExist=function(chai, uri, method) {
   var promise;
   switch(method) {
     case METHOD_GET:
-      promise=chai.request(URL).get(uri);
+      promise=chai.request(URL).get(`${uri}?${new Date().getTime()}`);
       break;
     case METHOD_POST:
       promise=chai.request(URL).post(uri);
