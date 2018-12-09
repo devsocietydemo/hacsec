@@ -35,6 +35,22 @@ describe('Attacks', function() {
           expect(response.body.map(entry=> {return {id:entry.id}})).to.have.deep.members([{id:2241}, {id:2242}, {id:2243}, {id:2244}]);
         })
     })
+
+    it('Should not allow to run multiple queries when SQL injection is used', function() {
+      return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME};SELECT * FROM accounts;`)
+        .set('sessionid',currentSessionId)
+        .then(response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body).to.have.lengthOf(2);
+          expect(response.body[0]).to.be.an('array');
+          expect(response.body[0]).to.have.lengthOf(1);
+          expect(response.body[0][0].id).to.be.equal(USERNAME);
+          expect(response.body[1]).to.be.an('array');
+          expect(response.body[1].map(entry=> {return {id:entry.id}})).to.deep.include.members([{id:86436}, {id:86438}, {id:86440}, {id:86442}]);
+        })
+    })
   })
 
   describe('A2:2017 - Broken Authentication', function() {
