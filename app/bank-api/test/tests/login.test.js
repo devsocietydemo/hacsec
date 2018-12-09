@@ -44,22 +44,8 @@ describe('Login API', function() {
   });
 
   describe(`${SESSIONS_URI} GET`, function() {
-    it('Should list all the active sessions when session id is provided', function() {
-      return chai.request(URL).get(SESSIONS_URI).set('sessionid','not_empty')
-        .then (response => {
-          expect(response).to.have.status(200);
-          expect(response).to.be.json;
-          expect(response.body).to.be.an('array');
-          expect(response.body[0]).not.to.be.null;
-          expect(response.body[0].customerId).not.to.be.null;
-          expect(response.body[0].sessions).to.be.an('array');
-          expect(response.body[0].sessions).not.to.be.null;
-        })
-    })
-
-    it('Should fail when trying to list sessions without session id', function() {
-      return chai.request(URL).get(SESSIONS_URI)
-        .then(response => expectAccessDenied(chai, response));
+    it('Should fail when trying to list all existing sessions', function() {
+      return ensureURLDoesNotExist(chai, SESSIONS_URI, METHOD_GET)
     })
   })
 
