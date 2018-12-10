@@ -1,6 +1,6 @@
 const runTransactionsAPITests = function(chai, config) {
 
-var { ACCOUNT_NUMBER, UNAUTHORIZED_ACCOUNT_NUMBER, URL, 
+var { ACCOUNT_NUMBER, UNAUTHORIZED_ACCOUNT_NUMBER, URL, ACCOUNTS_URI, 
   TRANSACTIONS_URI, METHOD_GET, validateHealthCheck, 
   expectAccessDenied, ensureURLDoesNotExist, logInUser, logOutUser } = config;
 
@@ -51,6 +51,40 @@ describe('Transactions API', function() {
         .send({account_id:ACCOUNT_NUMBER, amount:10.49, description:'Test transaction', target_iban:'PL12 3456 7890'})
         .set('sessionid', 'invalid')
         .then(response => expectAccessDenied(chai, response));
+    })
+
+    it('Should allow usage of HTML tags in description', function() {
+      return chai.request(URL).post(TRANSACTIONS_URI)
+        .send({account_id:ACCOUNT_NUMBER, amount:10.49, description:'Very <b>important</b> transaction<br />Call <i>+1-555-123456</i> for more details', target_iban:'PL12 3456 7890'})
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          expect(response).to.have.status(200);
+          return chai.request(URL).get(`${ACCOUNTS_URI}/${ACCOUNT_NUMBER}/transactions`)
+           .set('sessionid', currentSessionId)
+        })
+        .then(response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body.map(entry => entry.description)).to.include('Very <b>important</b> transaction<br />Call <i>+1-555-123456</i> for more details');
+        })
+    })
+
+    it('Should sanitize HTML correctly to prevent XSS', function() {
+      return chai.request(URL).post(TRANSACTIONS_URI)
+        .send({account_id:ACCOUNT_NUMBER, amount:10.49, description:'<a href="http://localhost:8005/page">More details...</a>', target_iban:'PL12 3456 7890'})
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          expect(response).to.have.status(200);
+          return chai.request(URL).get(`${ACCOUNTS_URI}/${ACCOUNT_NUMBER}/transactions`)
+           .set('sessionid', currentSessionId)
+        })
+        .then(response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body.map(entry => entry.description)).to.not.include('<a href="http://localhost:8005/page">More details...</a>');
+        })
     })
   })
 })
