@@ -17,6 +17,7 @@
     "mysql": "^2.16.0",
     "pug": "^2.0.3",
     "redis": "^2.8.0",
+    "sanitize-html": "^1.19.3",
     "uid-safe": "^2.1.5"
   },
   "devDependencies": {
