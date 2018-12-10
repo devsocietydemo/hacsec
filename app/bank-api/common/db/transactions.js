@@ -18,7 +18,7 @@ const getAllAccountTransactions = function(driver, accountId) {
 
 const sanitizeTransactionDescription = function(description) {
   return sanitizeHtml(description, {
-    allowedTags: [ 'p', 'br', 'b', 'i', 'em', 'strong', 'a' ],
+    allowedTags: [ 'p', 'br', 'b', 'i', 'em', 'strong' ],
     allowedAttributes: {
       'a': [ 'href' ]
     },
