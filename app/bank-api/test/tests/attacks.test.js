@@ -1,8 +1,8 @@
 const runAttacksTests = function(chai, config) {
 
-var { USERNAME, UNAUTHORIZED_USERNAME, UNAUTHORIZED_ACCOUNT_NUMBER, URL, WEAK_PASSWORD_HASH, CONTACTS_URI, 
-  CUSTOMERS_URI, TRANSACTIONS_URI, ADMINER_URI, CDN_URI, SESSIONS_URI, validateHealthCheck, 
-  logInUser, logOutUser } = config;
+var { USERNAME, UNAUTHORIZED_USERNAME, ACCOUNT_NUMBER, UNAUTHORIZED_ACCOUNT_NUMBER, URL, WEAK_PASSWORD_HASH, 
+  CONTACTS_URI, CUSTOMERS_URI, TRANSACTIONS_URI, ADMINER_URI, CDN_URI, SESSIONS_URI, ACCOUNTS_URI,
+  validateHealthCheck, logInUser, logOutUser } = config;
 var expect = chai.expect;
 
 describe('Attacks', function() {
@@ -208,6 +208,37 @@ describe('Attacks', function() {
           expect(response).to.have.status(200);
         })
     })
+  })
+
+  describe('A7:2017 - Cross-Site Scripting', function() {
+
+    var currentSessionId;
+
+    before('Log in to obtain valid session id', function() {
+      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+    })
+  
+    after('Log out customer to release session', function() {
+      return logOutUser(chai, currentSessionId);
+    })    
+    
+    it('Should not sanitize HTML correctly, allowing XSS', function() {
+      return chai.request(URL).post(TRANSACTIONS_URI)
+        .send({account_id:ACCOUNT_NUMBER, amount:10.49, description:'<a href="http://localhost:8005/page">More details...</a>', target_iban:'PL12 3456 7890'})
+        .set('sessionid', currentSessionId)
+        .then(response => {
+          expect(response).to.have.status(200);
+          return chai.request(URL).get(`${ACCOUNTS_URI}/${ACCOUNT_NUMBER}/transactions`)
+           .set('sessionid', currentSessionId)
+        })
+        .then(response => {
+          expect(response).to.have.status(200);
+          expect(response).to.be.json;
+          expect(response.body).to.be.an('array');
+          expect(response.body.map(entry => entry.description)).to.include('<a href="http://localhost:8005/page">More details...</a>');
+        })
+    })
+
   })
 })
 }
