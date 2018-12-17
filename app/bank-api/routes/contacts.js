@@ -4,7 +4,7 @@ var { getAllCustomerContacts, addCustomerContact, replaceCustomerContacts } = re
 var { validateCustomerSession } = require('../common/redis/sessions')
 var { parseContactsXml } = require('../common/xml/contacts');
 var { STANDARD_ACCESS_DENIED_ERROR } = require('../common/app/errors');
-var { checkIfSessionExists, sendCorrectResult, sendErrorMessage } = require('../common/http/handler')
+var { checkIfSessionExists, sendCorrectResult, sendErrorMessage, formatFileForDownload } = require('../common/http/handler')
 
 var router = express.Router();
 
@@ -39,6 +39,16 @@ router.post('/:customerId/xml', function(req, res) {
     .then( contacts => replaceCustomerContacts(res.locals.driver, customerId, contacts))
     .then( contacts => sendCorrectResult(res, contacts))
     .catch( error => sendErrorMessage(res, error))
+});
+
+router.get('/:customerId/download', function(req, res) {
+  const customerId = req.params.customerId;
+  const sessionId = req.headers.sessionid;
+  checkIfSessionExists(sessionId)
+    .then( sessionId => validateCustomerSession(res.locals.redisClient, sessionId, customerId))
+    .then( success => success ? getAllCustomerContacts(res.locals.driver, customerId) : Promise.reject(STANDARD_ACCESS_DENIED_ERROR))
+    .then( results => formatFileForDownload(results, res) )
+    .catch( error => sendErrorMessage(res, error) );
 });
 
 module.exports = router;

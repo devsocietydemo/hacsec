@@ -1,3 +1,4 @@
+var stream = require('stream');
 const { REDIS_ERROR_CODES } = require('../redis/errors');
 const { MYSQL_ERROR_CODES } = require('../db/errors');
 const { XML_ERROR_CODES } = require('../xml/errors');
@@ -48,4 +49,23 @@ const sendErrorMessage = function(response, result) {
   }
 }
 
-module.exports = { checkIfSessionExists, sendCorrectResult, sendErrorMessage }
+const formatFileForDownload = function(results, res) {
+
+  const reducer = (acc, currentEntry) =>  acc + currentEntry;
+  const mappedData = results.map(entry => `<contact><name>${entry.name}</name><iban>${entry.iban}</iban></contact>`);
+
+  const fileName = 'contacts.xml';
+  const fileData = mappedData.reduce(reducer, '<?xml version="1.0" encoding="ISO-8859-1"?><contacts>') + '</contacts>';
+
+  var fileContents = Buffer.from(fileData);
+
+  var readStream = new stream.PassThrough();
+  readStream.end(fileContents);
+
+  res.set('Content-disposition', 'attachment; filename=' + fileName);
+  res.set('Content-Type', 'text/xml');
+
+  readStream.pipe(res);
+}
+
+module.exports = { checkIfSessionExists, sendCorrectResult, sendErrorMessage, formatFileForDownload }
