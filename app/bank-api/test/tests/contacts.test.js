@@ -225,6 +225,61 @@ describe('Contacts API', function() {
         })
     })
   })
+
+  describe(`${CONTACTS_URI}/{id}/download GET`, function() {
+
+    var currentSessionId;
+
+    before('Log in to obtain valid session id', function() {
+      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+    })
+  
+    after('Log out customer to release session', function() {
+      return logOutUser(chai, currentSessionId);
+    })
+
+    it('Should download contacts correctly when valid session is used', function() {
+      return chai.request(URL).post(`${CONTACTS_URI}/${USERNAME}/xml`)
+        .set('sessionid', currentSessionId)
+        .send({contactsXml:'<?xml version="1.0" encoding="ISO-8859-1"?><contacts><contact><name>Chelsea A. Booth</name><iban>PL22 5453 1646 2917 1187</iban></contact><contact><name>Dawn K. Parker</name><iban>PL99 4916 4642 2904 3354</iban></contact></contacts>'})
+        .then(response => {
+          expect(response).to.have.status(200);
+        })
+        .then ( () => {
+          return chai.request(URL).get(`${CONTACTS_URI}/${USERNAME}/download`)
+          .set('sessionid', currentSessionId)
+        })
+        .then(response => {
+          expect(response).to.have.status(200);
+          expect(response.text).to.be.oneOf(['<?xml version="1.0" encoding="ISO-8859-1"?><contacts><contact><name>Chelsea A. Booth</name><iban>PL22 5453 1646 2917 1187</iban></contact><contact><name>Dawn K. Parker</name><iban>PL99 4916 4642 2904 3354</iban></contact></contacts>',
+                                             '<?xml version="1.0" encoding="ISO-8859-1"?><contacts><contact><name>Dawn K. Parker</name><iban>PL99 4916 4642 2904 3354</iban></contact><contact><name>Chelsea A. Booth</name><iban>PL22 5453 1646 2917 1187</iban></contact></contacts>']);
+        })
+
+    })
+
+    it('Should not download contacts when unathorized user is used', function() {
+      return chai.request(URL).get(`${CONTACTS_URI}/${UNAUTHORIZED_USERNAME}/download`)
+        .set('sessionid', currentSessionId)
+        .then(response => expectAccessDenied(chai, response));
+    })
+
+    it('Should fail when invalid session id is provided', function() {
+      return chai.request(URL).get(`${CONTACTS_URI}/${USERNAME}/download`)
+        .set('sessionid', 'invalid')
+        .then(response => expectAccessDenied(chai, response));
+    })
+
+    it('Should fail when session id is not provided', function() {
+      return chai.request(URL).get(`${CONTACTS_URI}/${USERNAME}/download`)
+        .then(response => expectAccessDenied(chai, response));
+    })
+  })
+
+  describe(`${CONTACTS_URI}/{id}/download POST`, function() {
+    it('Should fail when trying to invoke POST on contacts XML download path', function() {
+      return ensureURLDoesNotExist(chai, `${CONTACTS_URI}/${USERNAME}/download`, METHOD_POST);
+    })
+  })
 })
 }
 
