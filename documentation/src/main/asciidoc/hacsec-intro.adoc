@@ -73,7 +73,7 @@ NOTE: In some cases installation of Hyper-V might fail. In case it happens, plea
 [[installing-docker-for-windows]]
 Installing Docker for Windows
 -----------------------------
-Download latest version of the Docker for Windows application from https://store.docker.com/editions/community/docker-ce-desktop-windows[Docker Store]. Download and run the executable. To proceed with the installation you will be prompted for username and password to enable administrative access. Provide credentials you use to log into your computer.
+Download latest version of the Docker for Windows application from https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe[Docker Store]. Download and run the executable. To proceed with the installation you will be prompted for username and password to enable administrative access. Provide credentials you use to log into your computer.
 
 During the installation the following message box will open:
 
