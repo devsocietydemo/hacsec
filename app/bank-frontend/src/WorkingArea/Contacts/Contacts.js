@@ -22,6 +22,16 @@ const getXmlFromInput = (domEl) => new Promise((resolve, reject) => {
   }
 });
 
+const doUploadXml = (e, setData, importContacts) => {
+  const eventTarget = e.target;
+
+  getXmlFromInput(eventTarget).then(result => {
+    setData('importXml', result);
+    importContacts();
+    eventTarget.value = "";
+  })
+};
+
 const Contacts = ({contacts, addContact, importContacts, setData, newContact}) => {
   return (
     <div className="contacts">
@@ -51,20 +61,17 @@ const Contacts = ({contacts, addContact, importContacts, setData, newContact}) =
         <div className="new-contact-or">——— or ————</div>
 
         <div className="new-contact-xml">
-          <FormGroup label="XML File">
-            <input type="file" className="banking-input"
-                   onChange={ (e) => getXmlFromInput(e.target).then(result => setData('importXml', result)) }
-                />
-          </FormGroup>
+          <b>From XML File</b>
           <p>
-
             <strong>Warning:</strong> All contacts will be deleted and overwritten by XML content.
           </p>
           <div className="new-contact-actions">
-            <button className="banking-button active"
-                    onClick={() => importContacts()}>
+            <div className="banking-button file-button active">
+                <input type="file"
+                       onChange={ (e) => doUploadXml(e, setData, importContacts) }
+                    />
               Import
-            </button>
+            </div>
           </div>
         </div>
       </div>
