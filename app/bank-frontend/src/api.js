@@ -13,7 +13,11 @@ const fetchBankApi = (path, ...options) =>
 
     }
 
-    return response.json()
+    if (options && options[0] && options[0].transformFn) {
+      return options[0].transformFn(response);
+    } else {
+      return response.json()
+    }
   });
 
 
@@ -112,6 +116,30 @@ export const importContacts = function(id, xml, sessionId) {
     body: JSON.stringify({
       contactsXml: xml
     })
+  });
+}
+
+export const exportContacts = function(id, sessionId) {
+  var params = [];
+  params.push('contacts');
+  params.push(id);
+  params.push('download')
+  fetchBankApi(params, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'sessionId': sessionId
+    },
+    transformFn: response => response.blob()
+  }).then(response => {
+    const elem = window.document.createElement('a');
+
+    elem.href = URL.createObjectURL(response);
+    elem.download = 'contacts.xml';
+    document.body.appendChild(elem);
+    elem.click();
+    document.body.removeChild(elem);
   });
 }
 
