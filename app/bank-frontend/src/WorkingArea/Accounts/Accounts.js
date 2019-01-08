@@ -11,8 +11,6 @@ const Accounts = ({accounts, selectOperation, ...props}) => {
   return (
     <div className="accounts-overview">
       <div className="accounts-sum">
-        <div>Your values</div>
-        <div><strong>xxx.xx EUR</strong></div>
       </div>
       <ul className="accounts-list">
         <Error codes={[ERROR_ACCOUNTS_FETCH_FAILED]} />

@@ -39,7 +39,7 @@ const Account = ({
         <div className="account-controls">
           <NavLink to={OPERATION_CURRENT_BALANCE}
                    params={{accountId: id}}
-                   className="banking-button active">Go to balance</NavLink>
+                   className="banking-button active">Transaction history</NavLink>
 
           <NavLink to={OPERATION_NEW_TRANSFER}
                    params={{accountId: id}}
