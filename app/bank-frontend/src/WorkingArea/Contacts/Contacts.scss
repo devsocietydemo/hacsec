@@ -37,6 +37,15 @@
     .new-contact-actions {
       padding-top: 1em;
       text-align: center;
+
+      & > * {
+        margin: 1em 0;
+        display: inline;
+      }
+
+      * {
+        cursor: pointer;
+      }
     }
   }
 

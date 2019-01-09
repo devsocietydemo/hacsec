@@ -7,10 +7,10 @@ import Error from '../../Error/Error';
 import FormGroup from '../../FormGroup/FormGroup';
 import { NavLinkComponent } from '../../router';
 
-import { setInputNewContactData, initImportContacts, initAddContact } from '../../state/actions/contacts';
+import { setInputNewContactData, initImportContacts, initAddContact, initExportContacts } from '../../state/actions/contacts';
 import { OPERATION_NEW_TRANSFER } from '../../state/actions/operations';
 
-
+import { exportContacts } from '../../api';
 import './Contacts.scss';
 
 const getXmlFromInput = (domEl) => new Promise((resolve, reject) => {
@@ -32,7 +32,9 @@ const doUploadXml = (e, setData, importContacts) => {
   })
 };
 
-const Contacts = ({contacts, addContact, importContacts, setData, newContact}) => {
+const Contacts = ({contacts, addContact, importContacts, setData, newContact,
+  userId, sessionId}) => {
+
   return (
     <div className="contacts">
       <div className="new-contact">
@@ -60,18 +62,22 @@ const Contacts = ({contacts, addContact, importContacts, setData, newContact}) =
 
         <div className="new-contact-or">——— or ————</div>
 
+        <h3>Keep contacts in XML file</h3>
         <div className="new-contact-xml">
-          <b>From XML File</b>
           <p>
-            <strong>Warning:</strong> All contacts will be deleted and overwritten by XML content.
+            <strong>Warning:</strong> When importing, all contacts will be deleted and overwritten by XML content.
           </p>
           <div className="new-contact-actions">
             <div className="banking-button file-button active">
                 <input type="file"
                        onChange={ (e) => doUploadXml(e, setData, importContacts) }
                     />
-              Import
+              Import new from XML
             </div>
+            <button className="banking-button active"
+                    onClick={() => exportContacts(userId, sessionId)}>
+              Export existing to XML
+            </button>
           </div>
         </div>
       </div>
@@ -100,7 +106,9 @@ const Contacts = ({contacts, addContact, importContacts, setData, newContact}) =
 
 const mapStateToProps = state => ({
   newContact: state.contacts.newContact,
-  contacts: state.contacts.contacts
+  contacts: state.contacts.contacts,
+  userId: state.session.currentUser.id,
+  sessionId: state.session.sessionId
 });
 
 const mapDispatchToProps = dispatch => ({
