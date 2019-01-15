@@ -189,6 +189,158 @@
         "showReuseMessage": true,
         "clear": true
       }
-    }
+    },
+    {
+      "label": "(Re)build compatibility testing app",
+      "options": {
+        "cwd": "${workspaceFolder}/test-app/"
+      },
+      "linux": {
+        "command": "./build.sh"
+      },
+      "osx": {
+        "command": "./build.sh"
+      },
+      "windows": {
+        "command": "build.bat"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "(Re)start compatibility testing app",
+      "dependsOn": "(Re)build compatibility testing app",
+      "options": {
+        "cwd": "${workspaceFolder}/test-app/"
+      },
+      "linux": {
+        "command": "./start.sh"
+      },
+      "osx": {
+        "command": "./start.sh"
+      },
+      "windows": {
+        "command": "start.bat"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Stop compatibility testing app",
+      "options": {
+        "cwd": "${workspaceFolder}/test-app/"
+      },
+      "linux": {
+        "command": "./stop.sh"
+      },
+      "osx": {
+        "command": "./stop.sh"
+      },
+      "windows": {
+        "command": "stop.bat"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Destroy compatibility testing app",
+      "dependsOn": "Stop compatibility testing app",
+      "options": {
+        "cwd": "${workspaceFolder}/test-app/"
+      },
+      "linux": {
+        "command": "./destroy.sh"
+      },
+      "osx": {
+        "command": "./destroy.sh"
+      },
+      "windows": {
+        "command": "destroy.bat"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Full rebuild compatibility testing app",
+      "options": {
+        "cwd": "${workspaceFolder}/test-app/"
+      },
+      "linux": {
+        "command": "./rebuild.sh"
+      },
+      "osx": {
+        "command": "./rebuild.sh"
+      },
+      "windows": {
+        "command": "rebuild.bat"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Observe docker log files for compatibility testing app",
+      "options": {
+        "cwd": "${workspaceFolder}/test-app/"
+      },
+      "command": "docker-compose",
+      "args": [
+        "logs",
+        "-f"
+      ],
+      "group": "none",
+      "isBackground": true,
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
   ]
 }
