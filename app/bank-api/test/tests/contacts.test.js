@@ -8,18 +8,18 @@ var expect = chai.expect;
 describe('Contacts API', function() {
 
   before('Validate system healthcheck', function() {
-    return validateHealthCheck(chai);
+    return validateHealthCheck(chai, config);
   })
 
   describe(`${CONTACTS_URI} GET`, function() {
     it('Should fail when trying to invoke GET on contacts path', function() {
-      return ensureURLDoesNotExist(chai, CONTACTS_URI, METHOD_GET);
+      return ensureURLDoesNotExist(chai, config, CONTACTS_URI, METHOD_GET);
     })
   })
 
   describe(`${CONTACTS_URI} POST`, function() {
     it('Should fail when trying to invoke POST on contacts path', function() {
-      return ensureURLDoesNotExist(chai, CONTACTS_URI, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, CONTACTS_URI, METHOD_POST);
     })
   })
 
@@ -28,11 +28,11 @@ describe('Contacts API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should list customer contacts correctly when valid session is used', function() {
@@ -82,11 +82,11 @@ describe('Contacts API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should create new contact correctly when valid session is used', function() {
@@ -121,7 +121,7 @@ describe('Contacts API', function() {
 
   describe(`${CONTACTS_URI}/{id}/xml GET`, function() {
     it('Should fail when trying to invoke GET on contacts XML path', function() {
-      return ensureURLDoesNotExist(chai, `${CONTACTS_URI}/${USERNAME}/xml`, METHOD_GET);
+      return ensureURLDoesNotExist(chai, config, `${CONTACTS_URI}/${USERNAME}/xml`, METHOD_GET);
     })
   })
 
@@ -130,11 +130,11 @@ describe('Contacts API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should import contacts correctly when valid session is used', function() {
@@ -231,11 +231,11 @@ describe('Contacts API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should download contacts correctly when valid session is used', function() {
@@ -277,7 +277,7 @@ describe('Contacts API', function() {
 
   describe(`${CONTACTS_URI}/{id}/download POST`, function() {
     it('Should fail when trying to invoke POST on contacts XML download path', function() {
-      return ensureURLDoesNotExist(chai, `${CONTACTS_URI}/${USERNAME}/download`, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, `${CONTACTS_URI}/${USERNAME}/download`, METHOD_POST);
     })
   })
 })

@@ -8,12 +8,12 @@ const runConfigurationTests = function (chai, config) {
   describe('Configuration', function() {
   
     before('Validate system healthcheck', function() {
-      return validateHealthCheck(chai);
+      return validateHealthCheck(chai, config);
     })
 
     it('Should not allow access to MySQL Adminer Console', function() {
-      return ensureURLDoesNotExist(chai, ADMINER_URI, METHOD_GET)
-        .then( () => ensureURLDoesNotExist(chai, ADMINER_URI, METHOD_POST))
+      return ensureURLDoesNotExist(chai, config, ADMINER_URI, METHOD_GET)
+        .then( () => ensureURLDoesNotExist(chai, config, ADMINER_URI, METHOD_POST))
     })
 
     it('Should not allow to list CDN directory', function() {
@@ -24,7 +24,7 @@ const runConfigurationTests = function (chai, config) {
     })
 
     it('Should not allow access to access.php file', function() {
-      return ensureURLDoesNotExist(chai, `${CDN_URI}/access.php?${new Date().getTime()}`, METHOD_GET)
+      return ensureURLDoesNotExist(chai, config, `${CDN_URI}/access.php?${new Date().getTime()}`, METHOD_GET)
     })
   })
 }

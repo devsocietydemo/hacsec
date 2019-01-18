@@ -8,7 +8,7 @@ var expect = chai.expect;
 describe('Login API', function() {
  
   before('Validate system healthcheck', function() {
-    return validateHealthCheck(chai);
+    return validateHealthCheck(chai, config);
   })
  
   describe(`${LOGIN_URI} POST`, function() {
@@ -39,13 +39,13 @@ describe('Login API', function() {
   describe(`${LOGIN_URI} GET`, function() {
 
     it('Should fail when trying to invoke GET on login path', function() {
-      return ensureURLDoesNotExist(chai, LOGIN_URI, METHOD_GET)
+      return ensureURLDoesNotExist(chai, config, LOGIN_URI, METHOD_GET)
     })
   });
 
   describe(`${SESSIONS_URI} GET`, function() {
     it('Should fail when trying to list all existing sessions', function() {
-      return ensureURLDoesNotExist(chai, SESSIONS_URI, METHOD_GET)
+      return ensureURLDoesNotExist(chai, config, SESSIONS_URI, METHOD_GET)
     })
   })
 
@@ -99,7 +99,7 @@ describe('Login API', function() {
 
   describe(`${LOGOUT_URI} GET`, function() {
     it('Should fail when trying to invoke GET on logout path', function() {
-      return ensureURLDoesNotExist(chai, LOGOUT_URI, METHOD_GET);
+      return ensureURLDoesNotExist(chai, config, LOGOUT_URI, METHOD_GET);
     })
   });
 })

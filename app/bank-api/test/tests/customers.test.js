@@ -8,18 +8,18 @@ var expect = chai.expect;
 describe('Customers API', function() {
 
   before('Validate system healthcheck', function() {
-    return validateHealthCheck(chai);
+    return validateHealthCheck(chai, config);
   })
  
   describe(`${CUSTOMERS_URI} GET`, function() {
     it('Should fail when trying to invoke GET on customers path', function() {
-      return ensureURLDoesNotExist(chai, CUSTOMERS_URI, METHOD_GET)
+      return ensureURLDoesNotExist(chai, config, CUSTOMERS_URI, METHOD_GET)
     })
   })
 
   describe(`${CUSTOMERS_URI} POST`, function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      return ensureURLDoesNotExist(chai, CUSTOMERS_URI, METHOD_POST)
+      return ensureURLDoesNotExist(chai, config, CUSTOMERS_URI, METHOD_POST)
     })
   })
 
@@ -28,11 +28,11 @@ describe('Customers API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should list customer data correctly when valid session is used', function() {
@@ -103,7 +103,7 @@ describe('Customers API', function() {
 
   describe(`${CUSTOMERS_URI}/{id} POST`, function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      return ensureURLDoesNotExist(chai, `${CUSTOMERS_URI}/${USERNAME}`, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, `${CUSTOMERS_URI}/${USERNAME}`, METHOD_POST);
     })
   })
 
@@ -112,11 +112,11 @@ describe('Customers API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should fail when session id is not provided', function() {
@@ -161,7 +161,7 @@ describe('Customers API', function() {
 
   describe(`${CUSTOMERS_URI}/{id}/accounts POST`, function() {
     it('Should fail when trying to invoke POST on customers path', function() {
-      return ensureURLDoesNotExist(chai, `${CUSTOMERS_URI}/${USERNAME}/accounts`, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, `${CUSTOMERS_URI}/${USERNAME}/accounts`, METHOD_POST);
     })
   })
 })
