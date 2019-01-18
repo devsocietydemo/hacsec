@@ -9,12 +9,12 @@ var expect = chai.expect;
 describe('Transactions API', function() {
 
   before('Validate system healthcheck', function() {
-    return validateHealthCheck(chai);
+    return validateHealthCheck(chai, config);
   })
 
   describe(`${TRANSACTIONS_URI} GET`, function() {
     it('Should fail when trying to invoke GET on transactions path', function() {
-      return ensureURLDoesNotExist(chai, TRANSACTIONS_URI, METHOD_GET);
+      return ensureURLDoesNotExist(chai, config, TRANSACTIONS_URI, METHOD_GET);
     })
   })
 
@@ -23,11 +23,11 @@ describe('Transactions API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should create new transaction correctly when valid session is used', function() {

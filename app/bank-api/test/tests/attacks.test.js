@@ -8,7 +8,7 @@ var expect = chai.expect;
 describe('Attacks', function() {
 
   before('Validate system healthcheck', function() {
-    return validateHealthCheck(chai);
+    return validateHealthCheck(chai, config);
   })
 
   describe('A1:2017 - SQL Injection', function() {
@@ -16,11 +16,11 @@ describe('Attacks', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should list all customers data using SQL injection', function() {
@@ -58,11 +58,11 @@ describe('Attacks', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     it('Logout should not invalidate session', function() {
-      return logOutUser(chai, currentSessionId)
+      return logOutUser(chai, config, currentSessionId)
         .then( () => {
           return chai.request(URL).get(`${CUSTOMERS_URI}/${USERNAME}/accounts`)
           .set('sessionid', currentSessionId)
@@ -82,11 +82,11 @@ describe('Attacks', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Application should use weak password hashing', function() {
@@ -107,11 +107,11 @@ describe('Attacks', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should allow XXE to extract /etc/passwd file', function() {
@@ -139,11 +139,11 @@ describe('Attacks', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should list all the active sessions', function() {
@@ -215,11 +215,11 @@ describe('Attacks', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })    
     
     it('Should not sanitize HTML correctly, allowing XSS', function() {

@@ -21,8 +21,8 @@ const CDN_URI = '/cdn';
 const METHOD_GET = 'GET';
 const METHOD_POST = 'POST';
 
-const validateHealthCheck=function(chai) {
-  return chai.request(URL).get(`${HEALTH_URI}?${new Date().getTime()}`)
+const validateHealthCheck=function(chai, config) {
+  return chai.request(config.URL).get(`${config.HEALTH_URI}?${new Date().getTime()}`)
     .then( response => {
       chai.expect(response).to.have.status(200)
       chai.expect(response).to.be.json;
@@ -35,14 +35,14 @@ const expectAccessDenied=function(chai, response) {
   chai.expect(response.body.error).to.be.equal('Access denied');  
 }
 
-const ensureURLDoesNotExist=function(chai, uri, method) {
+const ensureURLDoesNotExist=function(chai, config, uri, method) {
   var promise;
   switch(method) {
     case METHOD_GET:
-      promise=chai.request(URL).get(`${uri}?${new Date().getTime()}`);
+      promise=chai.request(config.URL).get(`${uri}?${new Date().getTime()}`);
       break;
     case METHOD_POST:
-      promise=chai.request(URL).post(uri);
+      promise=chai.request(config.URL).post(uri);
       break;
     default:
       throw(`Unknown method passed: ${method}`);
@@ -53,9 +53,9 @@ const ensureURLDoesNotExist=function(chai, uri, method) {
     })
 }
 
-const logInUser=function(chai) {
-  return chai.request(URL).post(LOGIN_URI)
-    .send({id:USERNAME, password:VALID_PASSWORD})
+const logInUser=function(chai, config) {
+  return chai.request(config.URL).post(config.LOGIN_URI)
+    .send({id:config.USERNAME, password:config.VALID_PASSWORD})
     .then( response => {
       chai.expect(response).to.have.status(200);
       chai.expect(response).to.be.json;
@@ -65,8 +65,8 @@ const logInUser=function(chai) {
     })
 }
 
-const logOutUser=function(chai, sessionId) {
-  return chai.request(URL).post(LOGOUT_URI)
+const logOutUser=function(chai, config, sessionId) {
+  return chai.request(config.URL).post(config.LOGOUT_URI)
     .set('sessionid', sessionId)
     .then(response => {
       chai.expect(response).to.have.status(200);

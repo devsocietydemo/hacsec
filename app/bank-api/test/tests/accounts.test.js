@@ -9,18 +9,18 @@ var expect = chai.expect;
 describe('Accounts API', function() {
 
   before('Validate system healthcheck', function() {
-    return validateHealthCheck(chai);
+    return validateHealthCheck(chai, config);
   })
 
   describe(`${ACCOUNTS_URI} GET`, function() {
     it('Should fail when trying to invoke GET on accounts path', function() {
-      return ensureURLDoesNotExist(chai, ACCOUNTS_URI, METHOD_GET);
+      return ensureURLDoesNotExist(chai, config, ACCOUNTS_URI, METHOD_GET);
     })
   })
 
   describe(`${ACCOUNTS_URI} POST`, function() {
     it('Should fail when trying to invoke POST on accounts path', function() {
-      return ensureURLDoesNotExist(chai, ACCOUNTS_URI, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, ACCOUNTS_URI, METHOD_POST);
     })
   })
 
@@ -29,11 +29,11 @@ describe('Accounts API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should list account data correctly when valid session is used', function() {
@@ -89,7 +89,7 @@ describe('Accounts API', function() {
 
   describe(`${ACCOUNTS_URI}/{id} POST`, function() {
     it('Should fail when trying to invoke POST on accounts path', function() {
-      return ensureURLDoesNotExist(chai, `${ACCOUNTS_URI}/${ACCOUNT_NUMBER}`, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, `${ACCOUNTS_URI}/${ACCOUNT_NUMBER}`, METHOD_POST);
     })
   })
 
@@ -98,11 +98,11 @@ describe('Accounts API', function() {
     var currentSessionId;
 
     before('Log in to obtain valid session id', function() {
-      return logInUser(chai).then(sessionId => currentSessionId = sessionId);
+      return logInUser(chai, config).then(sessionId => currentSessionId = sessionId);
     })
   
     after('Log out customer to release session', function() {
-      return logOutUser(chai, currentSessionId);
+      return logOutUser(chai, config, currentSessionId);
     })
 
     it('Should list account transactions data correctly when valid session is used', function() {
@@ -156,7 +156,7 @@ describe('Accounts API', function() {
 
   describe('api/v1/accounts/{id}/transactions POST', function() {
     it('Should fail when trying to invoke POST on accounts path', function() {
-      return ensureURLDoesNotExist(chai, `${ACCOUNTS_URI}/${ACCOUNT_NUMBER}/transactions`, METHOD_POST);
+      return ensureURLDoesNotExist(chai, config, `${ACCOUNTS_URI}/${ACCOUNT_NUMBER}/transactions`, METHOD_POST);
     })
   })
 
