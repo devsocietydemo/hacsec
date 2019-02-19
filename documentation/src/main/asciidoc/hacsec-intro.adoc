@@ -9,7 +9,9 @@ image::hackathon.jpg["Hackathon"]
 
 Introduction
 ------------
-The purpose of this document is to provide all the information needed to set up local laptop environment for Security Hackathon.
+The purpose of this document is to provide all the information needed to set up local laptop environment for Security Hackathon using Docker for Windows.
+
+WARNING: If you are using Oracle VirtualBox on your laptop, this guide is not for you. Use link:hacsec-intro-dt.html[Security Hackathon Introduction for Docker Toolbox] document instead!
 
 [[hackathon-application-description]]
 Hackathon application description
@@ -94,7 +96,7 @@ Test your Docker installation by running the *hello-world* image from Docker Hub
 
 image::run_cmd.jpg["Running Windows Command Prompt"]
 
-TIP:Don't close Windows Command Prompt for now, we will keep using it.
+TIP: Don't close Windows Command Prompt for now, we will keep using it.
 
 Run hello-world image from Docker Hub using `docker run hello-world` command to ensure your Docker installation is running fine:
 ----
@@ -202,12 +204,13 @@ Last thing to do is to download and run the compatibility test application. Luck
 Run the following command in Windows Command Prompt to get the files (Please note: this is single line command!) `xcopy /r /y /i \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool CompatibilityTool`:
 ----
 C:\Users\dawid.buchwald>xcopy /r /y /i \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool CompatibilityTool
-\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\Docker-compose.yml
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\docker-compose.yml
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\prefetch.bat
 \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\start.bat
 \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\start.sh
 \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\stop.bat
 \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\stop.sh
-5 File(s) copied
+6 File(s) copied
 
 C:\Users\dawid.buchwald>
 ----
@@ -226,15 +229,16 @@ C:\Users\dawid.buchwald\CompatibilityTool>dir
 
  Directory of C:\Users\dawid.buchwald\CompatibilityTool
 
-07.11.2018  18:33    <DIR>          .
-07.11.2018  18:33    <DIR>          ..
-07.11.2018  18:34             1 046 Docker-compose.yml <1>
-07.11.2018  18:34                95 start.bat          <2>
-07.11.2018  18:34                47 start.sh           <3>
-07.11.2018  18:34                94 stop.bat           <4>
-07.11.2018  18:34                44 stop.sh            <5>
-               5 File(s)          1 326 bytes
-               2 Dir(s)  401 113 387 008 bytes free
+19.02.2019  10:22    <DIR>          .
+19.02.2019  10:22    <DIR>          ..
+27.11.2018  08:32             1 046 docker-compose.yml <1>
+15.01.2019  08:24               329 prefetch.bat       <2>
+27.11.2018  08:32                95 start.bat          <3>
+27.11.2018  08:32                47 start.sh           <4>
+27.11.2018  08:32                94 stop.bat           <5>
+18.01.2019  13:29                44 stop.sh            <6>
+               6 File(s)          1 655 bytes
+               2 Dir(s)  347 650 400 256 bytes free
 
 C:\Users\dawid.buchwald\CompatibilityTool>
 ----
@@ -242,10 +246,11 @@ C:\Users\dawid.buchwald\CompatibilityTool>
 The files are:
 
 <1> `Docker-compose.yml` file contains application definition, it will be used by Docker to run the app,
-<2> `start.bat` is the Windows script used to run the application,
-<3> `start.sh` is the startup script to be used in Linux/MacOS environment,
-<4> `stop.bat` is the Windows script used to stop the application,
-<5> `stop.sh` is the shutdown script for Linux/MacOS systems.
+<2> `prefetch.bat` is the Windows script that will be used to speed up download process,
+<3> `start.bat` is the Windows script used to run the application,
+<4> `start.sh` is the startup script to be used in Linux/MacOS environment,
+<5> `stop.bat` is the Windows script used to stop the application,
+<6> `stop.sh` is the shutdown script for Linux/MacOS systems.
 
 Now, if in <<checking-port-80, previous chapter>> you discovered that port `80` is available, you can skip to <<starting-up-compatibility-test-application, next section>>. Otherwise, do the following:
 
@@ -271,8 +276,16 @@ Save the file using `Ctrl + S` shortcut and close Notepad application using `Alt
 [[starting-up-compatibility-test-application]]
 Starting up Compatibility Test application
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Start with running the `prefetch.bat` script in Windows Command Prompt:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>prefetch.bat
+----
 
-From the Windows Command Prompt run the `start.bat` script (Please note: in `CompatibilityTool` folder!):
+Download of core components will start:
+
+image::prefetch.jpg[Preloading core compoents]
+
+After this is completed, run the `start.bat` script (Please note: still in `CompatibilityTool` folder!):
 ----
 C:\Users\dawid.buchwald\CompatibilityTool>start.bat
 Creating network "compatibilitytool_default" with the default driver

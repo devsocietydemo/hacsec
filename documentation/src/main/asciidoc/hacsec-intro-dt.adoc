@@ -1,0 +1,277 @@
+Security Hackathon Introduction for Docker Toolbox
+==================================================
+:Author: Dawid Buchwald 
+:Email: dawid.buchwald@cgi.com
+:version: 1.0
+:linkattrs:
+
+image::hackathon.jpg["Hackathon"]
+
+Introduction
+------------
+The purpose of this document is to provide all the information needed to set up local laptop environment for Security Hackathon using Docker Toolbox.
+
+WARNING: If you don't use (and don't intend to use in future) Oracle VirtualBox, there is a better guide for you: link:hacsec-intro.html[Security Hackathon Introduction].
+
+[[hackathon-application-description]]
+Hackathon application description
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+During the hackathon event you will be trying to break into online banking application, created specifically for this purpose. In order to ensure that each participant hacks the application in isolation (preventing them to break each other's system), banking application will be working locally on their laptops. Unfortunately, to be able to simulate various attacks, complex, multi-tiered architecture is required - resulting system setup consists of several components (database, application server, web frontend, session cache, static content provider).
+
+In order to ensure portability and performance of such application, Docker solution has been chosen - each of the specific components exists in separate, lightweight container. This should enable running the system even on older machines.
+
+Additionally, to ensure that all the potential compatibility issues are found and solved in advance, dedicated compatibility testing application was created - it uses exactly the same components as the final banking application, so if it runs correctly, the banking app will run just the same; at the same time, participants can't probe the final system for vulnerabilities prior to the event.
+
+This document describes the process of installing and configuring Docker Toolbox and running the compatibility testing application on your laptop.
+
+System requirements 
+^^^^^^^^^^^^^^^^^^^
+To be able to run Docker Toolbox on your laptop you need the following:
+
+. Administrative rights (to install Docker Toolbox),
+. Windows 7 Professional or Ultimate x64 / Windows 10 Professional or Enterprise 64-bit.
+
+If you already have Docker Toolbox installed and working correctly on your machine, skip directly to <<testing-docker-toolbox, chapter 3>>.
+
+[[installing-docker-toolbox]]
+Installing Docker Toolbox
+-------------------------
+Download latest version of the Docker Toolbox application from https://download.docker.com/win/stable/DockerToolbox.exe[Docker Website]. Download and run the executable. To proceed with the installation you will be prompted for username and password to enable administrative access. Provide credentials you use to log into your computer.
+
+image::install_docker_dt.jpg["Installing Docker Toolbox"]
+
+Follow installation wizard with default settings.
+
+After some time you expect installation to complete successfully, and new entry available in start menu:
+
+image::docker_toolbox_installed.jpg["Docker Toolbox installed successfully"]
+
+[[testing-docker-toolbox]]
+Testing Docker Toolbox
+----------------------
+To run docker, start *Docker Quickstart Terminal*. During first run it will download additional software, so it might take a bit longer:
+
+image::docker_quickstart_terminal.jpg["Downloading Boot2Docker ISO"]
+
+After a while it will run and the following screen will be displayed:
+
+image::docker_quickstart_running.jpg["Docker Toolbox running"]
+
+Please note the IP address (192.168.99.100 in my case) and leave the window open.
+
+Test your Docker installation by running the *hello-world* image from Docker Hub. To do it, start by opening command prompt using `Windows + R` shortcut again and entering `cmd` as command:
+
+image::run_cmd.jpg["Running Windows Command Prompt"]
+
+TIP: Don't close Windows Command Prompt for now, we will keep using it.
+
+Run hello-world image from Docker Hub using `docker run hello-world` command to ensure your Docker installation is running fine:
+----
+C:\Users\dawid.buchwald>docker run hello-world
+----
+
+Image will be downloaded (if not done before), and the following output should be printed:
+----
+C:\Users\dawid.buchwald>docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+d1725b59e92d: Pull complete
+Digest: sha256:0add3ace90ecb4adbf7777e9aacf18357296e799f81cabc9fde470971e499788
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
+
+C:\Users\dawid.buchwald>
+----
+
+Congratulations, this means that your Docker installation is working fine!
+
+Checking Docker Compose version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To be able to run the hackathon applications, you need also need Docker Compose. If you just installed Docker for Windows, most likely you have it already, but just to be sure run the `docker-compose version` command in the Windows Command Prompt ( if you closed it already, open it again using `Windows + R`, `cmd`).
+----
+C:\Users\dawid.buchwald>docker-compose version
+docker-compose version 1.20.1, build 5d8c71b2
+docker-py version: 3.1.4
+CPython version: 3.6.4
+OpenSSL version: OpenSSL 1.0.2k  26 Jan 2017
+
+C:\Users\dawid.buchwald>
+----
+
+If this is what you get (your versions might differ, that's OK as long as they are newer), you are good to go!
+
+[[running-compatibility-test-application]]
+Running compatibility test
+--------------------------
+Don't worry, we are almost there! 
+
+Last thing to do is to download and run the compatibility test application. Luckily all you need is five small files.
+
+Run the following command in Windows Command Prompt to get the files (Please note: this is single line command!) `xcopy /r /y /i \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool CompatibilityTool`:
+----
+C:\Users\dawid.buchwald>xcopy /r /y /i \\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool CompatibilityTool
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\docker-compose.yml
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\prefetch.bat
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\start.bat
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\start.sh
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\stop.bat
+\\morgana.ams.com\Public\Hackathons\Security\CompatibilityTool\stop.sh
+6 File(s) copied
+
+C:\Users\dawid.buchwald>
+----
+
+Go to `CompatibilityTool` folder using `cd CompatibilityTool` command:
+----
+C:\Users\dawid.buchwald>cd CompatibilityTool
+
+----
+
+List directory contents using `dir` command:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>dir
+ Volume in drive C is Windows
+ Volume Serial Number is 204D-474E
+
+ Directory of C:\Users\dawid.buchwald\CompatibilityTool
+
+19.02.2019  10:22    <DIR>          .
+19.02.2019  10:22    <DIR>          ..
+27.11.2018  08:32             1 046 docker-compose.yml <1>
+15.01.2019  08:24               329 prefetch.bat       <2>
+27.11.2018  08:32                95 start.bat          <3>
+27.11.2018  08:32                47 start.sh           <4>
+27.11.2018  08:32                94 stop.bat           <5>
+18.01.2019  13:29                44 stop.sh            <6>
+               6 File(s)          1 655 bytes
+               2 Dir(s)  347 650 400 256 bytes free
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+The files are:
+
+<1> `Docker-compose.yml` file contains application definition, it will be used by Docker to run the app,
+<2> `prefetch.bat` is the Windows script that will be used to speed up download process,
+<3> `start.bat` is the Windows script used to run the application,
+<4> `start.sh` is the startup script to be used in Linux/MacOS environment,
+<5> `stop.bat` is the Windows script used to stop the application,
+<6> `stop.sh` is the shutdown script for Linux/MacOS systems.
+
+[[starting-up-compatibility-test-application]]
+Starting up Compatibility Test application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Start with running the `prefetch.bat` script in Windows Command Prompt:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>prefetch.bat
+----
+
+Download of core components will start:
+
+image::prefetch.jpg[Preloading core compoents]
+
+After this is completed, run the `start.bat` script (Please note: still in `CompatibilityTool` folder!):
+----
+C:\Users\dawid.buchwald\CompatibilityTool>start.bat
+Creating network "compatibilitytool_default" with the default driver
+Pulling db (dawidbuchwald/hacsec-test-mysql:latest)...
+latest: Pulling from dawidbuchwald/hacsec-test-mysql
+f17d81b4b692: Downloading [=====>                                             ]  2.555MB/22.49MB
+c691115e6ae9: Download complete
+41544cb19235: Download complete
+254d04f5f66d: Download complete
+4fe240edfdc9: Download complete
+
+8df36ec4b34a: Download complete
+720bf9851f6a: Waiting
+e933e0a4fddf: Waiting
+9ffdbf5f677f: Waiting
+a403e1df0389: Waiting
+4669c5f285a6: Waiting
+cc97989e9e00: Waiting
+----
+
+Docker images will be downloaded from Docker Hub - it will take some time (around five minutes, depending on your network bandwidth).
+
+NOTE: Starting up will take so much time only the first time ever. Images will be cached locally by Docker, making the startup process in future much faster.
+
+What you expect at the end is:
+----
+07b9730387a3: Already exists
+6dbdee9d6fa5: Already exists
+477f45823c5d: Pull complete
+ebc261256063: Pull complete
+Digest: sha256:b7bdf0878904579a8fe3fae637e14b6bf4e48e0f28307d256c23f3e5ebc40375
+Status: Downloaded newer image for dawidbuchwald/hacsec-test-frontend:latest
+Creating test-app-cdn   ... done
+Creating test-app-db    ... done
+Creating test-app-redis ... done
+Creating test-app-adminer  ... done
+Creating test-app-api     ... done
+Creating test-app-frontend ... done
+----
+
+[[creating-user-access-key]]
+Creating user access key
+~~~~~~~~~~~~~~~~~~~~~~~~
+Run the browser pointing to your application using the IP address displayed in Docker Quickstart Terminal `start http://192.168.99.100` command:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>start http://192.168.99.100
+
+C:\Users\dawid.buchwald\CompatibilityTool>
+----
+
+WARNING: If your default browser is Internet Explorer, the page will not open. Try using some other browser (even Microsoft Edge will do for now), preferably Google Chrome.
+
+Your browser will open:
+
+image::landing_page_dt.jpg["Landing page of Compatibility Tool application"]
+
+Enter your e-mail address into form and click Encrypt button to generate your unique hackathon access key - this will be the proof that you are prepared to run hackathon application on your laptop.
+
+image::encrypted_dt.jpg["Access key generated"]
+
+Click the Send confirmation e-mail button to open your mail client with pre-populated e-mail message. Send it to confirm that you are ready to hack:
+
+image::email.jpg["Sending e-mail"]
+
+Now that you are done, stop the application using `stop.bat` script:
+----
+C:\Users\dawid.buchwald\CompatibilityTool>stop.bat
+Stopping test-app-frontend ... done
+Stopping test-app-api      ... done
+Stopping test-app-adminer  ... done
+Stopping test-app-cdn      ... done
+Stopping test-app-db       ... done
+Stopping test-app-redis    ... done
+Removing test-app-frontend ... done
+Removing test-app-api      ... done
+Removing test-app-adminer  ... done
+Removing test-app-cdn      ... done
+Removing test-app-db       ... done
+Removing test-app-redis    ... done
+Removing network compatibilitytool_default
+----
+
+That's all, Folks!
